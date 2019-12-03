@@ -1,20 +1,30 @@
 import React from 'react';
 import { Link, NavLink, withRouter } from 'react-router-dom';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
-const Navbar = (props) => {
+const Navibar = (props) => {
     return ( 
-        <nav className="nav-wrapper red darken-3">
-            <div className="container">
-                <a className="brand-logo">Poke 'Times</a>
-                <ul className="right">
-                    <li><Link to="/">Home</Link></li>
-                    <li><NavLink to="/about">About</NavLink></li>
-                    <li><NavLink to="/contact">Contact</NavLink></li>
-                </ul>
-            </div>
-        </nav>
+      <div className="container">
+          <Navbar expand="lg">
+            <Navbar.Brand as={Link} to="/"><img
+              alt="HirrMe logo"
+              src={require('../img/logo.png')}
+              width="20" 
+              className="d-inline-block align-top"
+            />{' '}Hirr.me</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse className="justify-content-end">
+              <Nav>
+                  <Nav.Link as={Link} to="/about">About</Nav.Link>
+                  <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
+              </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+      </div>
     )
 }
 
 // withRouter is used to pass the route properties to Navbar component (supercharging it)
-export default withRouter(Navbar);
+export default withRouter(Navibar);
