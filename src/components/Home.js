@@ -5,7 +5,6 @@ import Carousel from 'react-bootstrap/Carousel';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import Video from '../hoc/Videobackground';
 
 class Home extends Component {
     render() {
