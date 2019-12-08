@@ -5,12 +5,13 @@ import Carousel from 'react-bootstrap/Carousel';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import Video from '../hoc/Videobackground';
 
 class Home extends Component {
     render() {
         return (
 
-            <div className="container" style={{marginTop: "30px"}}>
+            <div className="container" style={{marginTop: "30px", zIndex: 1}}>
                 <h1 className="text-center">Seacrh for a job at Hirr.me</h1>
                 <p className="text-center">Let us help you to get work/ers</p>
                 <Form inline style={{display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px"}}>
