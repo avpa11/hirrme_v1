@@ -6,12 +6,14 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Video from './components/Video';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import * as firebase from 'firebase';
 
 class App extends Component {
-  render(){
-    return (
+  render(){    
+
+    return (      
       <BrowserRouter>
-        <div className="App">
+        <div className="App">          
           <Video />
           <Navbar />
           <Route exact path='/' component={Home} />
