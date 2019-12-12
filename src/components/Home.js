@@ -5,6 +5,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import Video from '../components/Video';
 import './FirebaseConnection.js'
 import * as firebase from 'firebase';
 
@@ -19,14 +20,25 @@ class Home extends Component {
     render() {
 
         return (
-
-            <div className="container" style={{ marginTop: "30px", zIndex: 1 }}>
+            <div>
+            <Video />
+            <div className="container" style={{ marginTop: "50px", zIndex: 1 }}>
                 <h1 className="text-center">Seacrh for a job at Hirr.me</h1>
                 <p className="text-center">Let us help you to get work/ers</p>
                 <Form inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-success"
+                <div className="input-group-prepend" style={{backgroundColor: 'none',borderColor: "#FFC107"}}>
+                    <span className="input-group-text">
+                        <i className="fa fa-search"></i>
+                    </span>
+                    <FormControl type="text" placeholder="Search" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                </div>
+                <div className="input-group-prepend">
+                    <span className="input-group-text">
+                        <i className="material-icons">place</i>                   
+                    </span>
+                    <FormControl type="text" placeholder="Search" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                </div>
+                    <Button variant="warning"
                         onClick={this.display}>
                         Search
                     </Button>
@@ -111,6 +123,7 @@ class Home extends Component {
                     </Carousel>
 
                 </div>
+            </div>
             </div>
         )
     }
