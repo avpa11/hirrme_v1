@@ -1,8 +1,6 @@
 import React from 'react';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import Nav from 'react-bootstrap/Nav';
 import { Link } from 'react-router-dom';
 
 const ModalLogin = () => {
@@ -12,7 +10,7 @@ const ModalLogin = () => {
     const handleShow = () => setShow(true);
     return (
         <div>
-            <Button onClick={handleShow}>
+            <Button variant="warning" className="loginButton" onClick={handleShow}>
               Login / Register
             </Button>
 
@@ -26,7 +24,7 @@ const ModalLogin = () => {
                     <Button variant="warning" onClick={handleClose}>
                     Close
                     </Button>
-                    <p>Don't have an account? <Nav.Link as={Link} to="/register">Register</Nav.Link> for free:)</p>
+                    <p>Don't have an account? <Link as={Link} to="/register">Register</Link> for free:)</p>
                 </Modal.Body>
             </Modal>
         </div>

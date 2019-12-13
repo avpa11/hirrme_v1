@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import CardDeck from 'react-bootstrap/CardDeck';
-import Card from 'react-bootstrap/Card';
-import Carousel from 'react-bootstrap/Carousel';
+// import CardDeck from 'react-bootstrap/CardDeck';
+// import Card from 'react-bootstrap/Card';
+// import Carousel from 'react-bootstrap/Carousel';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
@@ -44,83 +44,35 @@ class Home extends Component {
                     </Button>
                 </Form>
                 <div className="container" style={{ width: '80%', marginTop: "30px" }}>
-                    <Carousel interval={4000} slide={true} wrap={true} >
-                        <Carousel.Item>
-                            <CardDeck>
-                                <Card style={{ width: '15rem' }}>
-                                    <Card.Body>
-                                        <Card.Title>Card Title</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
-                                        <Card.Text>
-                                            Some quick example text to build on the card title and make up the bulk of
-                                            the card's content.
-                                    </Card.Text>
-                                        <Card.Link href="#">Card Link</Card.Link>
-                                    </Card.Body>
-                                </Card>
-                                <Card style={{ width: '15rem' }}>
-                                    <Card.Body>
-                                        <Card.Title>Card Title</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
-                                        <Card.Text>
-                                            Some quick example text to build on the card title and make up the bulk of
-                                            the card's content.
-                                    </Card.Text>
-                                        <Card.Link href="#">Card Link</Card.Link>
-                                    </Card.Body>
-                                </Card>
-                                <Card style={{ width: '15rem' }}>
-                                    <Card.Body>
-                                        <Card.Title>Card Title</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
-                                        <Card.Text>
-                                            Some quick example text to build on the card title and make up the bulk of
-                                            the card's content.
-                                    </Card.Text>
-                                        <Card.Link href="#">Card Link</Card.Link>
-                                    </Card.Body>
-                                </Card>
-                            </CardDeck>
+                    {/* <Carousel interval={4000} slide={true} wrap={true} >
+                    {Array.apply(null, Array(6)).map(function(item, i){                                        
+                        return (
+                            <Carousel.Item>
+                            <Card className="card col-4 img-fluid" style={{ width: '15rem' }}>
+                                <Card.Body>
+                                    <Card.Title>Card Title</Card.Title>
+                                    <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
+                                    <Card.Text>
+                                        Some quick example text to build on the card title and make up the bulk of
+                                        the card's content.
+                                </Card.Text>
+                                    <Card.Link href="#">Card Link</Card.Link>
+                                </Card.Body>
+                            </Card>
                         </Carousel.Item>
-                        <Carousel.Item>
-                            <CardDeck>
-                                <Card style={{ width: '15rem' }}>
-                                    <Card.Body>
-                                        <Card.Title>Card Title</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
-                                        <Card.Text>
-                                            Some quick example text to build on the card title and make up the bulk of
-                                            the card's content.
-                                    </Card.Text>
-                                        <Card.Link href="#">Card Link</Card.Link>
-                                    </Card.Body>
-                                </Card>
-                                <Card style={{ width: '15rem' }}>
-                                    <Card.Body>
-                                        <Card.Title>Card Title</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
-                                        <Card.Text>
-                                            Some quick example text to build on the card title and make up the bulk of
-                                            the card's content.
-                                    </Card.Text>
-                                        <Card.Link href="#">Card Link</Card.Link>
-                                    </Card.Body>
-                                </Card>
-                                <Card style={{ width: '15rem' }}>
-                                    <Card.Body>
-                                        <Card.Title>Card Title</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
-                                        <Card.Text>
-                                            Some quick example text to build on the card title and make up the bulk of
-                                            the card's content.
-                                    </Card.Text>
-                                        <Card.Link href="#">Card Link</Card.Link>
-                                    </Card.Body>
-                                </Card>
-                            </CardDeck>
-                        </Carousel.Item>
+                        );                
+                    }, this)}
+                        
 
-                    </Carousel>
+                    </Carousel> */}
+
+                    {/* {Array.apply(null, Array(6)).map(function(item, i){                                        
+                        return (
+                            <div className="card">
+                                    <p className="center">Some text</p>
+                            </div>
+                        );                
+                    }, this)} */}
 
                 </div>
             </div>

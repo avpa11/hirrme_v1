@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, NavLink, withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Modal from '../components/Modal';
@@ -7,7 +7,7 @@ import Modal from '../components/Modal';
 class Navibar extends Component {
     render() {
 
-      const {user} = this.props;
+      // const {user} = this.props;
 
       return ( 
         <div className="container">
@@ -24,8 +24,8 @@ class Navibar extends Component {
                     <Nav.Link as={Link} to="/about">About</Nav.Link>
                     <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
                 </Nav>
-            </Navbar.Collapse>
             <Modal />
+            </Navbar.Collapse>
             {/* Will be a user object in the future
              {user} */}
           </Navbar> 

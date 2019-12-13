@@ -53,7 +53,7 @@ class Register extends Component {
 
     render() {
         return (
-            <div className="rectangle" style={{marginTop: "50px", height: "200%"}}>
+            <div className="rectangle registerect container" style={{marginTop: "120px"}}>
                 <div className="container">
                     <h1>Help us get you work/ers</h1>
                     <Form onSubmit={this.handleSubmit} style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
@@ -62,9 +62,9 @@ class Register extends Component {
                                 {this.state.errorMessage}
                             </Alert>
                         ) : null }
-                        <FormControl value={this.state.email} onChange={this.handleChange} type="text" placeholder="Email" name="email" className="mr-sm-2" />
-                        <FormControl value={this.state.password} onChange={this.handleChange} type="password" placeholder="Password" name="password" className="mr-sm-2" />
-                        <FormControl value={this.state.passwordrepeat} onChange={this.handleChange} type="password" placeholder="Repeat Password" name="passwordrepeat" className="mr-sm-2" />
+                        <FormControl value={this.state.email} onChange={this.handleChange} type="text" placeholder="Email" name="email" className="mr-sm-2 col-sm-6 col-xs-12" />
+                        <FormControl value={this.state.password} onChange={this.handleChange} type="password" placeholder="Password" name="password" className="mr-sm-2 col-sm-6 col-xs-12" />
+                        <FormControl value={this.state.passwordrepeat} onChange={this.handleChange} type="password" placeholder="Repeat Password" name="passwordrepeat" className="mr-sm-2 col-sm-6 col-xs-12" />
         
                         <Button type="submit" variant="warning">
                             Register
