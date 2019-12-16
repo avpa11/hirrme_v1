@@ -31,7 +31,7 @@ body, html {
 /* Contact footer styles */
 
 #contactFooter{
-  width: 100%;
+  width: auto;
   height: 30em;
   background-color: transparent;
   text-align: center;
@@ -47,7 +47,7 @@ body, html {
 }
 
 .inputs{
-  max-width: 55em;
+  max-width: 50em;
   min-width: 20em;
   padding: 2em;
   margin: auto;

@@ -7,6 +7,7 @@ import Contact from './components/Contact';
 import Register from './components/Register';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as firebase from 'firebase';
+import ContactFooter from './components/ContactFooter';
 
 
 class App extends Component {
@@ -36,7 +37,8 @@ class App extends Component {
           <Route exact path='/' component={Home} />
           <Route path='/about' component={About} />
           <Route path='/contact' component={Contact} />          
-          <Route path='/register' component={Register} />          
+          <Route path='/register' component={Register} />
+          <ContactFooter />          
         </div>  
       </BrowserRouter>      
     );

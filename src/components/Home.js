@@ -66,13 +66,13 @@ class Home extends Component {
 
                     </Carousel> */}
 
-                    {/* {Array.apply(null, Array(6)).map(function(item, i){                                        
+                    {Array.apply(null, Array(6)).map(function(item, i){                                        
                         return (
-                            <div className="card">
+                            <div className="card" key={i}>
                                     <p className="center">Some text</p>
                             </div>
                         );                
-                    }, this)} */}
+                    }, this)}
 
                 </div>
             </div>

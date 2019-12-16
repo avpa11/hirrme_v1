@@ -21,7 +21,7 @@ class ContactFooter extends Component {
     render() {        
 
         return (
-            <div id='contactFooter'>
+            <div className="container" id='contactFooter'>
                 <div className="row">
                     <div className="col">
                         <img id='paperPlaneIcon' src='https://image.flaticon.com/icons/png/128/149/149446.png' alt=""/>
