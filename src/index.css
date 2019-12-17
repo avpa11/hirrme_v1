@@ -31,7 +31,6 @@ body, html {
 /* Contact footer styles */
 
 #contactFooter{
-  width: auto;
   height: 30em;
   background-color: transparent;
   text-align: center;
@@ -47,20 +46,18 @@ body, html {
 }
 
 .inputs{
+  margin: auto;
   max-width: 50em;
   min-width: 20em;
-  padding: 2em;
-  margin: auto;
 }
 
 #buttonSubscribeForEmails{
-  margin-left: 1em;
+  margin-left: 0.5em;
 }
 
 #rectangleRow{
   margin: auto;
-  padding: 7em;
-  padding-top: 4em;
+  padding: 4em 0;
 }
 
 .rectangle{
@@ -77,6 +74,10 @@ body, html {
   width: 8em;
   height: 5em;
   margin-top: 2em;
+}
+
+#emailInput{
+  border-color: #FFC107
 }
 
 /* End contact footer styles */
