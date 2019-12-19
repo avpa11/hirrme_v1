@@ -8,6 +8,8 @@ import {createStore, combineReducers} from 'redux';
 import allReducers from './reducers/allReducers';
 import {Provider} from 'react-redux';
 
+import Firebase, { FirebaseContext } from './components/Firebase'
+
 const store = createStore(
     allReducers, 
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
@@ -15,7 +17,9 @@ const store = createStore(
 
 ReactDOM.render(
 <Provider store={store}>
-    <App />
+    <FirebaseContext.Provider value={new Firebase()}>
+        <App />
+    </FirebaseContext.Provider>
 </Provider>,
 document.getElementById('root'));
 

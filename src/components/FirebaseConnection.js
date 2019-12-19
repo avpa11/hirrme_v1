@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import app from 'firebase/app';
 
 var firebaseConfig = {
           apiKey: "AIzaSyBrd47aC5DMfPk2D3_ejrFD9uqi0GQ1m30",
@@ -10,6 +11,22 @@ var firebaseConfig = {
           appId: "1:499108259977:web:dccb6a56b42862256b7e58",
           measurementId: "G-QNL3PHTCVC"
       };
-  
-      firebase.initializeApp(firebaseConfig);
-      firebase.analytics();
+
+class Firebase {
+    constructor() {
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+
+        this.auth = app.auth();
+    }
+
+    doCreateUserWithEmailAndPassword = (email, password) =>
+        this.auth.createUserWithEmailAndPassword(email, password);
+
+    doSignInWithEmailAndPassword = (email, password) =>
+        this.auth.signInWithEmailAndPassword(email, password);
+
+    doSignOut = () => this.auth.signOut();
+}
+
+export default Firebase;
