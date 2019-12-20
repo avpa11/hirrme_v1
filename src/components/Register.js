@@ -3,72 +3,86 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
-import * as firebase from 'firebase';
 
-// Redux stuff
-import { useSelector, useDispatch } from 'react-redux';
-import { setEmail } from '../actions'
+import { withFirebase } from './Firebase';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 
-const Register = () => {
+const Register = () => (
+    <div>
+        <SignUp />
+    </div>
+)
 
-    // Get user email from redux
-    // unused 
-    var userEmail = useSelector(state => state.userEmail);
 
-    const dispatch = useDispatch();
+const initState = {
+    email: '',
+    password: '',
+    passwordrepeat: '',
+    error: null
+};
 
-    // const handleChange = (e) => {
-    //     const tempName = e.target.name;
-    //     const tempValue = e.target.value;
 
-    //     this.setState({ [tempName]: tempValue }, () => {
-    //         if (this.state.password !== this.state.passwordrepeat) {
-    //             this.setState({errorMessage: 'Passwords don\'t match'})
-    //         } else {
-    //             this.setState({errorMessage: null});
-    //         }
-    //     });
-    // }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        var errorMessage = "";
-
-        var email = document.getElementById('userRegistrationEmail').value;
-        var password = document.getElementById('userRegistrationPassword').value;
-                
-        firebase.auth().createUserWithEmailAndPassword(email, password)        
-        .catch((error) => {
-            alert(error);
-            errorMessage = error.Message
-        })
-        .then(() => {
-            if(errorMessage === ""){
-                dispatch(setEmail(email))
-            }
-        })
+class SignUpForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {...initState}
     }
-    
-    return (
-        <div className="rectangle registerect container" style={{ marginTop: "120px" }}>
-            <div className="container">
-                <h1>Help us get you work/ers</h1>
-                <Form
-                    onSubmit={handleSubmit}
-                    style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
 
-                    <FormControl type="text" placeholder="Email" name="email" className="mr-sm-2 col-sm-6 col-xs-12" id='userRegistrationEmail' />
-                    <FormControl type="password" placeholder="Password" name="password" className="mr-sm-2 col-sm-6 col-xs-12" id='userRegistrationPassword' />
-                    <FormControl type="password" placeholder="Repeat Password" name="passwordrepeat" className="mr-sm-2 col-sm-6 col-xs-12" id='userRegistrationPasswordRepeat' />
+    handleSubmit = e => {
+        e.preventDefault();
+        const {email, password } = this.state;
 
-                    <Button type="submit" variant="warning">
-                        Register
-                        </Button>
-                </Form>
+        this.props.firebase.doCreateUserWithEmailAndPassword(email, password)
+        .then(authUser => {
+            this.setState({...initState});
+            this.props.history.push('/createaccount');
+        })
+        .catch(error => {
+            this.setState({ error });
+        })
+
+    }
+
+    handleChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    };
+
+    render () {
+        const {
+            email, password, passwordrepeat, error
+        } = this.state;
+
+        const invalid = 
+            password !== passwordrepeat || password === '' || email === '';
+        return (
+            <div className="rectangle registerect container" style={{ marginTop: "120px" }}>
+                <div className="container">
+                    <h1>Help us get you work/ers</h1>
+                    <Form
+                        onSubmit={this.handleSubmit}
+                        style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                        { error !== null ? (	                        
+                            <Alert variant="warning">	                            
+                                {error.message}	                                
+                            </Alert>	                           
+                        ) : null }
+                        <FormControl value={email} onChange={this.handleChange} type="text" placeholder="Email" name="email" className="mr-sm-2 col-sm-6 col-xs-12" id='userRegistrationEmail' />
+                        <FormControl value={password} onChange={this.handleChange} type="password" placeholder="Password" name="password" className="mr-sm-2 col-sm-6 col-xs-12" id='userRegistrationPassword' />
+                        <FormControl value={passwordrepeat} onChange={this.handleChange} type="password" placeholder="Repeat Password" name="passwordrepeat" className="mr-sm-2 col-sm-6 col-xs-12" id='userRegistrationPasswordRepeat' />
+
+                        <Button disabled={invalid} type="submit" variant="warning">
+                            Register
+                            </Button>
+                    </Form>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
+const SignUp = compose(withRouter, withFirebase)(SignUpForm);
+
 export default Register;
+
+export { SignUp };
