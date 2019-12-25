@@ -11,7 +11,7 @@ import { compose } from 'recompose';
 const Register = () => (
     <div>
         <SignUp />
-    </div>
+    </div> 
 )
 
 
