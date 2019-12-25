@@ -7,6 +7,8 @@ import Contact from './components/Contact';
 import Register from './components/Register';
 import CreateAccount from './components/CreateAccount';
 import UserAccount from './components/UserAccount';
+import User from './components/CreateUser';
+import Education from './components/Education';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ContactFooter from './components/ContactFooter';
 
@@ -26,6 +28,8 @@ class App extends Component {
             <Route path='/register' component={Register} />
             <Route path='/createaccount' component={CreateAccount} />
             <Route path='/useraccount' component={UserAccount} />
+            <Route path='/createuser' component={User} />
+            <Route path='/education' component={Education} />
             <ContactFooter />          
           </div>  
         </BrowserRouter>    
