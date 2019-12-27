@@ -9,6 +9,7 @@ import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
+
 const CreateCompany = () => (
     <div>
         <CompanyForm />
@@ -48,15 +49,7 @@ class CreateCompanyForm extends Component {
             country: this.state.companyCountry,
         })
             .then(() => {
-                this.setState({
-                    companyName: '',
-                    companyField: '',
-                    companyDesrciption: '',
-                    companyDirector: '',
-                    companyCity: '',
-                    companyProvince: 'BC',
-                    companyCountry: 'Canada'
-                })
+                this.setState({...initState})
             })
             .then(() => {
                 this.props.history.push('/useraccount');
@@ -113,7 +106,6 @@ class CreateCompanyForm extends Component {
             </AuthUserContext.Consumer>
         )
     }
-
 }
 
 const CompanyForm = compose(withRouter, withFirebase)(CreateCompanyForm);
