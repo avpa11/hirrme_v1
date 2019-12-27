@@ -8,11 +8,13 @@ import Register from './components/Register';
 import CreateAccount from './components/CreateAccount';
 import UserAccount from './components/UserAccount';
 import User from './components/CreateUser';
+import Company from './components/CreateCompany';
 import Education from './components/Education';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ContactFooter from './components/ContactFooter';
 
 import { withAuthentication } from './components/Session';
+import { FirebaseContext } from './components/Firebase';
 
 class App extends Component {
 
@@ -20,7 +22,7 @@ class App extends Component {
 
     return (      
         <BrowserRouter>
-          <div className="App">
+          <div className="App">            
             <Navbar />
             <Route exact path='/' component={Home} />
             <Route path='/about' component={About} />
@@ -29,8 +31,13 @@ class App extends Component {
             <Route path='/createaccount' component={CreateAccount} />
             <Route path='/useraccount' component={UserAccount} />
             <Route path='/createuser' component={User} />
+            <Route path='/createcompany' component={Company} />
             <Route path='/education' component={Education} />
-            <ContactFooter />          
+            <FirebaseContext.Consumer>
+              {firebase => (
+                <ContactFooter firebase={firebase}/>          
+              )}
+            </FirebaseContext.Consumer>
           </div>  
         </BrowserRouter>    
     );

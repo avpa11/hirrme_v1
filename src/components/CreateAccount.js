@@ -18,6 +18,9 @@ class CreateAccount extends Component {
         if (e.target.value === 'jobseeker') {
             this.props.history.push('/createuser');
         }
+        else{
+            this.props.history.push('/createcompany');
+        }
     };
 
     render () {

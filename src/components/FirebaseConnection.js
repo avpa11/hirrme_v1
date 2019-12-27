@@ -1,6 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/analytics';
 
 var firebaseConfig = {
           apiKey: "AIzaSyBrd47aC5DMfPk2D3_ejrFD9uqi0GQ1m30",
@@ -31,6 +32,9 @@ class Firebase {
 
     doSignOut = () => this.auth.signOut();
 
+    // Database
+    database = () => this.db.ref();
+
     // User
     user = uid => this.db.ref(`users/${uid}`);
     users = () => this.db.ref('users');
@@ -38,6 +42,13 @@ class Firebase {
     // Education
     education = uid => this.db.ref(`educations/${uid}`);
     educactions = () => this.db.ref('educations');
+
+    // Subscriptions
+    subscriptions = () => this.db.ref('subscriptions');
+
+    // Company
+    company = uid => this.db.ref(`companies/${uid}`);
+    companies = () => this.db.ref(`companies`);
 }
 
 export default Firebase;

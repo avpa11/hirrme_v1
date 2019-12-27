@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
 class ContactFooter extends Component {
 
-    subscribeForSpam(e) {
+    subscribeForSpam = e => {
 
         var email = document.getElementById('emailInput').value;
 
         if (email) {
-            firebase.database().ref("subscriptions").push({
+            this.props.firebase.subscriptions().push({
                 email: email
             })
             document.getElementById('emailInput').value = "";
@@ -20,7 +19,6 @@ class ContactFooter extends Component {
     }
 
     render() {
-
         return (
             <div className="container" id='contactFooter'>
                 <div className="row">

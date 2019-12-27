@@ -6,16 +6,16 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Video from '../components/Video';
-import './FirebaseConnection.js'
-import * as firebase from 'firebase';
+// import './FirebaseConnection.js'
+// import * as firebase from 'firebase';
 
 class Home extends Component {
 
-    display = () => {
-        firebase.database().ref().child('test').on('value', snap => {
-            alert(snap.val());
-        })
-    }
+    // display = () => {
+    //     firebase.database().ref().child('test').on('value', snap => {
+    //         alert(snap.val());
+    //     })
+    // }
 
     render() {
 

@@ -35,19 +35,8 @@ class CreateUserForm extends Component {
         e.preventDefault();
 
         // this adds a user object with a key and stores uid as userId field inside
-        // this.props.firebase.users.push({
-        //     userId: authUser.uid,
-        //     firstName: this.state.firstName,
-        //     lastName: this.state.lastName,
-        //     email: authUser.email,
-        //     title: this.state.title,
-        //     city: this.state.city,
-        //     province: this.state.province,
-        //     country: this.state.country,
-        // })
-
-        // this adds a user object under uid key from auth and nests key inside
-        this.props.firebase.user(authUser.uid).push({
+        this.props.firebase.users().push({
+            userId: authUser.uid,
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             email: authUser.email,
@@ -57,17 +46,42 @@ class CreateUserForm extends Component {
             country: this.state.country,
         })
         .then(() => {
+            this.setState({
+                firstName: '',
+                lastName: '',
+                title: '',
+                city: '',
+                province: '',
+                country: '',
+            })
+        })
+        .then(() => {
             this.props.history.push('/education');
         })
+        .catch(error => console.log(error));
 
-        this.setState({
-            firstName: '',
-            lastName: '',
-            title: '',
-            city: '',
-            province: '',
-            country: '',
-        })
+        // this adds a user object under uid key from auth and nests key inside
+        // this.props.firebase.user(authUser.uid).push({
+        //     firstName: this.state.firstName,
+        //     lastName: this.state.lastName,
+        //     email: authUser.email,
+        //     title: this.state.title,
+        //     city: this.state.city,
+        //     province: this.state.province,
+        //     country: this.state.country,
+        // })
+        // .then(() => {
+        //     this.props.history.push('/education');
+        // })
+
+        // this.setState({
+        //     firstName: '',
+        //     lastName: '',
+        //     title: '',
+        //     city: '',
+        //     province: '',
+        //     country: '',
+        // })
     }
 
     handleChange = e => {
