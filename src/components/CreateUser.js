@@ -46,14 +46,7 @@ class CreateUserForm extends Component {
             country: this.state.country,
         })
         .then(() => {
-            this.setState({
-                firstName: '',
-                lastName: '',
-                title: '',
-                city: '',
-                province: '',
-                country: '',
-            })
+            this.setState({...initState})
         })
         .then(() => {
             this.props.history.push('/education');

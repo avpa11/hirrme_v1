@@ -6,35 +6,28 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Video from '../components/Video';
-// import './FirebaseConnection.js'
-// import * as firebase from 'firebase';
+import { FaSearch, FaSearchLocation } from "react-icons/fa";
 
 class Home extends Component {
-
-    // display = () => {
-    //     firebase.database().ref().child('test').on('value', snap => {
-    //         alert(snap.val());
-    //     })
-    // }
 
     render() {
 
         return (
             <div>
             <Video />
-            <div className="container" style={{ marginTop: "50px", zIndex: 1 }}>
+            <div className="container" style={{ marginTop: "70px", zIndex: 1 }}>
                 <h1 className="text-center">Seacrh for a job at Hirr.me</h1>
                 <p className="text-center">Let us help you to get work/ers</p>
                 <Form inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
                 <div className="input-group-prepend" style={{backgroundColor: 'none',borderColor: "#FFC107"}}>
                     <span className="input-group-text">
-                        <i className="fa fa-search"></i>
+                        <FaSearch />
                     </span>
                     <FormControl type="text" placeholder="Search" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
                 </div>
                 <div className="input-group-prepend">
                     <span className="input-group-text">
-                        <i className="material-icons">place</i>                   
+                        <FaSearchLocation />                   
                     </span>
                     <FormControl type="text" placeholder="Search" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
                 </div>
@@ -43,7 +36,7 @@ class Home extends Component {
                         Search
                     </Button>
                 </Form>
-                <div className="container" style={{ width: '80%', marginTop: "30px" }}>
+                <div className="container">
                     {/* <Carousel interval={4000} slide={true} wrap={true} >
                     {Array.apply(null, Array(6)).map(function(item, i){                                        
                         return (
@@ -65,18 +58,19 @@ class Home extends Component {
                         
 
                     </Carousel> */}
-
+               
+                    <div className="scrolling-wrapper center">
                     {Array.apply(null, Array(6)).map(function(item, i){                                        
-                        return (
-                            <div className="card" key={i}>
-                                    <p className="center">Some text</p>
-                            </div>
-                        );                
-                    }, this)}
-
+                            return (
+                                <div className="scroll_card rectangle" key={i}>
+                                    <p className="center card_inside">Some text</p>
+                                </div>
+                            );                
+                        }, this)}
+                    </div>
                 </div>
             </div>
-            </div>
+        </div>
         )
     }
 }

@@ -52,14 +52,8 @@ class CreateEducationForm extends Component {
             // for now just reloads the same component
             this.props.history.push('/education');
         })
-        this.setState({
-            schoolName: '',
-            programType: '',
-            programName: '',
-            startDate: '',
-            endDate: '',
-            location: '',
-            successMessage: '',
+        .then(() => {
+            this.setState({...initState})
         })
     }
 
