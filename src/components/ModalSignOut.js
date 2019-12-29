@@ -54,7 +54,7 @@ class SignOutForm extends Component {
                                     onSubmit={this.handleSubmit}>
                                     <div id='modalSignOutItems'>
                                         <div onClick={this.changeVisibility}>                                             
-                                            <Link className='userModalLinks' style={{ 'text-decoration': 'none', 'color': 'black' }} as={Link} to="/useraccount">
+                                            <Link className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount">
                                             <img src='https://img.icons8.com/ios/50/000000/user.png' alt='' />User's profile
                                             </Link>
                                         </div>
