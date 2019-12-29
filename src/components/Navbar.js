@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import Modal from '../components/Modal';
+import ModalSignIn from './ModalSignIn';
 
 // need to create a use pop up and put sign out button there
-import SignOut from './SignOut';
+// import SignOut from './SignOut';
+import ModalSignOut from './ModalSignOut';
 
 import { AuthUserContext } from './Session';
 
@@ -35,8 +36,9 @@ class Navibar extends Component {
           <AuthUserContext.Consumer>{
               authUser => authUser ? 
               // Need to create a user profile popup and put sign out button there
-                <SignOut />
-              : <Modal />
+                // <SignOut />
+                <ModalSignOut />
+              : <ModalSignIn />
             }</AuthUserContext.Consumer>
           </Navbar.Collapse>
           {/* <UserAccount/> */}
