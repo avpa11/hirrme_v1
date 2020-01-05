@@ -109,6 +109,11 @@ input[type="email"]:focus {
   margin: 0 20px;
 }
 
+/* add a background color on scroll */
+.scrolled {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
 /* login modal
 .loginButton {
   background: linear-gradient(to right, #F3565E, #F97F3A, #FFAC11);
