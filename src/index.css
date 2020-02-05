@@ -5,6 +5,19 @@ body, html {
   font-family: "Nunito", 'Varela' !important;
 }
 
+.list-group-item.active {
+  background-color: #FFC107 !important;
+  border-color: #FFC107 !important;
+}
+
+html {
+  background-image: url('../src/img/background1.png');
+}
+
+body {
+  background-color: transparent !important;
+}
+
 /* change the coor of the blue glow in inputs */
 input[type="text"]:focus,
 input[type="password"]:focus,
@@ -33,7 +46,7 @@ input[type="email"]:focus {
   bottom: 0;
   min-width: 100%;
   min-height: 100%;
-  background: rgb(218, 161, 76);
+  background: url('../src/img/background1.png');
 }
 
 /* Contact footer styles */
@@ -114,11 +127,11 @@ input[type="email"]:focus {
   background-color: rgba(255, 255, 255, 0.9);
 }
 
-/* login modal
+/* login modal */
 .loginButton {
   background: linear-gradient(to right, #F3565E, #F97F3A, #FFAC11);
   border-color: linear-gradient(to right, #F3565E, #F97F3A, #FFAC11);
-} */
+}
 
 p>a {
   color: #FFAC11;

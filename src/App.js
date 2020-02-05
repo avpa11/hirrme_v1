@@ -10,6 +10,7 @@ import UserAccount from './components/UserAccount';
 import User from './components/CreateUser';
 import Company from './components/CreateCompany';
 import Education from './components/Education';
+import Experience from './components/Experience';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ContactFooter from './components/ContactFooter';
 
@@ -33,6 +34,7 @@ class App extends Component {
             <Route path='/createuser' component={User} />
             <Route path='/createcompany' component={Company} />
             <Route path='/education' component={Education} />
+            <Route path='/experience' component={Experience} />
             <FirebaseContext.Consumer>
               {firebase => (
                 <ContactFooter firebase={firebase}/>          

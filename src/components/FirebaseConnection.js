@@ -42,6 +42,10 @@ class Firebase {
     // Education
     education = uid => this.db.ref(`educations/${uid}`);
     educactions = () => this.db.ref('educations');
+    
+    // Experience
+    experience = uid => this.db.ref(`experience/${uid}`);
+    experiences = () => this.db.ref('experiences');
 
     // Subscriptions
     subscriptions = () => this.db.ref('subscriptions');

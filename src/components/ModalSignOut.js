@@ -43,7 +43,7 @@ class SignOutForm extends Component {
             <AuthUserContext.Consumer>
                 {authUser => (
                     <div>
-                        <Button variant="light" className="loginButton" onClick={this.changeVisibility}>
+                        <Button variant="light" className="logoutButton" onClick={this.changeVisibility}>
                             {authUser.email}
                             <img src='https://img.icons8.com/plasticine/2x/user.png' alt='' style={{ width: '2em' }}></img>
                         </Button>

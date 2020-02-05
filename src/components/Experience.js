@@ -10,31 +10,29 @@ import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-const Education = () => (
+const Experience = () => (
     <div>
-        <EducationForm />
+        <ExperienceForm />
     </div>
 )
 
 const initState = {
-    schoolName: '',
-    programType: '',
-    programName: '',
+    position: '',
+    company: '',
     startDate: '',
     endDate: '',
     location: '',
     successMessage: null
 };
 
-class CreateEducationForm extends Component {
+class CreateExperienceForm extends Component {
     constructor(props) {
         super(props);
         // this.state = {...initState}
         this.state = {
-            educations: [{
-                schoolName: '',
-                programType: '',
-                programName: '',
+            experiences: [{
+                position: '',
+                company: '',
                 startDate: '',
                 endDate: '',
                 location: '',
@@ -43,26 +41,20 @@ class CreateEducationForm extends Component {
     }
 
     handleSubmit = (event, authUser) => {
-        // alert('A name was submitted: ' + JSON.stringify(this.state.educations));
+        // alert('A name was submitted: ' + JSON.stringify(this.state.experiences));
         event.preventDefault();
 
-        this.state.educations.map((item, key)=> (
+        this.state.experiences.map((item, key)=> (
             this.props.firebase.education(authUser.uid).push({
-                schoolName: item.schoolName,
-                programType: item.programType,
-                programName: item.programName,
+                position: item.position,
+                company: item.company,
                 startDate: item.startDate,
                 endDate: item.endDate,
                 location: item.location,
             })
-        ))
-        .then(() => {
-            // for now just reloads the same component
-            this.props.history.push('/education');
-        })
-        .then(() => {
-            this.setState({...initState})
-        })
+        ));
+   
+        this.props.history.push('/useraccount');
 
     }
 
@@ -73,9 +65,8 @@ class CreateEducationForm extends Component {
     //     // this adds an education object under uid
     //     this.props.firebase.education(authUser.uid).push({
     //         // theoretically can set " this.setState({...initState}) " instead of writing each prop
-    //         schoolName: this.state.schoolName,
-    //         programType: this.state.programType,
-    //         programName: this.state.programName,
+    //         position: this.state.position,
+    //         company: this.state.company,
     //         startDate: this.state.startDate,
     //         endDate: this.state.endDate,
     //         location: this.state.location,
@@ -96,16 +87,15 @@ class CreateEducationForm extends Component {
     // };
     handleChange(i,e) {
         const { name, value } = e.target;
-        let educations = [...this.state.educations];
-        educations[i] = {...educations[i], [name]:value};
-        this.setState({educations});
+        let experiences = [...this.state.experiences];
+        experiences[i] = {...experiences[i], [name]:value};
+        this.setState({experiences});
     };
 
     addClick() {
         this.setState(prevState => ({
-            educations: [...prevState.educations, {schoolName: '',
-            programType: '',
-            programName: '',
+            experiences: [...prevState.experiences, {position: '',
+            company: '',
             startDate: '',
             endDate: '',
             location: ''}]
@@ -113,17 +103,16 @@ class CreateEducationForm extends Component {
     }
 
     removeClick(i){
-        let educations = [...this.state.educations];
-        educations.splice(i, 1);
-        this.setState({ educations });
+        let experiences = [...this.state.experiences];
+        experiences.splice(i, 1);
+        this.setState({ experiences });
      }
 
     createUI() {
-        return this.state.educations.map((el, i) => (
+        return this.state.experiences.map((el, i) => (
             <div key={i} style={{ marginBottom: '20px'}}>
-                <FormControl type="text" value={el.schoolName} onChange={this.handleChange.bind(this, i)} name="schoolName" placeholder="School Name"></FormControl>                        
-                <FormControl type="text" value={el.programType} onChange={this.handleChange.bind(this, i)} name="programType" placeholder="Program Type"></FormControl>                        
-                <FormControl type="text" value={el.programName} onChange={this.handleChange.bind(this, i)} name="programName" placeholder="Program Name"></FormControl>                        
+                <FormControl type="text" value={el.position} onChange={this.handleChange.bind(this, i)} name="position" placeholder="Position"></FormControl>                        
+                <FormControl type="text" value={el.company} onChange={this.handleChange.bind(this, i)} name="company" placeholder="Company"></FormControl>                        
                 <FormControl type="text" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder="Start Date"></FormControl>                        
                 <FormControl type="text" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder="End Date"></FormControl>                        
                 <FormControl type="text" value={el.location} onChange={this.handleChange.bind(this, i)} name="location" placeholder="Location"></FormControl>   
@@ -133,7 +122,7 @@ class CreateEducationForm extends Component {
     }
 
     render () {
-        const { schoolName, programType, programName, startDate, endDate, location, successMessage } = this.state;
+        const { position, company, startDate, endDate, location, successMessage } = this.state;
         return (
             // to grab the authenticated user info from React.Context hoc (may use Redux instead in the future)
             <AuthUserContext.Consumer>
@@ -152,9 +141,8 @@ class CreateEducationForm extends Component {
                                     {successMessage}	                                
                                 </Alert>	                           
                             ) : null } */}
-                            {/* <FormControl type="text" value={schoolName} onChange={this.handleChange} name="schoolName" placeholder="School Name"></FormControl>                        
-                            <FormControl type="text" value={programType} onChange={this.handleChange} name="programType" placeholder="Program Type"></FormControl>                        
-                            <FormControl type="text" value={programName} onChange={this.handleChange} name="programName" placeholder="Program Name"></FormControl>                        
+                            {/* <FormControl type="text" value={position} onChange={this.handleChange} name="position" placeholder="School Name"></FormControl>                        
+                            <FormControl type="text" value={company} onChange={this.handleChange} name="company" placeholder="Program Type"></FormControl>                        
                             <FormControl type="text" value={startDate} onChange={this.handleChange} name="startDate" placeholder="Start Date"></FormControl>                        
                             <FormControl type="text" value={endDate} onChange={this.handleChange} name="endDate" placeholder="End Date"></FormControl>                        
                             <FormControl type="text" value={location} onChange={this.handleChange} name="location" placeholder="Location"></FormControl>                        
@@ -176,10 +164,10 @@ class CreateEducationForm extends Component {
 
 }
 
-const EducationForm = compose(withRouter, withFirebase)(CreateEducationForm);
+const ExperienceForm = compose(withRouter, withFirebase)(CreateExperienceForm);
 
 const condition = authUser => !!authUser;
 
-export default withAuthorization(condition)(Education);
+export default withAuthorization(condition)(Experience);
 
-export { EducationForm };
+export { ExperienceForm };
