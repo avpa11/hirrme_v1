@@ -42,7 +42,7 @@ class Navibar extends Component {
               <Nav>
                   <Nav.Link as={Link} to="/about">About</Nav.Link>
                   <Nav.Link as={Link} to="/">Vacancies</Nav.Link>
-                  <Nav.Link as={Link} to="/">Job Seekers</Nav.Link>
+                  <Nav.Link as={Link} to="/jobseekers">Job Seekers</Nav.Link>
                   <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
               </Nav>
           {/* display sign out button if user is not authentivates. */}
