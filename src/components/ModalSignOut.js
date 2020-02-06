@@ -60,12 +60,10 @@ class SignOutForm extends Component {
                                             </Link>
                                         </div>
                                         <div>
-                                            <IoIosThumbsUp size={40} /><span>My invitations</span>
-                                            
+                                            <IoIosThumbsUp size={40} /><span>My invitations</span>                                            
                                         </div>
                                         <div>
-                                            <IoIosDocument size={40} /><span>My applications</span>
-                                            
+                                            <IoIosDocument size={40} /><span>My applications</span>                                            
                                         </div>
                                         <div>
                                             <IoMdSettings size={40} /><span>Settings</span>                                            
