@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
+import { withFirebase } from './Firebase';
 import { AuthUserContext, withAuthorization } from './Session';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+import PasswordChangeForm from './PasswordChange';
+import { compose } from 'recompose';
 class UserAccount extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          loading: false,
+          user: {},
+        };
+      }
     
     // getCompanyName = (uid) => {
     //     this.props.firebase.company(uid).on('value', snap => {
@@ -15,8 +24,20 @@ class UserAccount extends Component {
     //     })
     // }
 
+    componentDidMount() {
+        this.setState({ loading: true });
+        this.props.firebase.users().on('value', snapshot => {
+            this.setState({
+            user: snapshot.val(),
+            loading: false,
+            });
+            console.log(this.state.user)
+        })        
+    }
+
+    
+    
     render () {
-       
         return (
             <AuthUserContext.Consumer>
                 {authUser => (
@@ -51,14 +72,14 @@ class UserAccount extends Component {
                             <Tab.Pane eventKey="#link3">
                             ggJ  sdkfhsd fks dfkhszjdf ksdzfzsjkdfh'
                             </Tab.Pane>
-                            <Tab.Pane eventKey="#link4">
-                            Hjhgds  sdkfhsd fks dfkhszjdf kdfgdfg
+                            <Tab.Pane id="settingsTab" eventKey="#link4">
+                                <h2>Password Change</h2>
+                                <PasswordChangeForm />
                             </Tab.Pane>
                         </Tab.Content>
                         </Col>
                     </Row>
                 </Tab.Container>
-                    
                 </div>
             )}
             </AuthUserContext.Consumer>
@@ -68,4 +89,5 @@ class UserAccount extends Component {
 
 const condition = authUser => !!authUser;
 
-export default withAuthorization(condition)(UserAccount);
+// export default withAuthorization(condition)(UserAccount);
+export default compose(withFirebase, withAuthorization(condition))(UserAccount);

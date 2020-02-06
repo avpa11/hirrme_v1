@@ -58,7 +58,7 @@ class CreateEducationForm extends Component {
         ))
         .then(() => {
             // for now just reloads the same component
-            this.props.history.push('/education');
+            this.props.history.push('/experience');
         })
         .then(() => {
             this.setState({...initState})
