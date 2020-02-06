@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { withFirebase } from './Firebase';
 import { AuthUserContext } from './Session';
+import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, IoIosDocument, IoMdSettings } from "react-icons/io";
 
 const initState = {
     email: '',
@@ -44,8 +45,8 @@ class SignOutForm extends Component {
                 {authUser => (
                     <div>
                         <Button variant="light" className="logoutButton" onClick={this.changeVisibility}>
+                            <IoIosPerson size={40} />
                             {authUser.email}
-                            <img src='https://img.icons8.com/plasticine/2x/user.png' alt='' style={{ width: '2em' }}></img>
                         </Button>
 
                         <Modal show={this.state.show} onHide={this.changeVisibility} className="modal" id='modalSignOut'>
@@ -55,20 +56,19 @@ class SignOutForm extends Component {
                                     <div id='modalSignOutItems'>
                                         <div onClick={this.changeVisibility}>                                             
                                             <Link className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount">
-                                            <img src='https://img.icons8.com/ios/50/000000/user.png' alt='' />User's profile
+                                            <IoIosPersonAdd size={40} /><span>User's profile</span>                                            
                                             </Link>
                                         </div>
                                         <div>
-                                            <img src='https://img.icons8.com/material-outlined/24/000000/thumb-up.png' alt='' />
-                                            My invitations
+                                            <IoIosThumbsUp size={40} /><span>My invitations</span>
+                                            
                                         </div>
                                         <div>
-                                            <img src='https://img.icons8.com/wired/64/000000/word.png' alt='' />
-                                            My applications
+                                            <IoIosDocument size={40} /><span>My applications</span>
+                                            
                                         </div>
                                         <div>
-                                            <img src='https://img.icons8.com/ios/50/000000/settings.png' alt='' />
-                                            Settings
+                                            <IoMdSettings size={40} /><span>Settings</span>                                            
                                         </div>
                                     </div>
 

@@ -191,8 +191,8 @@ p>a:hover {
 }
 
 #modalSignIn {
+  margin-right: 1em !important;
   text-align: center;
-  margin-left: 70%;
   margin-top: 4em;
   width: 20%;
 }
@@ -215,7 +215,7 @@ p>a:hover {
 }
 
 #modalSignOut {
-  margin-left: 70%;
+  margin-right: 0em !important;
   margin-top: 4em;
   width: 15%;
   padding: 1em;
@@ -225,6 +225,10 @@ p>a:hover {
 #modalSignOutItems div {
   margin-left: 0;
   padding-bottom: 1em;
+}
+
+#modalSignOutItems span {
+  padding: 0.5em;
 }
 
 #modalSignOut button {
