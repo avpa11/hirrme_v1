@@ -87,6 +87,7 @@ input[type="email"]:focus {
   border-right: 0.2em solid grey;
   border-bottom: 0.2em solid  grey;
   margin: 3em auto;
+  padding: 2em;
   width: 15em;
   height: 13em;
 }
@@ -97,9 +98,19 @@ input[type="email"]:focus {
   margin-top: 2em;
 }
 
+.rectangle hr{
+  border : 2px solid black;
+  width : 70%
+}
+
+.rectangle h5{
+    margin: 0em;
+}
+
 #emailInput{
   border-color: #FFC107
 }
+
 
 /* End contact footer styles */
 
