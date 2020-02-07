@@ -14,9 +14,12 @@ class JobSeekers extends Component {
 
         var id = 0;
 
-        var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild(order);
+        var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('incognito')
+        .equalTo(null);
         jobSeekersRef.on('value', snap => {
-            document.getElementById('jobSeekersList').innerHTML = '';
+            if (document.getElementById('jobSeekersList')!=null) {
+                document.getElementById('jobSeekersList').innerHTML = '';
+            }
             snap.forEach(snap1 => {
 
                 id++;
@@ -24,7 +27,9 @@ class JobSeekers extends Component {
                 var div = document.createElement('div');
                 div.setAttribute('id', id);
                 div.setAttribute('class', 'jobSeeker');
-                document.getElementById('jobSeekersList').appendChild(div);
+                if (document.getElementById('jobSeekersList') != null) {
+                    document.getElementById('jobSeekersList').appendChild(div);
+                
 
                 ReactDOM.render(<JobSeekerObject
                     firstName={snap1.child('firstName').val()}
@@ -36,6 +41,7 @@ class JobSeekers extends Component {
                     country={snap1.child('country').val()}
                 />,
                 document.getElementById(id));
+                }
             });
         })
     }

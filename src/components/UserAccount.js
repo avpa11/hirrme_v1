@@ -89,7 +89,9 @@ class UserAccount extends Component {
                     p2.setAttribute('class', 'name');
                     p2.textContent = snap1.child('schoolName').val() + ", " + snap1.child('location').val();
                     div.appendChild(p2);
-                    document.getElementById('education').appendChild(div);
+                    if (document.getElementById('education')!= null) {
+                        document.getElementById('education').appendChild(div);
+                    }
 
                     // console.log(currentComponent.state.educations);
                 });
@@ -115,7 +117,9 @@ class UserAccount extends Component {
                     p2.setAttribute('class', 'name');
                     p2.textContent = snap1.child('company').val() + ", " + snap1.child('location').val();
                     div.appendChild(p2);
-                    document.getElementById('experience').appendChild(div);
+                    if (document.getElementById('experience')!= null) {
+                        document.getElementById('experience').appendChild(div);
+                    }
                     // console.log(currentComponent.state.experiences);
                 });
             })
@@ -127,9 +131,9 @@ class UserAccount extends Component {
       handleSubmit = (e) => {
         e.preventDefault();
         var incognito = this.state.incognito;
-        if (this.state.user.incognito == 1) {
+        if (this.state.user.incognito === 1) {
             incognito = null;
-        } else if (this.state.user.incognito == 0) {
+        } else if (this.state.user.incognito === 0) {
             incognito = null;
         } else {
             incognito = 1;
@@ -138,12 +142,14 @@ class UserAccount extends Component {
         this.props.firebase.database().ref.child('users').ref.child(this.state.key).update({
             incognito: incognito,
         })
-        .then(console.log("Success: " + incognito))
         .catch(error => console.log(error));
     }
 
       componentWillUnmount() {
         this.props.firebase.database().off();
+        this.props.firebase.database().ref.child('users').off();
+        this.props.firebase.database().ref.child('experience').off();
+        this.props.firebase.database().ref.child('educations').off();
       }
 
     render () {
@@ -185,10 +191,10 @@ class UserAccount extends Component {
 
                             </Tab.Pane>
                             <Tab.Pane eventKey="#link2">
-                            J;LSKD lj lksjdf skdfhjg skdfb skdfhksdfkj
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat harum odit pariatur inventore dolore dicta soluta maxime veritatis voluptates, exercitationem, vel consequatur incidunt dignissimos repudiandae in sint alias officiis ipsum!
                             </Tab.Pane>
                             <Tab.Pane eventKey="#link3">
-                            ggJ  sdkfhsd fks dfkhszjdf ksdzfzsjkdfh'
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium nemo assumenda cumque, explicabo ex soluta eveniet accusantium corrupti labore! Ea inventore ab ut ullam cupiditate aut voluptates illum vel culpa.
                             </Tab.Pane>
                             <Tab.Pane id="settingsTab" eventKey="#link4">
                                 <h2>Password Change</h2>
@@ -200,28 +206,27 @@ class UserAccount extends Component {
                 </Tab.Container>
                 </div>
                     <Row style={{marginTop: "50px", marginBottom: "50px"}}>
-                        <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '5px', minHeight: '200px'}}>
+                        <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
                             <h3 className="centerText">Education</h3>
                             <div id="education"></div>
                         </Col>
-                        <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '5px', minHeight: '200px'}}>
+                        <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
                             <h3 className="centerText">Experience</h3>
                             <div id="experience"></div>
                         </Col>
-                        <Col className="container" sm={2} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '5px', minHeight: '200px'}}>
-                            <h3>Account Visibility
-                            { this.state.user.incognito == 1 ? (	                        
+                        <Col className="container" sm={2} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
+                            <h3>Account Visibility <br />
+                            { this.state.user.incognito === 1 ? (	                        
                                 <FaUserSecret />                           
                             ) : <FaUserTie /> }
                             </h3>
-                            { this.state.user.incognito == 1 ? (	                        
+                            { this.state.user.incognito === 1 ? (	                        
                                 <p id="visibility">Incognito</p>                         
                             ) : <p id="visibility">Visible</p> }
                             {/* <p id="visibility"></p> */}
                             <Form
                                 onSubmit={e => this.handleSubmit(e)}>
                             {/* <FormControl style={{display: 'hidden'}} value={this.state.incognito} onChange={this.handleChange} type="checkbox" name="incognito" id='chbincognito' /> */}
-                            <label htmlFor="incognito">Your account visibilty</label>
                             <Button type="submit" variant="warning">
                                 Change
                             </Button>
