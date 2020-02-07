@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
 
 import { AuthUserContext, withAuthorization } from './Session';
 
@@ -16,15 +15,15 @@ const Education = () => (
     </div>
 )
 
-const initState = {
-    schoolName: '',
-    programType: '',
-    programName: '',
-    startDate: '',
-    endDate: '',
-    location: '',
-    successMessage: null
-};
+// const initState = {
+//     schoolName: '',
+//     programType: '',
+//     programName: '',
+//     startDate: '',
+//     endDate: '',
+//     location: '',
+//     successMessage: null
+// };
 
 class CreateEducationForm extends Component {
     constructor(props) {
@@ -56,13 +55,8 @@ class CreateEducationForm extends Component {
                 location: item.location,
             })
         ))
-        .then(() => {
-            // for now just reloads the same component
-            this.props.history.push('/experience');
-        })
-        .then(() => {
-            this.setState({...initState})
-        })
+
+        this.props.history.push('/experience');
 
     }
 
@@ -133,7 +127,6 @@ class CreateEducationForm extends Component {
     }
 
     render () {
-        const { schoolName, programType, programName, startDate, endDate, location, successMessage } = this.state;
         return (
             // to grab the authenticated user info from React.Context hoc (may use Redux instead in the future)
             <AuthUserContext.Consumer>

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
 
 import { AuthUserContext, withAuthorization } from './Session';
 
@@ -16,14 +15,14 @@ const Experience = () => (
     </div>
 )
 
-const initState = {
-    position: '',
-    company: '',
-    startDate: '',
-    endDate: '',
-    location: '',
-    successMessage: null
-};
+// const initState = {
+//     position: '',
+//     company: '',
+//     startDate: '',
+//     endDate: '',
+//     location: '',
+//     successMessage: null
+// };
 
 class CreateExperienceForm extends Component {
     constructor(props) {
@@ -45,46 +44,19 @@ class CreateExperienceForm extends Component {
         event.preventDefault();
 
         this.state.experiences.map((item, key)=> (
-            this.props.firebase.education(authUser.uid).push({
+            this.props.firebase.experience(authUser.uid).push({
                 position: item.position,
                 company: item.company,
                 startDate: item.startDate,
                 endDate: item.endDate,
                 location: item.location,
             })
-        ));
+        ))
    
         this.props.history.push('/useraccount');
 
     }
 
-    
-    // handleSubmit = (e, authUser) => {
-    //     e.preventDefault();
-
-    //     // this adds an education object under uid
-    //     this.props.firebase.education(authUser.uid).push({
-    //         // theoretically can set " this.setState({...initState}) " instead of writing each prop
-    //         position: this.state.position,
-    //         company: this.state.company,
-    //         startDate: this.state.startDate,
-    //         endDate: this.state.endDate,
-    //         location: this.state.location,
-    //     })
-    //     .then(() => {
-    //         // to display an Alert with success message, not proprely wotking yet
-    //         this.setState({successMessage: "One record has been added"});
-    //         // for now just reloads the same component
-    //         this.props.history.push('/education');
-    //     })
-    //     .then(() => {
-    //         this.setState({...initState})
-    //     })
-    // }
-
-    // handleChange = e => {
-    //     this.setState({ [e.target.name]: e.target.value });
-    // };
     handleChange(i,e) {
         const { name, value } = e.target;
         let experiences = [...this.state.experiences];
@@ -122,33 +94,16 @@ class CreateExperienceForm extends Component {
     }
 
     render () {
-        const { position, company, startDate, endDate, location, successMessage } = this.state;
         return (
             // to grab the authenticated user info from React.Context hoc (may use Redux instead in the future)
             <AuthUserContext.Consumer>
             {authUser => (
                 <div className="rectangle registerect container" style={{ marginTop: "120px", marginBottom: "500px" }}>
                     <div className="container">
-                        <h1>Almost done</h1>
+                        <h1>Last step</h1>
                         <Form
                             onSubmit={e => this.handleSubmit(e, authUser)}
                             style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                        {/* <Form
-                            onSubmit={e => this.handleSubmit(e, authUser)}
-                            style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                            { successMessage !== null ? (	                        
-                                <Alert variant="warning">	                            
-                                    {successMessage}	                                
-                                </Alert>	                           
-                            ) : null } */}
-                            {/* <FormControl type="text" value={position} onChange={this.handleChange} name="position" placeholder="School Name"></FormControl>                        
-                            <FormControl type="text" value={company} onChange={this.handleChange} name="company" placeholder="Program Type"></FormControl>                        
-                            <FormControl type="text" value={startDate} onChange={this.handleChange} name="startDate" placeholder="Start Date"></FormControl>                        
-                            <FormControl type="text" value={endDate} onChange={this.handleChange} name="endDate" placeholder="End Date"></FormControl>                        
-                            <FormControl type="text" value={location} onChange={this.handleChange} name="location" placeholder="Location"></FormControl>                        
-                            <Button type="submit" variant="warning">
-                                Register
-                            </Button> */}
                             {this.createUI()} 
                             <Button type='button' variant="warning" onClick={this.addClick.bind(this)}>Add More</Button>
                             <Button type="submit" variant="warning">

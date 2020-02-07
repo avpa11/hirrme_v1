@@ -266,7 +266,27 @@ p>a:hover {
 
 }
 
+/* User Account */
+.centerText {
+  display: inline-block;
+  margin-left: 20%;
+}
 
+.name {
+  color: rgb(155,155,155);
+}
+
+.mainp {
+  margin: 0 !important;
+}
+
+.span_date {
+  float: right;
+}
+
+#visibility {
+  color: #FFAC11;
+}
 
 
 
