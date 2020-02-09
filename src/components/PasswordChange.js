@@ -51,12 +51,12 @@ class PasswordChangeForm extends Component {
             onSubmit={this.handleSubmit}
             style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
             { error !== null ? (	                        
-                <Alert variant="warning">	                            
+                <Alert variant="danger">	                            
                     {error.message}	                                
                 </Alert>	                           
             ) : null }
             { success !== null ? (	                        
-                <Alert variant="danger">	                            
+                <Alert variant="warning">	                            
                     {success}                                
                 </Alert>	                           
             ) : null }

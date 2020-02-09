@@ -10,7 +10,13 @@ class JobSeekers extends Component {
         this.displayJobSeekers('firstName')
     }
 
+    
     displayJobSeekers(order) {
+        this.props.firebase.auth.onAuthStateChanged(authUser => {
+            authUser
+              ? this.setState({ authUser })
+              : this.setState({ authUser: null });
+        })
 
         var id = 0;
 
@@ -29,18 +35,42 @@ class JobSeekers extends Component {
                 div.setAttribute('class', 'jobSeeker');
                 if (document.getElementById('jobSeekersList') != null) {
                     document.getElementById('jobSeekersList').appendChild(div);
-                
 
-                ReactDOM.render(<JobSeekerObject
-                    firstName={snap1.child('firstName').val()}
-                    lastName={snap1.child('lastName').val()}
-                    title={snap1.child('title').val()}
-                    email={snap1.child('email').val()}
-                    city={snap1.child('city').val()}
-                    province={snap1.child('province').val()}
-                    country={snap1.child('country').val()}
-                />,
-                document.getElementById(id));
+                    if (this.state.authUser!=null) {
+
+                        ReactDOM.render(<JobSeekerObject
+                            firstName={snap1.child('firstName').val()}
+                            lastName={snap1.child('lastName').val()}
+                            title={snap1.child('title').val()}
+                            email={snap1.child('email').val()}
+                            city={snap1.child('city').val()}
+                            province={snap1.child('province').val()}
+                            country={snap1.child('country').val()}
+                            authUser={this.state.authUser.uid}
+                            authEmail={this.state.authUser.email}
+                            firebase={this.props.firebase}
+                            userId={snap1.child('userId').val()}
+                        />,
+                        document.getElementById(id));
+                    } else {
+                        ReactDOM.render(<JobSeekerObject
+                            firstName={snap1.child('firstName').val()}
+                            lastName={snap1.child('lastName').val()}
+                            title={snap1.child('title').val()}
+                            email={snap1.child('email').val()}
+                            city={snap1.child('city').val()}
+                            province={snap1.child('province').val()}
+                            country={snap1.child('country').val()}
+                            authUser={null}
+                            authEmail={null}
+                            firebase={this.props.firebase}
+                            userId={snap1.child('userId').val()}
+                        />,
+                        document.getElementById(id));
+                    }
+
+                // console.log(authUser);
+                // console.log(this.state.authUser.uid);
                 }
             });
         })
@@ -56,7 +86,22 @@ class JobSeekers extends Component {
     }
 }
 
+
 class JobSeekerObject extends Component {
+    handleLike = (e, userId, authUser, firebase, email) => {
+        e.preventDefault();
+        if (authUser != null) {
+            firebase.like(userId).push({
+                accountId: authUser,
+                email: email,
+                date: (new Date()).toISOString().split('T')[0],
+            })
+            .then(window.alert("Thank you for the like"))
+            .catch(error => console.log(error));
+        } else {
+            window.alert("You need to log in to leave a like")
+        }
+    }
     render() {
         return (
             <div style={{ display: 'table' }}>
@@ -73,11 +118,10 @@ class JobSeekerObject extends Component {
                     <Button variant="primary">View Profile</Button> <span />
                     <Button variant="primary">Send Email</Button> <span />
                     <Button variant="primary">Invite</Button> <span />
-                    <Button variant="danger">Like</Button>
+                    <Button onClick={e => this.handleLike(e, this.props.userId, this.props.authUser, this.props.firebase, this.props.authEmail)} variant="danger">Like</Button>
                 </div>
             </div>
         )
     }
 }
-
 export default withFirebase(JobSeekers);

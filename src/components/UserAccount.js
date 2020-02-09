@@ -19,18 +19,11 @@ class UserAccount extends Component {
           user: [],
           educations: [],
           experiences: [],
+          likes: [],
           incognito: null,
           key: ''
         };
       }
-    
-    // getCompanyName = (uid) => {
-    //     this.props.firebase.company(uid).on('value', snap => {
-    //         snap.forEach(childSnap => {
-    //             var companyName = childSnap.child('companyName').val();
-    //         })
-    //     })
-    // }
 
     componentDidMount() {
         let currentComponent = this;
@@ -39,12 +32,6 @@ class UserAccount extends Component {
           authUser
             ? this.setState({ authUser })
             : this.setState({ authUser: null });
-            // this.props.firebase.user(this.state.authUser.uid).on('value', snapshot => {
-            //     this.setState({
-            //         user: snapshot.val(),
-            //         loading: false,
-            //     });
-            // })  
 
             var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('userId')
             .equalTo(this.state.authUser.uid)
@@ -68,7 +55,7 @@ class UserAccount extends Component {
                     // console.log(snapshot.val());
                 });
             })
-
+            // Education
             this.props.firebase.database().ref.child('educations').ref.child(this.state.authUser.uid)
             .once('value').then(function(snapshot) {
                 snapshot.forEach(snap1 => {
@@ -96,7 +83,7 @@ class UserAccount extends Component {
                     // console.log(currentComponent.state.educations);
                 });
             })
-
+            // Experience
             this.props.firebase.database().ref.child('experience').ref.child(this.state.authUser.uid)
             .once('value').then(function(snapshot) {
                 snapshot.forEach(snap1 => {
@@ -123,7 +110,35 @@ class UserAccount extends Component {
                     // console.log(currentComponent.state.experiences);
                 });
             })
-
+            // Likes
+            var likesRef = this.props.firebase.database().ref.child('likes').ref.child(this.state.authUser.uid);
+            likesRef.on('value', snapshot => {
+                if (document.getElementById('likes') != null) {
+                    document.getElementById('likes').innerHTML = '';
+                } 
+                snapshot.forEach(snap1 => {
+                    currentComponent.setState({
+                        likes: snapshot.val(),
+                    });
+                    var likeDiv = document.createElement('div');
+                    likeDiv.setAttribute('class', 'edu');
+                    var p = document.createElement('p');
+                    p.setAttribute('class', 'name');
+                    p.textContent = "Liked by " + snap1.child('email').val() + " on " + snap1.child('date').val();
+                    likeDiv.appendChild(p);
+  
+                    var hr = document.createElement('hr');
+                    likeDiv.appendChild(hr);
+                    if (document.getElementById('likes')!= null) {
+                        if (likeDiv !== '') {
+                            document.getElementById('likes').appendChild(likeDiv);
+                        } else {
+                            // NOT WORKING
+                            document.getElementById('likes').innerHTML = "You don't have any likes yet";
+                        }
+                    }
+                });
+        });
         });
 
       }   
@@ -170,7 +185,7 @@ class UserAccount extends Component {
                                     User Account
                                     </ListGroup.Item>
                                     <ListGroup.Item action href="#link2">
-                                    Invitations
+                                    Invitations / Likes
                                     </ListGroup.Item>
                                     <ListGroup.Item action href="#link3">
                                     Applications
@@ -194,7 +209,8 @@ class UserAccount extends Component {
 
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="#link2">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat harum odit pariatur inventore dolore dicta soluta maxime veritatis voluptates, exercitationem, vel consequatur incidunt dignissimos repudiandae in sint alias officiis ipsum!
+                                        <h2>Likes</h2>
+                                        <div id="likes"></div>
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="#link3">
                                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium nemo assumenda cumque, explicabo ex soluta eveniet accusantium corrupti labore! Ea inventore ab ut ullam cupiditate aut voluptates illum vel culpa.
@@ -211,26 +227,26 @@ class UserAccount extends Component {
                         <Row style={{marginTop: "50px", marginBottom: "50px"}}>
                             <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
                                 <h3 className="centerText">Education</h3>
-                                <div id="education"></div>
+                                <div className="container" id="education"></div>
                             </Col>
                             <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
                                 <h3 className="centerText">Experience</h3>
-                                <div id="experience"></div>
+                                <div className="container" id="experience"></div>
                             </Col>
                             <Col className="container" sm={2} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
-                                <h3>Account Visibility <br />
+                                <h3 className="centerText">Account Visibility <br />
                                 { this.state.user.incognito === 1 ? (	                        
                                     <FaUserSecret />                           
                                 ) : <FaUserTie /> }
                                 </h3>
                                 { this.state.user.incognito === 1 ? (	                        
-                                    <p id="visibility">Incognito</p>                         
-                                ) : <p id="visibility">Visible</p> }
+                                    <p className="container" id="visibility">Incognito</p>                         
+                                ) : <p className="container" id="visibility">Visible</p> }
                                 {/* <p id="visibility"></p> */}
                                 <Form
                                     onSubmit={e => this.handleSubmit(e)}>
                                 {/* <FormControl style={{display: 'hidden'}} value={this.state.incognito} onChange={this.handleChange} type="checkbox" name="incognito" id='chbincognito' /> */}
-                                <Button type="submit" variant="warning">
+                                <Button style={{marginLeft: '7px'}} type="submit" variant="warning">
                                     Change
                                 </Button>
                                 </Form>

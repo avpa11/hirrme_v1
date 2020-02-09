@@ -60,6 +60,11 @@ class Firebase {
     // Vacancies
     vacancy = uid => this.db.ref(`vacancies/${uid}`);
     vacancies = () => this.db.ref(`vacancies`);
+
+    // Likes 
+    like = uid => this.db.ref(`likes/${uid}`);
+    likes = () => this.db.ref(`likes`);
+
 }
 
 export default Firebase;

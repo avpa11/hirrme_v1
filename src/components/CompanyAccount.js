@@ -70,6 +70,9 @@ class CompanyAccount extends Component {
             })
             var vacanciesRef = this.props.firebase.database().ref.child('vacancies').ref.child(this.state.authUser.uid);
             vacanciesRef.on('value', snapshot => {
+                if (document.getElementById('vacancies')!= null) {
+                    document.getElementById('vacancies').innerHTML = '';
+                }
                 snapshot.forEach(snap1 => {
                     currentComponent.setState({
                         vacancies: snapshot.val(),
@@ -242,7 +245,7 @@ class CreateVacancyForm extends Component {
                         
                             <FormControl type="text" value={positionTitle} onChange={this.handleChange} name="positionTitle" placeholder="Title"></FormControl>                        
                             <Form.Control as="textarea" value={description} onChange={this.handleChange} name="description" placeholder="Job Description" rows="3"></Form.Control> 
-                            <Form.Group controlId="locationControl">  
+                            <Form.Group>  
                                 <Form.Label>Location</Form.Label>    
                                 <Row>  
                                     <Col m={4}>
@@ -257,7 +260,7 @@ class CreateVacancyForm extends Component {
                                 </Row>
                             </Form.Group>   
                             <Form.Control as="textarea" value={requirements} onChange={this.handleChange} name="requirements" placeholder="Job Requirements" rows="3"></Form.Control>                        
-                            <Form.Group controlId="sectorControl">
+                            <Form.Group>
                                 <Form.Label>Job Sector</Form.Label>
                                 <Form.Control onChange={this.handleChange} value={sector} name="sector" as="select">
                                 <option value=""></option>
@@ -267,7 +270,7 @@ class CreateVacancyForm extends Component {
                                 </Form.Control>
                             </Form.Group>
                             <Form.Control as="textarea" value={keyResponsibilities} onChange={this.handleChange} name="keyResponsibilities" placeholder="Key Responsibilities" rows="3"></Form.Control>                        
-                            <Form.Group controlId="typeControl">
+                            <Form.Group>
                                 <Form.Label>Type</Form.Label>
                                 <Form.Control onChange={this.handleChange} value={type} name="type" as="select">
                                 <option value="" ></option>
@@ -277,7 +280,7 @@ class CreateVacancyForm extends Component {
                                 <option value="internship" >Internship</option>
                                 </Form.Control>
                             </Form.Group>
-                            <Form.Group controlId="salaryControl">
+                            <Form.Group>
                                 <Form.Label>Salary</Form.Label>
                                 <Row>
                                     <Col m={6}>
