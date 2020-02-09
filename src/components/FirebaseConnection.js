@@ -56,6 +56,10 @@ class Firebase {
     // Company
     company = uid => this.db.ref(`companies/${uid}`);
     companies = () => this.db.ref(`companies`);
+
+    // Vacancies
+    vacancy = uid => this.db.ref(`vacancies/${uid}`);
+    vacancies = () => this.db.ref(`vacancies`);
 }
 
 export default Firebase;

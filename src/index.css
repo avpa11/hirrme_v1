@@ -22,6 +22,9 @@ body {
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="radio"]:focus,
+input[type="select"]:focus,
+input[type="checkbox"]:focus,
+input[type="textarea"]:focus,
 input[type="email"]:focus {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(239, 153, 104, 0.6);
   outline: 0 none !important;

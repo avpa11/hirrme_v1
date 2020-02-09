@@ -9,8 +9,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import PasswordChangeForm from './PasswordChange';
 import { compose } from 'recompose';
-import { FaBriefcase } from "react-icons/fa";
-import { FaUserSecret, FaUserTie } from "react-icons/fa";
+import { FaBriefcase, FaUserSecret, FaUserTie } from "react-icons/fa";
+import CompanyAccount from "./CompanyAccount";
 class UserAccount extends Component {
     constructor(props) {
         super(props);
@@ -158,82 +158,87 @@ class UserAccount extends Component {
                 {authUser => (
                 <div style={{marginTop: "120px"}}>
                 <h1 style={{marginLeft: "20px"}}>Welcome to your account, {authUser.email}</h1>
-                <div className="container">
-                <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
-                    <Row>
-                        <Col sm={3}>
-                        <ListGroup>
-                            <ListGroup.Item action href="#link1">
-                            User Account
-                            </ListGroup.Item>
-                            <ListGroup.Item action href="#link2">
-                            Invitations
-                            </ListGroup.Item>
-                            <ListGroup.Item action href="#link3">
-                            Applications
-                            </ListGroup.Item>
-                            <ListGroup.Item action href="#link4">
-                            Settings
-                            </ListGroup.Item>
-                        </ListGroup>
-                        </Col>
-                        <Col sm={9} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '5px'}}>
-                        <Tab.Content>
-                            <Tab.Pane eventKey="#link1">
-                                <h2 className="centerText" style={{marginBottom: 0}}>{this.state.user.firstName}
-                                <span> {this.state.user.lastName}</span></h2>
-                                <p style={{color: 'rgb(155,155,155)'}}>
-                                    <span>{this.state.user.city}</span>,
-                                    <span> {this.state.user.province}</span>, 
-                                    <span> {this.state.user.country}</span>
-                                </p> <br />
-                                <h4><FaBriefcase /> {this.state.user.title}</h4>
+                
+                { this.state.user.userId != null ? (
+                    <div>	                        
+                        <div className="container">  
+                            <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+                            <Row>
+                                <Col sm={3}>
+                                <ListGroup>
+                                    <ListGroup.Item action href="#link1">
+                                    User Account
+                                    </ListGroup.Item>
+                                    <ListGroup.Item action href="#link2">
+                                    Invitations
+                                    </ListGroup.Item>
+                                    <ListGroup.Item action href="#link3">
+                                    Applications
+                                    </ListGroup.Item>
+                                    <ListGroup.Item action href="#link4">
+                                    Settings
+                                    </ListGroup.Item>
+                                </ListGroup>
+                                </Col>
+                                <Col sm={9} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '5px'}}>
+                                <Tab.Content>
+                                    <Tab.Pane eventKey="#link1">
+                                        <h2 className="centerText" style={{marginBottom: 0}}>{this.state.user.firstName}
+                                        <span> {this.state.user.lastName}</span></h2>
+                                        <p style={{color: 'rgb(155,155,155)'}}>
+                                            <span>{this.state.user.city}</span>,
+                                            <span> {this.state.user.province}</span>, 
+                                            <span> {this.state.user.country}</span>
+                                        </p> <br />
+                                        <h4><FaBriefcase /> {this.state.user.title}</h4>
 
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="#link2">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat harum odit pariatur inventore dolore dicta soluta maxime veritatis voluptates, exercitationem, vel consequatur incidunt dignissimos repudiandae in sint alias officiis ipsum!
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="#link3">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium nemo assumenda cumque, explicabo ex soluta eveniet accusantium corrupti labore! Ea inventore ab ut ullam cupiditate aut voluptates illum vel culpa.
-                            </Tab.Pane>
-                            <Tab.Pane id="settingsTab" eventKey="#link4">
-                                <h2>Password Change</h2>
-                                <PasswordChangeForm />
-                            </Tab.Pane>
-                        </Tab.Content>
-                        </Col>
-                    </Row>
-                </Tab.Container>
-                </div>
-                    <Row style={{marginTop: "50px", marginBottom: "50px"}}>
-                        <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
-                            <h3 className="centerText">Education</h3>
-                            <div id="education"></div>
-                        </Col>
-                        <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
-                            <h3 className="centerText">Experience</h3>
-                            <div id="experience"></div>
-                        </Col>
-                        <Col className="container" sm={2} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
-                            <h3>Account Visibility <br />
-                            { this.state.user.incognito === 1 ? (	                        
-                                <FaUserSecret />                           
-                            ) : <FaUserTie /> }
-                            </h3>
-                            { this.state.user.incognito === 1 ? (	                        
-                                <p id="visibility">Incognito</p>                         
-                            ) : <p id="visibility">Visible</p> }
-                            {/* <p id="visibility"></p> */}
-                            <Form
-                                onSubmit={e => this.handleSubmit(e)}>
-                            {/* <FormControl style={{display: 'hidden'}} value={this.state.incognito} onChange={this.handleChange} type="checkbox" name="incognito" id='chbincognito' /> */}
-                            <Button type="submit" variant="warning">
-                                Change
-                            </Button>
-                            </Form>
-                        </Col>
-                    </Row>
-                </div>
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="#link2">
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat harum odit pariatur inventore dolore dicta soluta maxime veritatis voluptates, exercitationem, vel consequatur incidunt dignissimos repudiandae in sint alias officiis ipsum!
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="#link3">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium nemo assumenda cumque, explicabo ex soluta eveniet accusantium corrupti labore! Ea inventore ab ut ullam cupiditate aut voluptates illum vel culpa.
+                                    </Tab.Pane>
+                                    <Tab.Pane id="settingsTab" eventKey="#link4">
+                                        <h2>Password Change</h2>
+                                        <PasswordChangeForm />
+                                    </Tab.Pane>
+                                </Tab.Content>
+                                </Col>
+                            </Row>
+                            </Tab.Container>
+                        </div>
+                        <Row style={{marginTop: "50px", marginBottom: "50px"}}>
+                            <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
+                                <h3 className="centerText">Education</h3>
+                                <div id="education"></div>
+                            </Col>
+                            <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
+                                <h3 className="centerText">Experience</h3>
+                                <div id="experience"></div>
+                            </Col>
+                            <Col className="container" sm={2} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
+                                <h3>Account Visibility <br />
+                                { this.state.user.incognito === 1 ? (	                        
+                                    <FaUserSecret />                           
+                                ) : <FaUserTie /> }
+                                </h3>
+                                { this.state.user.incognito === 1 ? (	                        
+                                    <p id="visibility">Incognito</p>                         
+                                ) : <p id="visibility">Visible</p> }
+                                {/* <p id="visibility"></p> */}
+                                <Form
+                                    onSubmit={e => this.handleSubmit(e)}>
+                                {/* <FormControl style={{display: 'hidden'}} value={this.state.incognito} onChange={this.handleChange} type="checkbox" name="incognito" id='chbincognito' /> */}
+                                <Button type="submit" variant="warning">
+                                    Change
+                                </Button>
+                                </Form>
+                            </Col>
+                        </Row>
+                    </div>  
+                ) : <CompanyAccount /> }
+               </div> 
             )}
             </AuthUserContext.Consumer>
         )
