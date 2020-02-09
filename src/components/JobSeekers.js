@@ -5,6 +5,12 @@ import { IoMdPerson } from "react-icons/io";
 import Button from 'react-bootstrap/Button';
 
 class JobSeekers extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          authUser: null,
+        };
+      }
 
     componentDidMount() {
         this.displayJobSeekers('firstName')
