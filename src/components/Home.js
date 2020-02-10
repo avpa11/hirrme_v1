@@ -13,6 +13,16 @@ import { FiMapPin, FiPhone } from "react-icons/fi";
 import { withFirebase } from './Firebase';
 
 class Home extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          vacanciesTitle: [],
+          sector: [],
+          type: [],
+          salaryType: [],
+          salary: [],
+        };
+      }
 
     subscribeForSpam = e => {
 
@@ -28,8 +38,34 @@ class Home extends Component {
         }
     }
 
+    displayVacancies = () => {
+        var vacanciesRef = this.props.firebase.database().child('vacancies').ref;      
+        vacanciesRef.on('value', snap => {            
+            snap.forEach(snap1 => {
+                snap1.forEach(snap2 => {
+                    console.log(snap2.child('description').val());
+                    
+                    this.setState(state => {
+                        const vacanciesTitle = state.vacanciesTitle.concat(snap2.child('positionTitle').val());
+                        const sector = state.sector.concat(snap2.child('sector').val());
+                        const type = state.type.concat(snap2.child('type').val());
+                        const salaryType = state.salaryType.concat(snap2.child('salaryType').val());
+                        const salary = state.salary.concat(snap2.child('salary').val());
+                        return {vacanciesTitle, sector, type, salaryType,salary}
+                    });
+                })                
+            })
+        })                 
+    }
+
+    componentDidMount = () => {
+        this.displayVacancies();
+    }
+
     render() {
+
         return (
+            
             <div>
             <Video />
             <div className="container" style={{ marginTop: "70px", zIndex: 1 }}>
@@ -77,10 +113,16 @@ class Home extends Component {
                     </Carousel> */}
                
                     <div className="scrolling-wrapper center">
-                    {Array.apply(null, Array(6)).map(function(item, i){                                        
+                    {Array.apply(null, Array(6)).map(function(item, i){                                                                    
                             return (
-                                <div className="scroll_card rectangle" key={i}>
-                                    <p className="center card_inside">Some text</p>
+                                <div className="scroll_card rectangle">
+                                    <div className="card_inside" style={{margin: 'auto', display: 'table', textAlign : 'left', verticalAlign: 'center'}}>                                                                                                                                                  
+                                            <p style={{fontWeight: "bold"}}>{this.state.vacanciesTitle[i] ? this.state.vacanciesTitle[i] : "Coming soon"}</p>
+                                            <h7>Sector: {this.state.sector[i] ? this.state.sector[i] : "Coming soon"}</h7> <br/>
+                                            <h7>Type: {this.state.type[i] ? this.state.type[i] : "Coming soon"}</h7> <br/>
+                                            <h7>Salary Type: {this.state.salaryType[i] ? this.state.salaryType[i] : "Coming soon"}</h7> <br/>
+                                            <h7>Salary: ${this.state.salary[i] ? this.state.salary[i] : "Coming soon"}</h7> <br/>                                                                                   
+                                    </div>
                                 </div>
                             );                
                         }, this)}
