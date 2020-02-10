@@ -21,6 +21,13 @@ class Home extends Component {
           type: [],
           salaryType: [],
           salary: [],
+          firstName: [],
+          lastName: [],
+          title: [],
+          email: [],          
+          city: [],          
+          province: [],          
+          country: [],          
         };
       }
 
@@ -58,8 +65,30 @@ class Home extends Component {
         })                 
     }
 
+    displayJobSeekers = () => {
+        var jobSeekersRef = this.props.firebase.database().child('users').orderByChild('incognito')
+        .equalTo(null);
+        jobSeekersRef.on('value', snap => {            
+            snap.forEach(snap1 => {
+                
+                    this.setState(state => {
+                        const firstName = state.firstName.concat(snap1.child('firstName').val());
+                        const lastName = state.lastName.concat(snap1.child('lastName').val());
+                        const title = state.title.concat(snap1.child('title').val());
+                        const email = state.email.concat(snap1.child('email').val());
+                        const city = state.city.concat(snap1.child('city').val());
+                        const province = state.province.concat(snap1.child('province').val());
+                        const country = state.country.concat(snap1.child('country').val());
+                        return {firstName, lastName, title, email, city, province, country}
+                    });
+                })                
+            })
+                 
+    }
+
     componentDidMount = () => {
         this.displayVacancies();
+        this.displayJobSeekers();
     }
 
     render() {
@@ -111,8 +140,8 @@ class Home extends Component {
                         
 
                     </Carousel> */}
-               
-                    <div className="scrolling-wrapper center">
+                    <h2>Vacancies</h2>
+                    <div className="scrolling-wrapper center">                        
                     {Array.apply(null, Array(6)).map(function(item, i){                                                                    
                             return (
                                 <div className="scroll_card rectangle">
@@ -121,7 +150,26 @@ class Home extends Component {
                                             <h7>Sector: {this.state.sector[i] ? this.state.sector[i] : "Coming soon"}</h7> <br/>
                                             <h7>Type: {this.state.type[i] ? this.state.type[i] : "Coming soon"}</h7> <br/>
                                             <h7>Salary Type: {this.state.salaryType[i] ? this.state.salaryType[i] : "Coming soon"}</h7> <br/>
-                                            <h7>Salary: ${this.state.salary[i] ? this.state.salary[i] : "Coming soon"}</h7> <br/>                                                                                   
+                                            <h7>Salary: ${this.state.salary[i] ? this.state.salary[i] : "Coming soon"}</h7> <br/>  
+                                            <Button variant="primary" size="sm">View vacancy</Button>                                                                          
+                                    </div>
+                                </div>
+                            );                
+                        }, this)}
+                    </div>
+
+                    <br/> <br/>
+                    <h2>Job Seekers</h2>
+                    <div className="scrolling-wrapper center">
+                    {Array.apply(null, Array(6)).map(function(item, i){                                                                    
+                            return (
+                                <div className="scroll_card rectangle">
+                                    <div className="card_inside" style={{margin: 'auto', display: 'table', textAlign : 'left', verticalAlign: 'center'}}>                                                                                                                                                  
+                                            <p style={{fontWeight: "bold"}}>{this.state.firstName[i]} {this.state.lastName[i]}</p>
+                                            <h7>Title: {this.state.title[i]}</h7> <br/>
+                                            <h7>Email: {this.state.email[i]}</h7> <br/>
+                                            <h7>From: {this.state.city[i]}</h7> <br/> <br/>
+                                            <Button variant="primary" size="sm">View profile</Button>                                                                                     
                                     </div>
                                 </div>
                             );                
