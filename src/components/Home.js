@@ -11,6 +11,8 @@ import { FaRegEnvelope } from "react-icons/fa";
 import { IoMdPaperPlane } from "react-icons/io";
 import { FiMapPin, FiPhone } from "react-icons/fi";
 import { withFirebase } from './Firebase';
+import {Link} from 'react-router-dom';
+import Nav from 'react-bootstrap/Nav';
 
 class Home extends Component {
     constructor(props) {
@@ -144,14 +146,16 @@ class Home extends Component {
                     <div className="scrolling-wrapper center">                        
                     {Array.apply(null, Array(6)).map(function(item, i){                                                                    
                             return (
-                                <div className="scroll_card rectangle">
+                                <div className="scroll_card rectangle" style={{padding: '1em 1em 2em 1em'}}>
                                     <div className="card_inside" style={{margin: 'auto', display: 'table', textAlign : 'left', verticalAlign: 'center'}}>                                                                                                                                                  
                                             <p style={{fontWeight: "bold"}}>{this.state.vacanciesTitle[i] ? this.state.vacanciesTitle[i] : "Coming soon"}</p>
                                             <h7>Sector: {this.state.sector[i] ? this.state.sector[i] : "Coming soon"}</h7> <br/>
                                             <h7>Type: {this.state.type[i] ? this.state.type[i] : "Coming soon"}</h7> <br/>
                                             <h7>Salary Type: {this.state.salaryType[i] ? this.state.salaryType[i] : "Coming soon"}</h7> <br/>
                                             <h7>Salary: ${this.state.salary[i] ? this.state.salary[i] : "Coming soon"}</h7> <br/>  
-                                            <Button variant="primary" size="sm">View vacancy</Button>                                                                          
+                                            <Nav>
+                                                <Nav.Link as={Link} to="/vacancies"><Button variant="primary" size="sm">View vacancy</Button> </Nav.Link>                                                                        
+                                            </Nav>
                                     </div>
                                 </div>
                             );                
@@ -163,13 +167,15 @@ class Home extends Component {
                     <div className="scrolling-wrapper center">
                     {Array.apply(null, Array(6)).map(function(item, i){                                                                    
                             return (
-                                <div className="scroll_card rectangle">
+                                <div className="scroll_card rectangle" style={{padding: '1em 1em 2em 1em'}}>
                                     <div className="card_inside" style={{margin: 'auto', display: 'table', textAlign : 'left', verticalAlign: 'center'}}>                                                                                                                                                  
                                             <p style={{fontWeight: "bold"}}>{this.state.firstName[i]} {this.state.lastName[i]}</p>
                                             <h7>Title: {this.state.title[i]}</h7> <br/>
                                             <h7>Email: {this.state.email[i]}</h7> <br/>
                                             <h7>From: {this.state.city[i]}</h7> <br/> <br/>
-                                            <Button variant="primary" size="sm">View profile</Button>                                                                                     
+                                            <Nav>
+                                                <Nav.Link as={Link} to="/jobseekers"><Button variant="primary" size="sm">View profile</Button> </Nav.Link>                                                                        
+                                            </Nav>                                                                                     
                                     </div>
                                 </div>
                             );                

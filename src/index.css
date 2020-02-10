@@ -259,7 +259,7 @@ p>a:hover {
   border-color: #f8f9fa !important;
 }
 
-.jobSeeker {
+.jobSeeker, .vacancy {
   font-size: 1em;
   text-align: center;
   margin: 1em;

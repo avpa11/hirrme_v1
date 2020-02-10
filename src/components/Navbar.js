@@ -41,7 +41,7 @@ class Navibar extends Component {
           <Navbar.Collapse className="justify-content-end">
               <Nav>
                   <Nav.Link as={Link} to="/about">About</Nav.Link>
-                  <Nav.Link as={Link} to="/">Vacancies</Nav.Link>
+                  <Nav.Link as={Link} to="/vacancies">Vacancies</Nav.Link>
                   <Nav.Link as={Link} to="/jobseekers">Job Seekers</Nav.Link>
                   <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
               </Nav>
