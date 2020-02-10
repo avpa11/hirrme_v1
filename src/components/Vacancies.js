@@ -34,7 +34,6 @@ class Vacancies extends Component {
             }
             snap.forEach(snap => {
                 snap.forEach(snap1 => {
-
                     id++;
 
                     var div = document.createElement('div');
@@ -59,7 +58,7 @@ class Vacancies extends Component {
                             authUser={this.state.authUser != null ? this.state.authUser.uid : null}
                             authEmail={this.state.authUser != null ? this.state.authUser.email : null}
                             firebase={this.props.firebase}
-                            userId={snap1.child('userId').val()}
+                            userId={snap.key}
                         />, document.getElementById(id));
                     }
                 })
