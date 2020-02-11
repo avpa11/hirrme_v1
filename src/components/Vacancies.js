@@ -72,13 +72,12 @@ class Vacancies extends Component {
     render() {
         return (
             <div className="container" style={{ marginTop: "120px" }}>
-                <h4 className="text-center">Job Seekers</h4>
+                <h4 className="text-center">Vacancies</h4>
                 <p id='vacanciesList'></p>
             </div>
         )
     }
 }
-
 
 class VacancyObject extends Component {
     constructor(props) {

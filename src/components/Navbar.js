@@ -43,7 +43,11 @@ class Navibar extends Component {
                   <Nav.Link as={Link} to="/about">About</Nav.Link>
                   <Nav.Link as={Link} to="/vacancies">Vacancies</Nav.Link>
                   <Nav.Link as={Link} to="/jobseekers">Job Seekers</Nav.Link>
-                  <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
+                  <Nav.Link as={Link} to="/" onClick={() => {
+                    if(window.location.href === 'http://localhost:3000/'){
+                      window.scrollTo(0,document.body.scrollHeight)                  
+                  }}}
+                    >Contact</Nav.Link>       
               </Nav>
           {/* display sign out button if user is not authentivates. */}
           <AuthUserContext.Consumer>{
