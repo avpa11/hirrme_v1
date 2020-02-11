@@ -99,21 +99,22 @@ class Home extends Component {
             
             <div>
             <Video />
+            <br />
             <div className="container" style={{ marginTop: "70px", zIndex: 1 }}>
                 <h1 className="text-center">Seacrh for a job at Hirr.me</h1>
                 <p className="text-center">Let us help you to get work/ers</p>
-                <Form inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                <Form inline style={{ display: 'flex', justifyContent: 'center', marginTop: "120px", marginBottom: "80px" }}>
                 <div className="input-group-prepend" style={{backgroundColor: 'none',borderColor: "#FFC107"}}>
                     <span className="input-group-text">
                         <FaSearch />
                     </span>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                    <FormControl type="text" placeholder="Keyword or Title" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
                 </div>
                 <div className="input-group-prepend">
                     <span className="input-group-text">
                         <FaSearchLocation />                   
                     </span>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                    <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
                 </div>
                     <Button variant="warning"
                         onClick={this.display}>
@@ -162,7 +163,27 @@ class Home extends Component {
                         }, this)}
                     </div>
 
-                    <br/> <br/>
+                    <br/> <br/><br/><br/>
+                    <h1 className="text-center">Seacrh for workers at Hirr.me</h1>
+                <p className="text-center">Let us help you to get work/ers</p>
+                    <Form inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                <div className="input-group-prepend" style={{backgroundColor: 'none',borderColor: "#FFC107"}}>
+                    <span className="input-group-text">
+                        <FaSearch />
+                    </span>
+                    <FormControl type="text" placeholder="Name, Keyword or Title" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                </div>
+                <div className="input-group-prepend">
+                    <span className="input-group-text">
+                        <FaSearchLocation />                   
+                    </span>
+                    <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                </div>
+                    <Button variant="warning"
+                        onClick={this.display}>
+                        Search
+                    </Button>
+                </Form>
                     <h2>Job Seekers</h2>
                     <div className="scrolling-wrapper center">
                     {Array.apply(null, Array(6)).map(function(item, i){                                                                    

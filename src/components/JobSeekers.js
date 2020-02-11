@@ -3,18 +3,79 @@ import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
 import { IoMdPerson } from "react-icons/io";
 import Button from 'react-bootstrap/Button';
+import { FaSearch, FaSearchLocation } from "react-icons/fa";
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 
 class JobSeekers extends Component {
     constructor(props) {
         super(props);
         this.state = {
           authUser: null,
+          searchPosition: '',
         };
       }
 
     componentDidMount() {
         this.displayJobSeekers('firstName')
     }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        var id = 0;
+
+        // FIREBASE SEARCH IS TOO BASIC ONLY FOR ONE "WHERE" CLAUSE AND CASE-SENSITIVE
+        // var jseekerByTitle = this.props.firebase.database().ref.child('users').orderByChild('title')
+        // .startAt(this.state.searchPosition).endAt(this.state.searchPosition+"\uf8ff");
+
+        var jseekerByTitle = this.props.firebase.database().ref.child('users').orderByChild('incognito')
+        .equalTo(null);
+
+
+        jseekerByTitle.on('value', snap => {
+            if (document.getElementById('jobSeekersList')!=null) {
+                document.getElementById('jobSeekersList').innerHTML = '';
+            }
+            snap.forEach(snap1 => {
+                id++;
+
+                if (snap1.child('title').val().toLowerCase().indexOf(this.state.searchPosition) >= 0 ||
+                snap1.child('firstName').val().toLowerCase().indexOf(this.state.searchPosition) >= 0 || 
+                snap1.child('lastName').val().toLowerCase().indexOf(this.state.searchPosition) >= 0) {
+                var div = document.createElement('div');
+                div.setAttribute('id', id);
+                div.setAttribute('class', 'jobSeeker');
+                if (document.getElementById('jobSeekersList') != null) {
+                    document.getElementById('jobSeekersList').appendChild(div);
+
+                        ReactDOM.render(<JobSeekerObject
+                            firstName={snap1.child('firstName').val()}
+                            lastName={snap1.child('lastName').val()}
+                            title={snap1.child('title').val()}
+                            email={snap1.child('email').val()}
+                            city={snap1.child('city').val()}
+                            province={snap1.child('province').val()}
+                            country={snap1.child('country').val()}
+                            authUser={this.state.authUser != null ? this.state.authUser.uid : null}
+                            authEmail={this.state.authUser != null ? this.state.authUser.email : null}
+                            firebase={this.props.firebase}
+                            userId={snap1.child('userId').val()}
+                        />,
+                        document.getElementById(id));
+
+                // console.log(authUser);
+                // console.log(this.state.authUser.uid);
+                }
+            }
+            });
+        })
+
+
+    }
+
+    handleChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    };
 
     
     displayJobSeekers(order) {
@@ -42,8 +103,6 @@ class JobSeekers extends Component {
                 if (document.getElementById('jobSeekersList') != null) {
                     document.getElementById('jobSeekersList').appendChild(div);
 
-                    if (this.state.authUser!=null) {
-
                         ReactDOM.render(<JobSeekerObject
                             firstName={snap1.child('firstName').val()}
                             lastName={snap1.child('lastName').val()}
@@ -52,40 +111,40 @@ class JobSeekers extends Component {
                             city={snap1.child('city').val()}
                             province={snap1.child('province').val()}
                             country={snap1.child('country').val()}
-                            authUser={this.state.authUser.uid}
-                            authEmail={this.state.authUser.email}
-                            firebase={this.props.firebase}
-                            userId={snap1.child('userId').val()}
-                        />,
-                        document.getElementById(id));
-                    } else {
-                        ReactDOM.render(<JobSeekerObject
-                            firstName={snap1.child('firstName').val()}
-                            lastName={snap1.child('lastName').val()}
-                            title={snap1.child('title').val()}
-                            email={snap1.child('email').val()}
-                            city={snap1.child('city').val()}
-                            province={snap1.child('province').val()}
-                            country={snap1.child('country').val()}
-                            authUser={null}
-                            authEmail={null}
+                            authUser={this.state.authUser != null ? this.state.authUser.uid : null}
+                            authEmail={this.state.authUser != null ? this.state.authUser.email : null}
                             firebase={this.props.firebase}
                             userId={snap1.child('userId').val()}
                         />,
                         document.getElementById(id));
                     }
-
-                // console.log(authUser);
-                // console.log(this.state.authUser.uid);
-                }
             });
         })
     }
 
     render() {
+        const { searchPosition } = this.state;
         return (
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Job Seekers</h4>
+                <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                <div className="input-group-prepend" style={{backgroundColor: 'none',borderColor: "#FFC107"}}>
+                    <span className="input-group-text">
+                        <FaSearch />
+                    </span>
+                    <FormControl value={searchPosition} onChange={this.handleChange} name="searchPosition" type="text" placeholder="Name, Keyword or Title" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                </div>
+                <div className="input-group-prepend">
+                    <span className="input-group-text">
+                        <FaSearchLocation />                   
+                    </span>
+                    <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                </div>
+                    <Button variant="warning"
+                         type="submit">
+                        Search
+                    </Button>
+                </Form>
                 <p id='jobSeekersList'></p>
             </div>
         )

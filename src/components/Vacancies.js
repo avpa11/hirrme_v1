@@ -3,18 +3,81 @@ import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
 import { IoMdPaper } from "react-icons/io";
 import Button from 'react-bootstrap/Button';
+import { FaSearch, FaSearchLocation } from "react-icons/fa";
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 
 class Vacancies extends Component {
     constructor(props) {
         super(props);
         this.state = {
             authUser: null,
+            search: '',
         };
     }
 
     componentDidMount() {
         this.displayVacancies('positionTitle')
     }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        var id = 0;
+
+        var vacanciesByTitle  = this.props.firebase.database().child('vacancies').ref;
+
+        vacanciesByTitle.on('value', snap => {
+            if (document.getElementById('vacanciesList') != null) {
+                document.getElementById('vacanciesList').innerHTML = '';
+            }
+            snap.forEach(snap => {
+                snap.forEach(snap1 => {
+                    id++;
+
+                    if (snap1.child('positionTitle').val().toLowerCase().indexOf(this.state.search) >= 0 ||
+                    snap1.child('sector').val().toLowerCase().indexOf(this.state.search) >= 0 ||
+                    snap1.child('description').val().toLowerCase().indexOf(this.state.search) >= 0 ||
+                    snap1.child('requirements').val().toLowerCase().indexOf(this.state.search) >= 0 ||
+                    snap1.child('keyResponsibilities').val().toLowerCase().indexOf(this.state.search) >= 0 ||
+                    snap1.child('type').val().toLowerCase().indexOf(this.state.search) >= 0) {
+
+                        var div = document.createElement('div');
+                        div.setAttribute('id', id);
+                        div.setAttribute('class', 'vacancy');
+                        if (document.getElementById('vacanciesList') != null) {
+                            document.getElementById('vacanciesList').appendChild(div);
+    
+                            ReactDOM.render(<VacancyObject
+                                vacancyTitle={snap1.child('positionTitle').val()}
+                                sector={snap1.child('sector').val()}
+                                type={snap1.child('type').val()}
+                                salaryType={snap1.child('salaryType').val()}
+                                salary={snap1.child('salary').val()}
+                                city={snap1.child('city').val()}
+                                province={snap1.child('province').val()}
+                                country={snap1.child('country').val()}
+                                contactInfo={snap1.child('contactInfo').val()}
+                                description={snap1.child('description').val()}
+                                keyResponsibilities={snap1.child('keyResponsibilities').val()}
+                                requirements={snap1.child('requirements').val()}
+                                authUser={this.state.authUser != null ? this.state.authUser.uid : null}
+                                authEmail={this.state.authUser != null ? this.state.authUser.email : null}
+                                firebase={this.props.firebase}
+                                userId={snap.key}
+                            />, document.getElementById(id));
+                        }
+                    }
+
+                })
+            })
+        })
+
+
+    }
+
+    handleChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    };
 
 
     displayVacancies(order) {
@@ -69,9 +132,28 @@ class Vacancies extends Component {
 
 
     render() {
+        const { search } = this.state;
         return (
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Vacancies</h4>
+                <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                <div className="input-group-prepend" style={{backgroundColor: 'none',borderColor: "#FFC107"}}>
+                    <span className="input-group-text">
+                        <FaSearch />
+                    </span>
+                    <FormControl value={search} onChange={this.handleChange} name="search" type="text" placeholder="Keyword or Title" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                </div>
+                <div className="input-group-prepend">
+                    <span className="input-group-text">
+                        <FaSearchLocation />                   
+                    </span>
+                    <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                </div>
+                    <Button variant="warning"
+                         type="submit">
+                        Search
+                    </Button>
+                </Form>
                 <p id='vacanciesList'></p>
             </div>
         )
