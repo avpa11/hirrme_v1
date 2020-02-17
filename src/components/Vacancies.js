@@ -79,14 +79,7 @@ class Vacancies extends Component {
 
     displayVacancies() {
         this.props.firebase.auth.onAuthStateChanged(authUser => {
-            if (authUser != null) {
-                this.setState({ authUser });
-                console.log(this.state.authUser.email)
-            }
-            else {
-                this.setState({ authUser: null });
-                console.log("User is null");
-            }
+            authUser != null ? this.setState({ authUser }) : this.setState({ authUser: null })
         })
 
         var id = 0;
@@ -172,12 +165,16 @@ class VacancyObject extends Component {
     }
 
     componentDidMount = () => {
-        var likedVacancies = this.state.firebase.database().child('likes/' + this.props.vacancyTitle).ref;
+        var likedVacancies = this.state.firebase.database().child('likes').ref;
+
         this.setState({ likeStatus: 'Like' })
+        
         if (this.state.authUser !== null) {
             likedVacancies.on('value', snap => {
                 snap.forEach(snap1 => {
-                    if (snap1.child('email').val() === this.state.authUser.email) {
+                    if (snap1.child('email').val() === this.state.authUser.email &&
+                        snap1.child('vacancyTitle').val() === this.props.vacancyTitle &&
+                        snap1.child('contactInfo').val() === this.props.contactInfo) {
                         this.setState({ likeStatus: 'Dislike' })
                     }
                 })
@@ -188,32 +185,28 @@ class VacancyObject extends Component {
     handleLike = (e) => {
         e.preventDefault();
 
-        if (this.state.authUser != null) {
-            if (this.state.likeStatus === 'Like') {
-                this.addLike();
-            }
-            else if (this.state.likeStatus === 'Dislike') {
-                this.removeLike();
-            }
-        } else {
-            window.alert("You need to log in to leave a like")
-        }
+        this.state.authUser != null ? (this.state.likeStatus === 'Like' ? this.addLike() : this.removeLike()) : window.alert("You need to log in to leave a like")
     }
 
     addLike = () => {
-        this.state.firebase.database().child('likes/' + this.props.vacancyTitle).push({
+        this.state.firebase.database().child('likes').push({
+            vacancyTitle: this.props.vacancyTitle,
+            contactInfo: this.props.contactInfo,
             email: this.state.authUser.email,
             date: (new Date()).toISOString().split('T')[0],
-        }).then(this.setState({ likeStatus: 'Dislike' }))
+        })
+            .then(this.setState({ likeStatus: 'Dislike' }))
             .catch(error => console.log(error));
     }
 
     removeLike = () => {
-        var likedVacancies = this.state.firebase.database().child('likes/' + this.props.vacancyTitle).ref;
+        var likedVacancies = this.state.firebase.database().child('likes').ref;
 
         likedVacancies.once('value', snap => {
             snap.forEach(snap1 => {
-                if (snap1.child('email').val() === this.state.authUser.email) {
+                if (snap1.child('email').val() === this.state.authUser.email &&
+                    snap1.child('vacancyTitle').val() === this.props.vacancyTitle &&
+                    snap1.child('contactInfo').val() === this.props.contactInfo) {
                     likedVacancies.child(snap1.key).remove()
                         .then(this.setState({ likeStatus: 'Like' }))
                         .catch(error => console.log(error));
