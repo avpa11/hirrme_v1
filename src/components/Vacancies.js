@@ -11,20 +11,20 @@ class Vacancies extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authUser: null,
+            authUser: this.props.firebase.auth.currentUser,
             search: '',
         };
     }
 
     componentDidMount() {
-        this.displayVacancies('positionTitle')
+        this.displayVacancies();
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
         var id = 0;
 
-        var vacanciesByTitle  = this.props.firebase.database().child('vacancies').ref;
+        var vacanciesByTitle = this.props.firebase.database().child('vacancies').ref;
 
         vacanciesByTitle.on('value', snap => {
             if (document.getElementById('vacanciesList') != null) {
@@ -35,18 +35,18 @@ class Vacancies extends Component {
                     id++;
 
                     if (snap1.child('positionTitle').val().toLowerCase().indexOf(this.state.search) >= 0 ||
-                    snap1.child('sector').val().toLowerCase().indexOf(this.state.search) >= 0 ||
-                    snap1.child('description').val().toLowerCase().indexOf(this.state.search) >= 0 ||
-                    snap1.child('requirements').val().toLowerCase().indexOf(this.state.search) >= 0 ||
-                    snap1.child('keyResponsibilities').val().toLowerCase().indexOf(this.state.search) >= 0 ||
-                    snap1.child('type').val().toLowerCase().indexOf(this.state.search) >= 0) {
+                        snap1.child('sector').val().toLowerCase().indexOf(this.state.search) >= 0 ||
+                        snap1.child('description').val().toLowerCase().indexOf(this.state.search) >= 0 ||
+                        snap1.child('requirements').val().toLowerCase().indexOf(this.state.search) >= 0 ||
+                        snap1.child('keyResponsibilities').val().toLowerCase().indexOf(this.state.search) >= 0 ||
+                        snap1.child('type').val().toLowerCase().indexOf(this.state.search) >= 0) {
 
                         var div = document.createElement('div');
                         div.setAttribute('id', id);
                         div.setAttribute('class', 'vacancy');
                         if (document.getElementById('vacanciesList') != null) {
                             document.getElementById('vacanciesList').appendChild(div);
-    
+
                             ReactDOM.render(<VacancyObject
                                 vacancyTitle={snap1.child('positionTitle').val()}
                                 sector={snap1.child('sector').val()}
@@ -60,8 +60,7 @@ class Vacancies extends Component {
                                 description={snap1.child('description').val()}
                                 keyResponsibilities={snap1.child('keyResponsibilities').val()}
                                 requirements={snap1.child('requirements').val()}
-                                authUser={this.state.authUser != null ? this.state.authUser.uid : null}
-                                authEmail={this.state.authUser != null ? this.state.authUser.email : null}
+                                authUser={this.state.authUser}
                                 firebase={this.props.firebase}
                                 userId={snap.key}
                             />, document.getElementById(id));
@@ -71,8 +70,6 @@ class Vacancies extends Component {
                 })
             })
         })
-
-
     }
 
     handleChange = e => {
@@ -80,11 +77,16 @@ class Vacancies extends Component {
     };
 
 
-    displayVacancies(order) {
+    displayVacancies() {
         this.props.firebase.auth.onAuthStateChanged(authUser => {
-            authUser
-                ? this.setState({ authUser })
-                : this.setState({ authUser: null });
+            if (authUser != null) {
+                this.setState({ authUser });
+                console.log(this.state.authUser.email)
+            }
+            else {
+                this.setState({ authUser: null });
+                console.log("User is null");
+            }
         })
 
         var id = 0;
@@ -118,8 +120,7 @@ class Vacancies extends Component {
                             description={snap1.child('description').val()}
                             keyResponsibilities={snap1.child('keyResponsibilities').val()}
                             requirements={snap1.child('requirements').val()}
-                            authUser={this.state.authUser != null ? this.state.authUser.uid : null}
-                            authEmail={this.state.authUser != null ? this.state.authUser.email : null}
+                            authUser={this.state.authUser}
                             firebase={this.props.firebase}
                             userId={snap.key}
                         />, document.getElementById(id));
@@ -129,28 +130,26 @@ class Vacancies extends Component {
         })
     }
 
-
-
     render() {
         const { search } = this.state;
         return (
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Vacancies</h4>
                 <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                <div className="input-group-prepend" style={{backgroundColor: 'none',borderColor: "#FFC107"}}>
-                    <span className="input-group-text">
-                        <FaSearch />
-                    </span>
-                    <FormControl value={search} onChange={this.handleChange} name="search" type="text" placeholder="Keyword or Title" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
-                </div>
-                <div className="input-group-prepend">
-                    <span className="input-group-text">
-                        <FaSearchLocation />                   
-                    </span>
-                    <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
-                </div>
+                    <div className="input-group-prepend" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
+                        <span className="input-group-text">
+                            <FaSearch />
+                        </span>
+                        <FormControl value={search} onChange={this.handleChange} name="search" type="text" placeholder="Keyword or Title" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
+                    </div>
+                    <div className="input-group-prepend">
+                        <span className="input-group-text">
+                            <FaSearchLocation />
+                        </span>
+                        <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
+                    </div>
                     <Button variant="warning"
-                         type="submit">
+                        type="submit">
                         Search
                     </Button>
                 </Form>
@@ -165,31 +164,70 @@ class VacancyObject extends Component {
         super(props);
         this.state = {
             display: "none",
-            displayButton: "Expand"
+            displayButton: "Expand",
+            authUser: this.props.authUser,
+            firebase: this.props.firebase,
+            likeStatus: null,
         };
     }
 
-    handleLike = (e, userId, authUser, firebase, email) => {
-        e.preventDefault();
-        if (authUser != null) {
-            firebase.like(userId).push({
-                accountId: authUser,
-                email: email,
-                date: (new Date()).toISOString().split('T')[0],
+    componentDidMount = () => {
+        var likedVacancies = this.state.firebase.database().child('likes/' + this.props.vacancyTitle).ref;
+        this.setState({ likeStatus: 'Like' })
+        if (this.state.authUser !== null) {
+            likedVacancies.on('value', snap => {
+                snap.forEach(snap1 => {
+                    if (snap1.child('email').val() === this.state.authUser.email) {
+                        this.setState({ likeStatus: 'Dislike' })
+                    }
+                })
             })
-                .then(window.alert("Thank you for the like"))
-                .catch(error => console.log(error));
+        }
+    }
+
+    handleLike = (e) => {
+        e.preventDefault();
+
+        if (this.state.authUser != null) {
+            if (this.state.likeStatus === 'Like') {
+                this.addLike();
+            }
+            else if (this.state.likeStatus === 'Dislike') {
+                this.removeLike();
+            }
         } else {
             window.alert("You need to log in to leave a like")
         }
+    }
+
+    addLike = () => {
+        this.state.firebase.database().child('likes/' + this.props.vacancyTitle).push({
+            email: this.state.authUser.email,
+            date: (new Date()).toISOString().split('T')[0],
+        }).then(this.setState({ likeStatus: 'Dislike' }))
+            .catch(error => console.log(error));
+    }
+
+    removeLike = () => {
+        var likedVacancies = this.state.firebase.database().child('likes/' + this.props.vacancyTitle).ref;
+
+        likedVacancies.once('value', snap => {
+            snap.forEach(snap1 => {
+                if (snap1.child('email').val() === this.state.authUser.email) {
+                    likedVacancies.child(snap1.key).remove()
+                        .then(this.setState({ likeStatus: 'Like' }))
+                        .catch(error => console.log(error));
+                }
+            })
+        })
     }
 
     showAllInfo = () => {
         if (this.state.display === 'none') {
             this.setState({ display: "contents" });
             this.setState({ displayButton: "Hide" })
-        }
-        else {
+
+        } else {
             this.setState({ display: "none" });
             this.setState({ displayButton: "Expand" })
         }
@@ -211,7 +249,7 @@ class VacancyObject extends Component {
                     <div style={{ float: 'left', margin: '0 2em' }}>
                         <Button onClick={this.showAllInfo} variant="primary">{this.state.displayButton}</Button> <span />
                         <Button variant="primary">Send Email</Button> <span />
-                        <Button onClick={e => this.handleLike(e, this.props.userId, this.props.authUser, this.props.firebase, this.props.authEmail)} variant="danger">Like</Button>
+                        <Button onClick={e => this.handleLike(e)} variant="danger">{this.state.likeStatus}</Button>
                     </div>
                 </div>
                 <div style={{ display: this.state.display, textAlign: 'left' }}>
@@ -228,4 +266,5 @@ class VacancyObject extends Component {
         )
     }
 }
+
 export default withFirebase(Vacancies);
