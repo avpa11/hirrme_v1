@@ -52,7 +52,6 @@ class Home extends Component {
         vacanciesRef.on('value', snap => {            
             snap.forEach(snap1 => {
                 snap1.forEach(snap2 => {
-                    console.log(snap2.child('description').val());
                     
                     this.setState(state => {
                         const vacanciesTitle = state.vacanciesTitle.concat(snap2.child('positionTitle').val());
