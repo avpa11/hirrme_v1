@@ -5,16 +5,12 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 // Redux
 // import {createStore, combineReducers} from 'redux';
-import {createStore} from 'redux';
-import allReducers from './reducers/allReducers';
+// import {createStore} from 'redux';
+// import allReducers from './reducers/allReducers';
 import {Provider} from 'react-redux';
+import store from './store';
 
 import Firebase, { FirebaseContext } from './components/Firebase'
-
-const store = createStore(
-    allReducers, 
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-    );
 
 ReactDOM.render(
 <Provider store={store}>
