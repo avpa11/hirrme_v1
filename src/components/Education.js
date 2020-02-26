@@ -3,11 +3,12 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
-import { AuthUserContext, withAuthorization } from './Session';
+import { withAuthorization } from './Session';
 
 import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { connect } from 'react-redux';
 
 const Education = () => (
     <div>
@@ -129,13 +130,11 @@ class CreateEducationForm extends Component {
     render () {
         return (
             // to grab the authenticated user info from React.Context hoc (may use Redux instead in the future)
-            <AuthUserContext.Consumer>
-            {authUser => (
                 <div className="rectangle registerect container" style={{ marginTop: "120px", marginBottom: "500px" }}>
                     <div className="container">
                         <h1>Almost done</h1>
                         <Form
-                            onSubmit={e => this.handleSubmit(e, authUser)}
+                            onSubmit={e => this.handleSubmit(e, this.props.authUser)}
                             style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
                         {/* <Form
                             onSubmit={e => this.handleSubmit(e, authUser)}
@@ -162,14 +161,16 @@ class CreateEducationForm extends Component {
                         </Form>
                     </div>
                 </div>
-            )}
-            </AuthUserContext.Consumer>
         )
     }
 
 }
 
-const EducationForm = compose(withRouter, withFirebase)(CreateEducationForm);
+const mapStateToProps = state => ({
+    authUser: state.sessionState.authUser,
+  });
+
+const EducationForm = compose(connect(mapStateToProps), withRouter, withFirebase)(CreateEducationForm);
 
 const condition = authUser => !!authUser;
 

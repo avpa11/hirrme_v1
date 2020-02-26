@@ -3,11 +3,12 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
-import { AuthUserContext, withAuthorization } from './Session';
+import { withAuthorization } from './Session';
 
 import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { connect } from 'react-redux';
 
 const Experience = () => (
     <div>
@@ -96,13 +97,11 @@ class CreateExperienceForm extends Component {
     render () {
         return (
             // to grab the authenticated user info from React.Context hoc (may use Redux instead in the future)
-            <AuthUserContext.Consumer>
-            {authUser => (
                 <div className="rectangle registerect container" style={{ marginTop: "120px", marginBottom: "500px" }}>
                     <div className="container">
                         <h1>Last step</h1>
                         <Form
-                            onSubmit={e => this.handleSubmit(e, authUser)}
+                            onSubmit={e => this.handleSubmit(e, this.props.authUser)}
                             style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
                             {this.createUI()} 
                             <Button type='button' variant="warning" onClick={this.addClick.bind(this)}>Add More</Button>
@@ -112,14 +111,16 @@ class CreateExperienceForm extends Component {
                         </Form>
                     </div>
                 </div>
-            )}
-            </AuthUserContext.Consumer>
         )
     }
 
 }
 
-const ExperienceForm = compose(withRouter, withFirebase)(CreateExperienceForm);
+const mapStateToProps = state => ({
+    authUser: state.sessionState.authUser,
+  });
+
+const ExperienceForm = compose(connect(mapStateToProps), withRouter, withFirebase)(CreateExperienceForm);
 
 const condition = authUser => !!authUser;
 
