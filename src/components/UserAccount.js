@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
             super(props);
             this.state = {
             loading: false,
+            // don't need user state anymore ¯\_(ツ)_/¯
             user: [],
             educations: [],
             experiences: [],
@@ -29,6 +30,10 @@ import { connect } from 'react-redux';
         }
 
         componentDidMount() {
+            // loading flag
+            if (!this.props.user) {
+                this.setState({ loading: true });
+            }
             let currentComponent = this;
             this.setState({ loading: true });
             this.props.firebase.auth.onAuthStateChanged(authUser => {
@@ -40,6 +45,14 @@ import { connect } from 'react-redux';
                 .equalTo(this.state.authUser.uid)
                 jobSeekersRef.on('value', snapshot => {
                     snapshot.forEach(snap1 => {
+                        // Redux
+                        this.props.onSetUser(
+                            snap1.val(),
+                            // user object key
+                            Object.keys(snapshot.val())[0],
+                        );
+                        this.setState({ loading: false });
+
                         currentComponent.setState({
                             user: snap1.val(),
                             loading: false,
@@ -171,6 +184,8 @@ import { connect } from 'react-redux';
         }
 
         render () {
+            // const { user } = this.props;
+            // const { loading } = this.state;
             return (
                 // <AuthUserContext.Consumer>
                 //     {authUser => (
@@ -264,12 +279,20 @@ import { connect } from 'react-redux';
         }
     }
 
-const mapStateToProps = state => ({
+
+// Redux stuff
+const mapStateToProps = (state, props) => ({
     authUser: state.sessionState.authUser,
+    user: (state.userState.users || {})[props.match.params.id],
+
 });
-      
+     
+const mapDispatchToProps = dispatch => ({
+    onSetUser: (user, uid) => dispatch({ type: 'USER_SET', user, uid }),
+  });
+
 
 const condition = authUser => !!authUser;
 
 // export default withAuthorization(condition)(UserAccount);
-export default compose(connect(mapStateToProps), withFirebase, withAuthorization(condition))(UserAccount);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withFirebase, withAuthorization(condition))(UserAccount);

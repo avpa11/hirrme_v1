@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { AuthUserContext } from './Session';
+// import { AuthUserContext } from './Session';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';

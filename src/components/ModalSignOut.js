@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { withFirebase } from './Firebase';
-import { AuthUserContext } from './Session';
+// import { AuthUserContext } from './Session';
 import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, IoIosDocument, IoMdSettings } from "react-icons/io";
 
 import { connect } from 'react-redux';
@@ -43,8 +43,8 @@ class SignOutForm extends Component {
 
     render() {
         return (
-            <AuthUserContext.Consumer>
-                {authUser => (
+            // <AuthUserContext.Consumer>
+            //     {authUser => (
                     <div>
                         <Button variant="light" className="logoutButton" onClick={this.changeVisibility}>
                             <IoIosPerson size={40} />
@@ -81,8 +81,8 @@ class SignOutForm extends Component {
                             </Modal.Body>
                         </Modal>
                     </div>
-                )}
-            </AuthUserContext.Consumer>
+            //     )}
+            // </AuthUserContext.Consumer>
         )
     }
 }
