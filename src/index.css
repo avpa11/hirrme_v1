@@ -1,21 +1,45 @@
 @import url("https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i");
 @import url("https://fonts.googleapis.com/css?family=Varela+Round");
-/* body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-} */
 
 body, html {
   font-family: "Nunito", 'Varela' !important;
+}
+
+.list-group-item.active {
+  background-color: #FFC107 !important;
+  border-color: #FFC107 !important;
+}
+
+html {
+  background-image: url('../src/img/background1.png');
+}
+
+body {
+  background-color: transparent !important;
+}
+
+/* change the coor of the blue glow in inputs */
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="radio"]:focus,
+input[type="select"]:focus,
+input[type="checkbox"]:focus,
+input[type="textarea"]:focus,
+input[type="email"]:focus {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(239, 153, 104, 0.6);
+  outline: 0 none !important;
+  border-color: #FFC107;
+}
+
+/* change default blue color for selection */
+::-moz-selection { /* Code for Firefox */
+  color: rgba(255, 166, 0, 1);
+  background: rgba(230, 225, 208, 0.651);
+}
+
+::selection {
+  color: rgb(255, 94, 0);
+  background: rgba(250, 238, 238, 0.651);
 }
 
 #myVideo {
@@ -25,13 +49,12 @@ body, html {
   bottom: 0;
   min-width: 100%;
   min-height: 100%;
-  background: rgb(218, 161, 76);
+  background: url('../src/img/background1.png');
 }
 
 /* Contact footer styles */
 
 #contactFooter{
-  width: 100%;
   height: 30em;
   background-color: transparent;
   text-align: center;
@@ -47,20 +70,18 @@ body, html {
 }
 
 .inputs{
-  max-width: 55em;
-  min-width: 20em;
-  padding: 2em;
   margin: auto;
+  max-width: 50em;
+  min-width: 20em;
 }
 
 #buttonSubscribeForEmails{
-  margin-left: 1em;
+  margin-left: 0.5em;
 }
 
 #rectangleRow{
   margin: auto;
-  padding: 7em;
-  padding-top: 4em;
+  padding: 4em 0;
 }
 
 .rectangle{
@@ -69,6 +90,7 @@ body, html {
   border-right: 0.2em solid grey;
   border-bottom: 0.2em solid  grey;
   margin: 3em auto;
+  padding: 2em;
   width: 15em;
   height: 13em;
 }
@@ -79,4 +101,207 @@ body, html {
   margin-top: 2em;
 }
 
+.rectangle hr{
+  border : 2px solid black;
+  width : 70%
+}
+
+.rectangle h5{
+    margin: 0em;
+}
+
+#emailInput{
+  border-color: #FFC107
+}
+
+
 /* End contact footer styles */
+
+/* cards in homepage */
+.card {
+  box-shadow: 5px 5px 2px grey;
+  width: 30%;
+  height: 30%;
+  background-color: #fafafa66;
+  padding: 30px 0;
+  border: 1px solid #e5e8eb;
+  border-radius: .5rem;
+  margin: 0 10px;
+}
+/* nav bar */
+.nav-link, .loginButton {
+  color: black !important;
+  font-family: 'Varela Round' !important;
+  font-size: 18px !important;
+  margin: 0 20px;
+}
+
+/* add a background color on scroll */
+.scrolled {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* login modal */
+.loginButton {
+  background: linear-gradient(to right, #F3565E, #F97F3A, #FFAC11);
+  border-color: linear-gradient(to right, #F3565E, #F97F3A, #FFAC11);
+}
+
+p>a {
+  color: #FFAC11;
+}
+
+p>a:hover {
+  color: #F97F3A;
+  text-decoration: none;
+}
+
+/* register */
+.registerect {
+  width: 55em;
+  height: 30em;
+}
+
+/* cards scroll in home page */
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll_card {
+  display: inline-block;
+  /* min-width: fit-content; */
+  margin: 10px;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.card_inside {
+  margin: 0 auto; 
+  display: inline; 
+  margin: 20px;
+}
+
+@media (min-width: 1024px) {
+  .scroll_card {
+      margin-left: 70px;
+      margin-right: 70px;
+  }
+}
+
+#modalSignIn {
+  margin-right: 1em !important;
+  text-align: center;
+  margin-top: 4em;
+  width: 20%;
+}
+
+#authForm Button{
+  width: 33%;
+}
+
+#authForm p{
+  margin: 0;
+}
+
+.authInputs {
+  margin-bottom: 0.5em;
+  min-width: 5em;
+}
+
+.modal-backdrop.show {
+  opacity: 0 !important;
+}
+
+#modalSignOut {
+  margin-right: 0em !important;
+  margin-top: 3.5em;
+  width: 10%;
+  padding: 1em;
+  min-width: 15em;
+}
+
+#modalSignOutItems div {
+  margin-left: 0;
+  padding-bottom: 1em;
+}
+
+#modalSignOutItems span {
+  padding: 0.5em;
+}
+
+#modalSignOut button {
+  margin: auto;
+}
+
+#modalSignOutItems div img{
+  width: 3em;
+  padding-right: 0.7em;
+}
+
+#buttonLogoutPlaceholder {
+  text-align: center;
+}
+
+.btn-light:focus {
+  color: #212529;
+  background-color: #f8f9fa !important;
+  border-color: #f8f9fa !important;
+}
+
+.btn-light:hover {
+  color: #212529;
+  background-color: #f8f9fa !important;
+  border-color: #f8f9fa !important;
+}
+
+.jobSeeker, .vacancy {
+  font-size: 1em;
+  text-align: center;
+  margin: 1em;
+  padding: 1em;
+  border-radius: 10px;
+  background-color: rgba(161, 156, 156, 0.5);
+
+}
+
+/* User Account */
+.centerText {
+  display: inline-block;
+  margin-left: 20%;
+}
+
+.name {
+  color: rgb(155,155,155);
+}
+
+.mainp {
+  margin: 0 !important;
+}
+
+.span_date {
+  float: right;
+}
+
+#visibility {
+  color: #FFAC11;
+}
+
+.buttonDivider{
+  width:5px;
+    height:auto;
+    display:inline-block;
+}
+
+
+
+
+
+
+
+
+

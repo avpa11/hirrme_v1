@@ -3,10 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import ContactFooter from './components/ContactFooter';
+// Redux
+// import {createStore, combineReducers} from 'redux';
+// import {createStore} from 'redux';
+// import allReducers from './reducers/allReducers';
+import {Provider} from 'react-redux';
+import store from './store';
 
-ReactDOM.render(<App />, document.getElementById('root'));
-ReactDOM.render(<ContactFooter />, document.getElementById('contactFooterPlaceholder'))
+import Firebase, { FirebaseContext } from './components/Firebase'
+
+ReactDOM.render(
+<Provider store={store}>
+    <FirebaseContext.Provider value={new Firebase()}>
+        <App />
+    </FirebaseContext.Provider>
+</Provider>,
+document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

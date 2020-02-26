@@ -1,13 +1,40 @@
-import React from 'react';
-import { Link, NavLink, withRouter } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
+import { compose } from 'recompose';
 import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import Container from 'react-bootstrap/Container';
+import ModalSignIn from './ModalSignIn';
 
-const Navibar = (props) => {
-    return ( 
-      <div className="container">
-          <Navbar expand="lg">
+// need to create a use pop up and put sign out button there
+// import SignOut from './SignOut';
+import ModalSignOut from './ModalSignOut';
+
+// import { AuthUserContext } from './Session';
+
+// Redux
+import { connect } from 'react-redux';
+
+class Navibar extends Component {
+  state = {
+    isTop: true,
+  };
+
+  componentDidMount() {
+    document.addEventListener('scroll', () => {
+      const isTop = window.scrollY < 100;
+      if (isTop !== this.state.isTop) {
+          this.setState({ isTop })
+      }
+    });
+  }
+    render() {
+
+      // const {authUser} = this.props;
+
+      return ( 
+        <Container>
+          <Navbar fixed="top" expand="lg" className={this.state.isTop ? '' : 'scrolled'}>
             <Navbar.Brand as={Link} to="/"><img
               alt="HirrMe logo"
               src={require('../img/logo.png')}
@@ -18,13 +45,34 @@ const Navibar = (props) => {
           <Navbar.Collapse className="justify-content-end">
               <Nav>
                   <Nav.Link as={Link} to="/about">About</Nav.Link>
-                  <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
+                  <Nav.Link as={Link} to="/vacancies">Vacancies</Nav.Link>
+                  <Nav.Link as={Link} to="/jobseekers">Job Seekers</Nav.Link>
+                  <Nav.Link as={Link} to="/" onClick={() => {
+                    if(window.location.href === 'http://localhost:3000/'){
+                      window.scrollTo(0,document.body.scrollHeight)                  
+                  }}}
+                    >Contact</Nav.Link>       
               </Nav>
+          {/* display sign out button if user is not authentivates. */}          
+          {
+              this.props.authUser != null ? 
+              // Need to create a user profile popup and put sign out button there
+                // <SignOut />
+                <ModalSignOut />
+              : <ModalSignIn />
+            }
           </Navbar.Collapse>
-        </Navbar>
-      </div>
-    )
+          {/* <UserAccount/> */}
+        </Navbar> 
+      </Container>
+      )
+  }
 }
 
+const mapStateToProps = state => ({
+  authUser: state.sessionState.authUser,
+});
+
+
 // withRouter is used to pass the route properties to Navbar component (supercharging it)
-export default withRouter(Navibar);
+export default compose(connect(mapStateToProps),withRouter)(Navibar);
