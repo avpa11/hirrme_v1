@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
+import { compose } from 'recompose';
 import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import ModalSignIn from './ModalSignIn';
@@ -9,7 +10,10 @@ import ModalSignIn from './ModalSignIn';
 // import SignOut from './SignOut';
 import ModalSignOut from './ModalSignOut';
 
-import { AuthUserContext } from './Session';
+// import { AuthUserContext } from './Session';
+
+// Redux
+import { connect } from 'react-redux';
 
 class Navibar extends Component {
   state = {
@@ -49,22 +53,26 @@ class Navibar extends Component {
                   }}}
                     >Contact</Nav.Link>       
               </Nav>
-          {/* display sign out button if user is not authentivates. */}
-          <AuthUserContext.Consumer>{
-              authUser => authUser ? 
+          {/* display sign out button if user is not authentivates. */}          
+          {
+              this.props.authUser != null ? 
               // Need to create a user profile popup and put sign out button there
                 // <SignOut />
                 <ModalSignOut />
               : <ModalSignIn />
-            }</AuthUserContext.Consumer>
+            }
           </Navbar.Collapse>
           {/* <UserAccount/> */}
-          {/* Will be a user object in the future
-            {user} */}
         </Navbar> 
       </Container>
       )
   }
 }
+
+const mapStateToProps = state => ({
+  authUser: state.sessionState.authUser,
+});
+
+
 // withRouter is used to pass the route properties to Navbar component (supercharging it)
-export default withRouter(Navibar);
+export default compose(connect(mapStateToProps),withRouter)(Navibar);

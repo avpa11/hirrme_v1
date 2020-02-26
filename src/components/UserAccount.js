@@ -14,7 +14,6 @@ import CompanyAccount from "./CompanyAccount";
 
 import { connect } from 'react-redux';
 
-const UserAccount = (Component , { authUser }) => (
     class UserAccount extends Component {
         constructor(props) {
             super(props);
@@ -176,7 +175,7 @@ const UserAccount = (Component , { authUser }) => (
                 // <AuthUserContext.Consumer>
                 //     {authUser => (
                     <div style={{marginTop: "120px"}}>
-                    <h1 style={{marginLeft: "20px"}}>Welcome to your account, {authUser.email}</h1>
+                    <h1 style={{marginLeft: "20px"}}>Welcome to your account, {this.props.authUser.email}</h1>
                     
                     { this.state.user.userId != null ? (
                         <div>	                        
@@ -264,9 +263,13 @@ const UserAccount = (Component , { authUser }) => (
             )
         }
     }
-)
+
+const mapStateToProps = state => ({
+    authUser: state.sessionState.authUser,
+});
+      
 
 const condition = authUser => !!authUser;
 
 // export default withAuthorization(condition)(UserAccount);
-export default compose(withFirebase, withAuthorization(condition))(UserAccount);
+export default compose(connect(mapStateToProps), withFirebase, withAuthorization(condition))(UserAccount);

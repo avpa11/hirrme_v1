@@ -8,6 +8,8 @@ import { withFirebase } from './Firebase';
 import { AuthUserContext } from './Session';
 import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, IoIosDocument, IoMdSettings } from "react-icons/io";
 
+import { connect } from 'react-redux';
+
 const initState = {
     email: '',
     password: '',
@@ -46,7 +48,7 @@ class SignOutForm extends Component {
                     <div>
                         <Button variant="light" className="logoutButton" onClick={this.changeVisibility}>
                             <IoIosPerson size={40} />
-                            {authUser.email}
+                            {this.props.authUser.email}
                         </Button>
 
                         <Modal show={this.state.show} onHide={this.changeVisibility} className="modal" id='modalSignOut'>
@@ -85,5 +87,10 @@ class SignOutForm extends Component {
     }
 }
 
-const SignOut = compose(withRouter, withFirebase)(SignOutForm);
+const mapStateToProps = state => ({
+    authUser: state.sessionState.authUser,
+  });
+  
+
+const SignOut = compose(connect(mapStateToProps), withRouter, withFirebase)(SignOutForm);
 export default SignOut;
