@@ -48,6 +48,8 @@ class CompanyAccount extends Component {
             ? this.setState({ authUser })
             : this.setState({ authUser: null });
 
+            if (this.state.authUser != null) {
+
             var companyRef = this.props.firebase.database().ref.child('companies').orderByChild('companyId')
             .equalTo(this.state.authUser.uid)
             companyRef.on('value', snapshot => {
@@ -133,7 +135,7 @@ class CompanyAccount extends Component {
                 });
         });
 
-        
+         }
         })
     }
 
@@ -237,7 +239,6 @@ class CreateVacancyForm extends Component {
         const { positionTitle, description, city, province, country, requirements, sector,
             keyResponsibilities, type, salary, salaryType, contactInfo } = this.state;
         return (
-            // to grab the authenticated user info from React.Context hoc (may use Redux instead in the future)
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
                 style={{ justifyContent: 'center', marginTop: "30px", marginBottom: "30px" }}>
@@ -307,7 +308,7 @@ class CreateVacancyForm extends Component {
 
 const mapStateToProps = state => ({
     authUser: state.sessionState.authUser,
-  });
+});
 
 
 

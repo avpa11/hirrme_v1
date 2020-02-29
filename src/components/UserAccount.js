@@ -19,11 +19,6 @@ import { connect } from 'react-redux';
             super(props);
             this.state = {
             loading: false,
-            // don't need user state anymore ¯\_(ツ)_/¯
-            user: [],
-            educations: [],
-            experiences: [],
-            likes: [],
             incognito: null,
             key: ''
             };
@@ -36,13 +31,10 @@ import { connect } from 'react-redux';
             }
             let currentComponent = this;
             this.setState({ loading: true });
-            this.props.firebase.auth.onAuthStateChanged(authUser => {
-            authUser
-                ? this.setState({ authUser })
-                : this.setState({ authUser: null });
 
-                var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('userId')
-                .equalTo(this.state.authUser.uid)
+                
+                var jobSeekersRef = this.props.firebase.users().orderByChild('userId')
+                .equalTo(this.props.authUser.uid)
                 jobSeekersRef.on('value', snapshot => {
                     snapshot.forEach(snap1 => {
                         // Redux
@@ -51,28 +43,11 @@ import { connect } from 'react-redux';
                             // user object key
                             Object.keys(snapshot.val())[0],
                         );
-                        this.setState({ loading: false });
-
-                        currentComponent.setState({
-                            user: snap1.val(),
-                            loading: false,
-                        });
-                        if (snapshot.val() !== null) {
-                            Object.keys(snapshot.val() ).forEach(key => {
-                            // The ID is the key
-                            //   console.log(key);
-                            currentComponent.setState({
-                                key: key,
-                            });
-                            });
-                        }
-                        // console.log(currentComponent.state.user.incognito);
-                        // console.log(currentComponent.state.user);
-                        // console.log(snapshot.val());
+                        currentComponent.setState({ loading: false, key: Object.keys(snapshot.val())[0]  });
                     });
                 })
                 // Education
-                this.props.firebase.database().ref.child('educations').ref.child(this.state.authUser.uid)
+                this.props.firebase.education(this.props.authUser.uid)
                 .once('value').then(function(snapshot) {
                     snapshot.forEach(snap1 => {
                         currentComponent.setState({
@@ -100,7 +75,7 @@ import { connect } from 'react-redux';
                     });
                 })
                 // Experience
-                this.props.firebase.database().ref.child('experience').ref.child(this.state.authUser.uid)
+                this.props.firebase.experience(this.props.authUser.uid)
                 .once('value').then(function(snapshot) {
                     snapshot.forEach(snap1 => {
                         currentComponent.setState({
@@ -127,7 +102,7 @@ import { connect } from 'react-redux';
                     });
                 })
                 // Likes
-                var likesRef = this.props.firebase.database().ref.child('likes').ref.child(this.state.authUser.uid);
+                var likesRef = this.props.firebase.database().ref.child('likes').ref.child(this.props.authUser.uid);
                 likesRef.on('value', snapshot => {
                     if (document.getElementById('likes') != null) {
                         document.getElementById('likes').innerHTML = '';
@@ -155,44 +130,46 @@ import { connect } from 'react-redux';
                         }
                     });
             });
-            });
 
         }   
-
+        
         handleSubmit = (e) => {
             e.preventDefault();
             var incognito = this.state.incognito;
-            if (this.state.user.incognito === 1) {
+            if (this.props.user.incognito === 1) {
                 incognito = null;
-            } else if (this.state.user.incognito === 0) {
+            } else if (this.props.user.incognito === 0) {
                 incognito = null;
             } else {
                 incognito = 1;
             }
 
-            this.props.firebase.database().ref.child('users').ref.child(this.state.key).update({
+            // console.log(this.props.user);
+            // console.log(this.props.user.incognito);
+            // console.log(this.props.user.userId);
+
+            
+            this.props.firebase.users().ref.child(this.state.key).update({
                 incognito: incognito,
             })
             .catch(error => console.log(error));
         }
-
+        
         componentWillUnmount() {
             this.props.firebase.database().off();
             this.props.firebase.database().ref.child('users').off();
             this.props.firebase.database().ref.child('experience').off();
             this.props.firebase.database().ref.child('educations').off();
         }
-
+        
         render () {
-            // const { user } = this.props;
             // const { loading } = this.state;
+
             return (
-                // <AuthUserContext.Consumer>
-                //     {authUser => (
                     <div style={{marginTop: "120px"}}>
                     <h1 style={{marginLeft: "20px"}}>Welcome to your account, {this.props.authUser.email}</h1>
                     
-                    { this.state.user.userId != null ? (
+                    { this.props.user != null ? (
                         <div>	                        
                             <div className="container">  
                                 <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
@@ -216,14 +193,14 @@ import { connect } from 'react-redux';
                                     <Col sm={9} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '5px'}}>
                                     <Tab.Content>
                                         <Tab.Pane eventKey="#link1">
-                                            <h2 className="centerText" style={{marginBottom: 0}}>{this.state.user.firstName}
-                                            <span> {this.state.user.lastName}</span></h2>
+                                            <h2 className="centerText" style={{marginBottom: 0}}>{this.props.user.firstName}
+                                            <span> {this.props.user.lastName}</span></h2>
                                             <p style={{color: 'rgb(155,155,155)'}}>
-                                                <span>{this.state.user.city}</span>,
-                                                <span> {this.state.user.province}</span>, 
-                                                <span> {this.state.user.country}</span>
+                                                <span>{this.props.user.city}</span>,
+                                                <span> {this.props.user.province}</span>, 
+                                                <span> {this.props.user.country}</span>
                                             </p> <br />
-                                            <h4><FaBriefcase /> {this.state.user.title}</h4>
+                                            <h4><FaBriefcase /> {this.props.user.title}</h4>
 
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="#link2">
@@ -253,11 +230,11 @@ import { connect } from 'react-redux';
                                 </Col>
                                 <Col className="container" sm={2} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
                                     <h3 className="centerText">Account Visibility <br />
-                                    { this.state.user.incognito === 1 ? (	                        
+                                    { this.props.user.incognito === 1 ? (	                        
                                         <FaUserSecret />                           
                                     ) : <FaUserTie /> }
                                     </h3>
-                                    { this.state.user.incognito === 1 ? (	                        
+                                    { this.props.user.incognito === 1 ? (	                        
                                         <p className="container" id="visibility">Incognito</p>                         
                                     ) : <p className="container" id="visibility">Visible</p> }
                                     {/* <p id="visibility"></p> */}
@@ -273,8 +250,6 @@ import { connect } from 'react-redux';
                         </div>  
                     ) : <CompanyAccount /> }
                 </div> 
-                // )}
-                // </AuthUserContext.Consumer>
             )
         }
     }
@@ -283,12 +258,20 @@ import { connect } from 'react-redux';
 // Redux stuff
 const mapStateToProps = (state, props) => ({
     authUser: state.sessionState.authUser,
-    user: (state.userState.users || {})[props.match.params.id],
+    // user: (state.userState.users || {})[props.match.params.id],
+    // user: Object.keys(state.userState.users || {}).map(key => ({
+    //     ...state.userState.users[key],
+    //     uid: key,
+    //   })),
+    // user: Object.keys(state.userState.users || {}).map(key => ({
+    //         ...state.userState.users,
+    //     }))
+    user: (state.userState.user || {})[Object.keys(state.userState.user  || {})]
 
 });
      
 const mapDispatchToProps = dispatch => ({
-    onSetUser: (user, uid) => dispatch({ type: 'USER_SET', user, uid }),
+    onSetUser: (user, key) => dispatch({ type: 'USER_SET', user, key }),
   });
 
 

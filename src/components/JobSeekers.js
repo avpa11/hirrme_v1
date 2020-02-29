@@ -148,6 +148,7 @@ class JobSeekers extends Component {
         // can now grab the users from redux here instead of firebase in ComponentDidMount ... maybe ¯\_(ツ)_/¯
         const { users } = this.props;
         const { loading } = this.state;
+        // console.log(users);
 
         return (
             <div className="container" style={{ marginTop: "120px" }}>
@@ -218,8 +219,8 @@ class JobSeekerObject extends Component {
 
 // ¯\_(ツ)_/¯
 const mapStateToProps = state => ({
-    users: Object.keys(state.userState.users || {}).map(key => ({
-      ...state.userState.users[key],
+    users: Object.keys(state.usersState.users || {}).map(key => ({
+      ...state.usersState.users[key],
       uid: key,
     })),
 });

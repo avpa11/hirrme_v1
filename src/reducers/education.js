@@ -12,10 +12,10 @@ const INITIAL_STATE = {
   });
   function educationReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
-      case 'MESSAGES_SET': {
+      case 'EDUCATIONS_SET': {
         return applySetEducations(state, action);
       }
-      case 'MESSAGES_LIMIT_SET': {
+      case 'EDUCATIONS_LIMIT_SET': {
         return applySetEducationsLimit(state, action);
       }
       default:
