@@ -7,18 +7,33 @@ import { FaSearch, FaSearchLocation } from "react-icons/fa";
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 
+// ¯\_(ツ)_/¯
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+
 class JobSeekers extends Component {
     constructor(props) {
         super(props);
         this.state = {
           authUser: null,
           searchPosition: '',
+        //   loading indicator for Firebase listener on Redux update ¯\_(ツ)_/¯
+          loading: false,
         };
       }
 
     componentDidMount() {
+        // ¯\_(ツ)_/¯
+        if (!this.props.users.length) {
+            this.setState({ loading: true });
+        }
+
         this.displayJobSeekers('firstName')
     }
+
+    componentWillUnmount() {
+        this.props.firebase.users().off();
+      }
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -90,6 +105,11 @@ class JobSeekers extends Component {
         var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('incognito')
         .equalTo(null);
         jobSeekersRef.on('value', snap => {
+            // store the users in redux after fetching them ¯\_(ツ)_/¯
+            this.props.onSetUsers(snap.val());
+            // ¯\_(ツ)_/¯
+            this.setState({ loading: false });
+
             if (document.getElementById('jobSeekersList')!=null) {
                 document.getElementById('jobSeekersList').innerHTML = '';
             }
@@ -124,9 +144,15 @@ class JobSeekers extends Component {
 
     render() {
         const { searchPosition } = this.state;
+
+        // can now grab the users from redux here instead of firebase in ComponentDidMount ... maybe ¯\_(ツ)_/¯
+        const { users } = this.props;
+        const { loading } = this.state;
+
         return (
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Job Seekers</h4>
+                {loading && <div>Loading ...</div>}
                 <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
                 <div className="input-group-prepend" style={{backgroundColor: 'none',borderColor: "#FFC107"}}>
                     <span className="input-group-text">
@@ -189,4 +215,20 @@ class JobSeekerObject extends Component {
         )
     }
 }
-export default withFirebase(JobSeekers);
+
+// ¯\_(ツ)_/¯
+const mapStateToProps = state => ({
+    users: Object.keys(state.userState.users || {}).map(key => ({
+      ...state.userState.users[key],
+      uid: key,
+    })),
+});
+
+const mapDispatchToProps = dispatch => ({
+    onSetUsers: users => dispatch({ type: 'USERS_SET', users }),
+});
+
+export default compose(withFirebase,connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ))(JobSeekers);

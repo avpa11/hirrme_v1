@@ -3,9 +3,11 @@ import Form from 'react-bootstrap/Form';
 // import Button from 'react-bootstrap/Button';
 // import Row from 'react-bootstrap/Row';
 import FormControl from 'react-bootstrap/FormControl';
-import { AuthUserContext, withAuthorization } from './Session';
+import { withAuthorization } from './Session';
 import CreateCompanyPage from './CreateCompany';
 
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
 
 class CreateAccount extends Component {
 
@@ -31,36 +33,37 @@ class CreateAccount extends Component {
     render() {
 
         return (
-            <AuthUserContext.Consumer>
-                {authUser => (
-                    <div>
-                        <div id="mainPlaceholder" className="container rectangle registerect container" style={{ marginTop: "120px" }} >
-                            <h1>Tell us who you are</h1>
-                            <Form
-                                onSubmit={this.handleSubmit}
-                                style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+            <div>
+                <div id="mainPlaceholder" className="container rectangle registerect container" style={{ marginTop: "120px" }} >
+                    <h1>Tell us who you are</h1>
+                    <Form
+                        onSubmit={this.handleSubmit}
+                        style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
 
-                                <FormControl value="jobseeker" onChange={this.handleChange} type="radio" name="usertype" className="mr-sm-2 col-12 col-xs-12" id='rdbjobseeker' />
-                                <label htmlFor="rdbjobseeker">Job Seeker</label>
-                                <FormControl value="employer" onChange={this.handleChange} type="radio" name="usertype" className="mr-sm-2 col-12 col-xs-12" id='rdbemployer' />
-                                <label htmlFor="rdbemployer">Employer</label>
-                                {/* <Row>
-                            <Button type="submit" variant="warning" className="container center">
-                                Continue
-                            </Button>
-                        </Row> */}
-                            </Form>
-                        </div>
-                        <div id="createCompanyPagePlaceholder" style={{display:"none"}}>
-                            <CreateCompanyPage />
-                        </div>
-                    </div>
-                )}
-            </AuthUserContext.Consumer>
+                        <FormControl value="jobseeker" onChange={this.handleChange} type="radio" name="usertype" className="mr-sm-2 col-12 col-xs-12" id='rdbjobseeker' />
+                        <label htmlFor="rdbjobseeker">Job Seeker</label>
+                        <FormControl value="employer" onChange={this.handleChange} type="radio" name="usertype" className="mr-sm-2 col-12 col-xs-12" id='rdbemployer' />
+                        <label htmlFor="rdbemployer">Employer</label>
+                        {/* <Row>
+                    <Button type="submit" variant="warning" className="container center">
+                        Continue
+                    </Button>
+                </Row> */}
+                    </Form>
+                </div>
+                <div id="createCompanyPagePlaceholder" style={{display:"none"}}>
+                    <CreateCompanyPage />
+                </div>
+            </div>
         )
     }
 }
 
+const mapStateToProps = state => ({
+    authUser: state.sessionState.authUser,
+  });
+
+
 const condition = authUser => !!authUser;
 
-export default withAuthorization(condition)(CreateAccount);
+export default compose(connect(mapStateToProps),withAuthorization(condition))(CreateAccount);

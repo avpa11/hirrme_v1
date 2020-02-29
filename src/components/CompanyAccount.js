@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { AuthUserContext } from './Session';
+// import { AuthUserContext } from './Session';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
@@ -12,6 +12,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import PasswordChangeForm from './PasswordChange';
 import { FaBriefcase } from "react-icons/fa";
+import { connect } from 'react-redux';
 
 const initState = {
     //   for vacancies:
@@ -237,78 +238,80 @@ class CreateVacancyForm extends Component {
             keyResponsibilities, type, salary, salaryType, contactInfo } = this.state;
         return (
             // to grab the authenticated user info from React.Context hoc (may use Redux instead in the future)
-            <AuthUserContext.Consumer>
-            {authUser => (
-                        <Form
-                            onSubmit={e => this.handleSubmit(e, authUser)}
-                            style={{ justifyContent: 'center', marginTop: "30px", marginBottom: "30px" }}>
-                        
-                            <FormControl type="text" value={positionTitle} onChange={this.handleChange} name="positionTitle" placeholder="Title"></FormControl>                        
-                            <Form.Control as="textarea" value={description} onChange={this.handleChange} name="description" placeholder="Job Description" rows="3"></Form.Control> 
-                            <Form.Group>  
-                                <Form.Label>Location</Form.Label>    
-                                <Row>  
-                                    <Col m={4}>
-                                        <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>                        
-                                    </Col>               
-                                    <Col m={4}>
-                                        <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province"></FormControl>                        
-                                    </Col>               
-                                    <Col m={4}>
-                                        <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country"></FormControl>   
-                                    </Col>               
-                                </Row>
-                            </Form.Group>   
-                            <Form.Control as="textarea" value={requirements} onChange={this.handleChange} name="requirements" placeholder="Job Requirements" rows="3"></Form.Control>                        
-                            <Form.Group>
-                                <Form.Label>Job Sector</Form.Label>
-                                <Form.Control onChange={this.handleChange} value={sector} name="sector" as="select">
-                                <option value=""></option>
-                                <option value="computer">Computer and Technology</option>
-                                <option value="marketing">Marketing</option>
-                                <option value="finance">Accounting and Finance</option>
-                                </Form.Control>
-                            </Form.Group>
-                            <Form.Control as="textarea" value={keyResponsibilities} onChange={this.handleChange} name="keyResponsibilities" placeholder="Key Responsibilities" rows="3"></Form.Control>                        
-                            <Form.Group>
-                                <Form.Label>Type</Form.Label>
-                                <Form.Control onChange={this.handleChange} value={type} name="type" as="select">
-                                <option value="" ></option>
-                                <option value="full-time" >Full-time</option>
-                                <option value="part-time" >Part-time</option>
-                                <option value="contract" >Contract</option>
-                                <option value="internship" >Internship</option>
-                                </Form.Control>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Salary</Form.Label>
-                                <Row>
-                                    <Col m={6}>
-                                        <FormControl type="text" value={salary} onChange={this.handleChange} name="salary" placeholder="Salary"></FormControl>   
-                                    </Col>  
-                                    <Col m={6}>
-                                        <Form.Control onChange={this.handleChange} value={salaryType} name="salaryType" as="select">
-                                        <option value=""> </option>
-                                        <option value="yearly">yearly</option>
-                                        <option value="hourly">hourly</option>
-                                        </Form.Control>
-                                    </Col>  
-                                </Row>
-                            </Form.Group>
-                            <FormControl type="email" value={contactInfo} onChange={this.handleChange} name="contactInfo" placeholder="Contact Email"></FormControl>      
-                     
-                            <Button type="submit" variant="warning">
-                                Create
-                            </Button>
-                        </Form>
-            )}
-            </AuthUserContext.Consumer>
+            <Form
+                onSubmit={e => this.handleSubmit(e, this.props.authUser)}
+                style={{ justifyContent: 'center', marginTop: "30px", marginBottom: "30px" }}>
+            
+                <FormControl type="text" value={positionTitle} onChange={this.handleChange} name="positionTitle" placeholder="Title"></FormControl>                        
+                <Form.Control as="textarea" value={description} onChange={this.handleChange} name="description" placeholder="Job Description" rows="3"></Form.Control> 
+                <Form.Group>  
+                    <Form.Label>Location</Form.Label>    
+                    <Row>  
+                        <Col m={4}>
+                            <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>                        
+                        </Col>               
+                        <Col m={4}>
+                            <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province"></FormControl>                        
+                        </Col>               
+                        <Col m={4}>
+                            <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country"></FormControl>   
+                        </Col>               
+                    </Row>
+                </Form.Group>   
+                <Form.Control as="textarea" value={requirements} onChange={this.handleChange} name="requirements" placeholder="Job Requirements" rows="3"></Form.Control>                        
+                <Form.Group>
+                    <Form.Label>Job Sector</Form.Label>
+                    <Form.Control onChange={this.handleChange} value={sector} name="sector" as="select">
+                    <option value=""></option>
+                    <option value="computer">Computer and Technology</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="finance">Accounting and Finance</option>
+                    </Form.Control>
+                </Form.Group>
+                <Form.Control as="textarea" value={keyResponsibilities} onChange={this.handleChange} name="keyResponsibilities" placeholder="Key Responsibilities" rows="3"></Form.Control>                        
+                <Form.Group>
+                    <Form.Label>Type</Form.Label>
+                    <Form.Control onChange={this.handleChange} value={type} name="type" as="select">
+                    <option value="" ></option>
+                    <option value="full-time" >Full-time</option>
+                    <option value="part-time" >Part-time</option>
+                    <option value="contract" >Contract</option>
+                    <option value="internship" >Internship</option>
+                    </Form.Control>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Salary</Form.Label>
+                    <Row>
+                        <Col m={6}>
+                            <FormControl type="text" value={salary} onChange={this.handleChange} name="salary" placeholder="Salary"></FormControl>   
+                        </Col>  
+                        <Col m={6}>
+                            <Form.Control onChange={this.handleChange} value={salaryType} name="salaryType" as="select">
+                            <option value=""> </option>
+                            <option value="yearly">yearly</option>
+                            <option value="hourly">hourly</option>
+                            </Form.Control>
+                        </Col>  
+                    </Row>
+                </Form.Group>
+                <FormControl type="email" value={contactInfo} onChange={this.handleChange} name="contactInfo" placeholder="Contact Email"></FormControl>      
+            
+                <Button type="submit" variant="warning">
+                    Create
+                </Button>
+            </Form>
         )
     }
 
 }
 
-const VacancyForm = compose(withRouter, withFirebase)(CreateVacancyForm);
+const mapStateToProps = state => ({
+    authUser: state.sessionState.authUser,
+  });
+
+
+
+const VacancyForm = compose(connect(mapStateToProps),withRouter, withFirebase)(CreateVacancyForm);
 
 export default withFirebase(CompanyAccount);
 

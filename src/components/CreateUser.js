@@ -3,11 +3,13 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
-import { AuthUserContext, withAuthorization } from './Session';
+import { withAuthorization } from './Session';
 
 import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+
+import { connect } from 'react-redux';
 
 const CreateUser = () => (
     <div>
@@ -85,13 +87,11 @@ class CreateUserForm extends Component {
         const { firstName, lastName, title, city, province, country } = this.state;
         return (
             // to grab the authenticated user info from React.Context hoc (may use Redux instead in the future)
-            <AuthUserContext.Consumer>
-            {authUser => (
                 <div className="rectangle registerect container" style={{ marginTop: "120px" }}>
                     <div className="container">
                         <h1>Almost done</h1>
                         <Form
-                            onSubmit={e => this.handleSubmit(e, authUser)}
+                            onSubmit={e => this.handleSubmit(e, this.props.authUser)}
                             style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
                         
                             <FormControl type="text" value={firstName} onChange={this.handleChange} name="firstName" placeholder="First Name"></FormControl>                        
@@ -106,14 +106,16 @@ class CreateUserForm extends Component {
                         </Form>
                     </div>
                 </div>
-            )}
-            </AuthUserContext.Consumer>
         )
     }
 
 }
 
-const UserForm = compose(withRouter, withFirebase)(CreateUserForm);
+const mapStateToProps = state => ({
+    authUser: state.sessionState.authUser,
+  });
+
+const UserForm = compose(connect(mapStateToProps), withRouter, withFirebase)(CreateUserForm);
 // condtion to check for user authorization
 const condition = authUser => !!authUser;
 

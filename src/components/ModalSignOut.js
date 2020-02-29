@@ -5,8 +5,10 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { withFirebase } from './Firebase';
-import { AuthUserContext } from './Session';
+// import { AuthUserContext } from './Session';
 import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, IoIosDocument, IoMdSettings } from "react-icons/io";
+
+import { connect } from 'react-redux';
 
 const initState = {
     email: '',
@@ -41,12 +43,12 @@ class SignOutForm extends Component {
 
     render() {
         return (
-            <AuthUserContext.Consumer>
-                {authUser => (
+            // <AuthUserContext.Consumer>
+            //     {authUser => (
                     <div>
                         <Button variant="light" className="logoutButton" onClick={this.changeVisibility}>
                             <IoIosPerson size={40} />
-                            {authUser.email}
+                            {this.props.authUser.email}
                         </Button>
 
                         <Modal show={this.state.show} onHide={this.changeVisibility} className="modal" id='modalSignOut'>
@@ -79,11 +81,16 @@ class SignOutForm extends Component {
                             </Modal.Body>
                         </Modal>
                     </div>
-                )}
-            </AuthUserContext.Consumer>
+            //     )}
+            // </AuthUserContext.Consumer>
         )
     }
 }
 
-const SignOut = compose(withRouter, withFirebase)(SignOutForm);
+const mapStateToProps = state => ({
+    authUser: state.sessionState.authUser,
+  });
+  
+
+const SignOut = compose(connect(mapStateToProps), withRouter, withFirebase)(SignOutForm);
 export default SignOut;

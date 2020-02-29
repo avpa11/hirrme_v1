@@ -1,8 +1,10 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import AuthUserContext  from './context';
+// import AuthUserContext  from './context';
 import { withFirebase } from '../Firebase';
+
+import { connect } from 'react-redux';
 
 const withAuthorization = condition => Component => {
     class WithAuthorization extends React.Component {
@@ -19,16 +21,17 @@ const withAuthorization = condition => Component => {
         this.listener();
       }
       render() {
-        return (
-            <AuthUserContext.Consumer>
-            {authUser =>
-              condition(authUser) ? <Component {...this.props} /> : null
-            }
-          </AuthUserContext.Consumer>
-        );
+        return condition(this.props.authUser) ? (
+          <Component {...this.props} />
+        ) : null;
       }
     }
-    return compose(withRouter, withFirebase,)(WithAuthorization);
+
+    const mapStateToProps = state => ({
+      authUser: state.sessionState.authUser,
+    });
+
+    return compose(withRouter, withFirebase, connect(mapStateToProps),)(WithAuthorization);
   };
 
 export default withAuthorization;

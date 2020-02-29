@@ -3,12 +3,13 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
-import { AuthUserContext, withAuthorization } from './Session';
+import { withAuthorization } from './Session';
 
 import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
+import { connect } from 'react-redux';
 
 const CreateCompany = () => (
     <div>
@@ -81,34 +82,34 @@ class CreateCompanyForm extends Component {
     render() {
         const { companyName, companyField, companyDesrciption, companyDirector, companyCity, companyProvince, companyCountry } = this.state;
         return (
-            <AuthUserContext.Consumer>
-                {authUser => (
-                    <div className="rectangle registerect container" style={{ marginTop: "120px" }}>
-                        <div className="container">
-                            <h1>Let us know more about your company!</h1>
-                            <Form
-                                onSubmit={e => this.handleSubmit(e, authUser)}
-                                style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                                <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder="Name"></FormControl>
-                                <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder="Field"></FormControl>
-                                <FormControl type="text" value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder="Description"></FormControl>
-                                <FormControl type="text" value={companyDirector} onChange={this.handleChange} name="companyDirector" placeholder="Director"></FormControl>
-                                <FormControl type="text" value={companyCity} onChange={this.handleChange} name="companyCity" placeholder="City"></FormControl>
-                                <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="Province"></FormControl>
-                                <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="Country"></FormControl>
-                                <Button type="submit" variant="warning">
-                                    Register
-                            </Button>
-                            </Form>
-                        </div>
+                <div className="rectangle registerect container" style={{ marginTop: "120px" }}>
+                    <div className="container">
+                        <h1>Let us know more about your company!</h1>
+                        <Form
+                            onSubmit={e => this.handleSubmit(e, this.props.authUser)}
+                            style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                            <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder="Name"></FormControl>
+                            <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder="Field"></FormControl>
+                            <FormControl type="text" value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder="Description"></FormControl>
+                            <FormControl type="text" value={companyDirector} onChange={this.handleChange} name="companyDirector" placeholder="Director"></FormControl>
+                            <FormControl type="text" value={companyCity} onChange={this.handleChange} name="companyCity" placeholder="City"></FormControl>
+                            <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="Province"></FormControl>
+                            <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="Country"></FormControl>
+                            <Button type="submit" variant="warning">
+                                Register
+                        </Button>
+                        </Form>
                     </div>
-                )}
-            </AuthUserContext.Consumer>
+                </div>
         )
     }
 }
 
-const CompanyForm = compose(withRouter, withFirebase)(CreateCompanyForm);
+const mapStateToProps = state => ({
+    authUser: state.sessionState.authUser,
+  });
+
+const CompanyForm = compose(connect(mapStateToProps), withRouter, withFirebase)(CreateCompanyForm);
 const condition = authUser => !!authUser;
 
 export default withAuthorization(condition)(CreateCompany);
