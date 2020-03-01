@@ -6,13 +6,34 @@ import Button from 'react-bootstrap/Button';
 import { FaSearch, FaSearchLocation } from "react-icons/fa";
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+
+const mapStateToProps = state => ({
+    vacancies: Object.keys(state.vacanciesState.vacancies || {}).map(key => ({
+        ...state.vacanciesState.vacancies[key],
+        uid: key,
+    })),
+    savedVacancies: Object.keys(state.savedVacanciesState.savedVacancies || {}).map(key => ({
+        ...state.savedVacanciesState.savedVacancies[key],
+        uid: key,
+    })),
+    authUser: state.sessionState.authUser,
+});
+
+const mapDispatchToProps = dispatch => ({
+    onSetVacancies: vacancies => dispatch({ type: 'VACANCIES_SET', vacancies }),
+    onSetSavedVacancies: savedVacancies => dispatch({ type: 'SAVED_VACANCIES_SET', savedVacancies })
+});
 
 class Vacancies extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authUser: this.props.firebase.auth.currentUser,
+            // authUser: this.props.firebase.auth.currentUser,
             search: '',
+            loading: false,
+
         };
     }
 
@@ -78,48 +99,52 @@ class Vacancies extends Component {
 
 
     displayVacancies() {
-        this.props.firebase.auth.onAuthStateChanged(authUser => {
-            authUser != null ? this.setState({ authUser }) : this.setState({ authUser: null })
+        // this.props.firebase.auth.onAuthStateChanged(authUser => {
+        //     authUser != null ? this.setState({ authUser }) : this.setState({ authUser: null })
+        // })
+
+        var savedVacanciesRef = this.props.firebase.database().ref.child('savedVacancies').ref;
+
+        savedVacanciesRef.on('value', snap => {
+            this.props.onSetSavedVacancies(snap.val());
         })
+
+        let savedVacanciesData = this.props.savedVacancies;
 
         var id = 0;
 
         var vacanciesRef = this.props.firebase.database().child('vacancies').ref;
 
         vacanciesRef.on('value', snap => {
+
+            this.props.onSetVacancies(snap.val());
+            // ¯\_(ツ)_/¯
+            this.setState({ loading: false });
+
             if (document.getElementById('vacanciesList') != null) {
                 document.getElementById('vacanciesList').innerHTML = '';
             }
-            snap.forEach(snap => {
-                snap.forEach(snap1 => {
-                    id++;
 
-                    var div = document.createElement('div');
-                    div.setAttribute('id', id);
-                    div.setAttribute('class', 'vacancy');
-                    if (document.getElementById('vacanciesList') != null) {
-                        document.getElementById('vacanciesList').appendChild(div);
+            let vacanciesData = this.props.vacancies;
 
-                        ReactDOM.render(<VacancyObject
-                            vacancyTitle={snap1.child('positionTitle').val()}
-                            sector={snap1.child('sector').val()}
-                            type={snap1.child('type').val()}
-                            salaryType={snap1.child('salaryType').val()}
-                            salary={snap1.child('salary').val()}
-                            city={snap1.child('city').val()}
-                            province={snap1.child('province').val()}
-                            country={snap1.child('country').val()}
-                            contactInfo={snap1.child('contactInfo').val()}
-                            description={snap1.child('description').val()}
-                            keyResponsibilities={snap1.child('keyResponsibilities').val()}
-                            requirements={snap1.child('requirements').val()}
-                            authUser={this.state.authUser}
-                            firebase={this.props.firebase}
-                            userId={snap.key}
-                        />, document.getElementById(id));
+            for (var i in vacanciesData) {
+                var companyData = vacanciesData[i];
+
+                for (var vacancy in companyData) {
+                    if (companyData[vacancy].hasOwnProperty('positionTitle')) {
+                        id++;
+
+                        var div = document.createElement('div');
+                        div.setAttribute('id', id);
+                        div.setAttribute('class', 'vacancy');
+                        if (document.getElementById('vacanciesList') != null) {
+                            document.getElementById('vacanciesList').appendChild(div);
+
+                            ReactDOM.render(<VacancyObject vacancyData={companyData[vacancy]} savedVacanciesData={savedVacanciesData} authUser={this.props.authUser} firebase={this.props.firebase} />, document.getElementById(id));
+                        }
                     }
-                })
-            })
+                }
+            }
         })
     }
 
@@ -158,57 +183,69 @@ class VacancyObject extends Component {
         this.state = {
             display: "none",
             displayButton: "Expand",
-            authUser: this.props.authUser,
-            firebase: this.props.firebase,
-            likeStatus: null,
+            isSaveDisabled: true,
+            saveStatus: 'Save'
         };
     }
 
     componentDidMount = () => {
-        var likedVacancies = this.state.firebase.database().child('likes').ref;
+        // var savedVacancies = this.state.firebase.database().child('savedVacancies').ref;
 
-        this.setState({ likeStatus: 'Like' })
-        
-        if (this.state.authUser !== null) {
-            likedVacancies.on('value', snap => {
-                snap.forEach(snap1 => {
-                    if (snap1.child('email').val() === this.state.authUser.email &&
-                        snap1.child('vacancyTitle').val() === this.props.vacancyTitle &&
-                        snap1.child('contactInfo').val() === this.props.contactInfo) {
-                        this.setState({ likeStatus: 'Dislike' })
-                    }
-                })
-            })
+        if (this.props.authUser != null) {
+            this.props.firebase.database().ref.child('companies').orderByChild('email').equalTo(this.props.authUser.email).once('value', snap => {
+                if (!snap.exists()) {
+                    this.setState({ isSaveDisabled: false })
+                }
+            });
+            this.props.savedVacanciesData.forEach(savedVacancyData => {
+                if (savedVacancyData.email === this.props.authUser.email &&
+                    savedVacancyData.positionTitle === this.props.vacancyData.positionTitle &&
+                    savedVacancyData.positionTitle === this.props.vacancyData.positionTitle) {
+                    this.setState({ saveStatus: 'Remove' })
+                }
+            });
         }
+
+        // if (this.state.authUser !== null) {
+        //     likedVacancies.on('value', snap => {
+        //         snap.forEach(snap1 => {
+        //             if (snap1.child('email').val() === this.state.authUser.email &&
+        //                 snap1.child('vacancyTitle').val() === this.props.vacancyTitle &&
+        //                 snap1.child('contactInfo').val() === this.props.contactInfo) {
+        //                 this.setState({ likeStatus: 'Dislike' })
+        //             }
+        //         })
+        //     })
+        // }
     }
 
     handleLike = (e) => {
         e.preventDefault();
 
-        this.state.authUser != null ? (this.state.likeStatus === 'Like' ? this.addLike() : this.removeLike()) : window.alert("You need to log in to leave a like")
+        this.props.authUser != null ? (this.state.saveStatus === 'Save' ? this.saveVacancy() : this.removeVacancy()) : window.alert("You need to log in to leave a like")
     }
 
-    addLike = () => {
-        this.state.firebase.database().child('likes').push({
-            vacancyTitle: this.props.vacancyTitle,
-            contactInfo: this.props.contactInfo,
-            email: this.state.authUser.email,
+    saveVacancy = () => {
+        this.props.firebase.database().child('savedVacancies').push({
+            positionTitle: this.props.vacancyData.positionTitle,
+            contactInfo: this.props.vacancyData.contactInfo,
+            email: this.props.authUser.email,
             date: (new Date()).toISOString().split('T')[0],
         })
-            .then(this.setState({ likeStatus: 'Dislike' }))
+            .then(this.setState({ saveStatus: 'Remove' }))
             .catch(error => console.log(error));
     }
 
-    removeLike = () => {
-        var likedVacancies = this.state.firebase.database().child('likes').ref;
+    removeVacancy = () => {
+        var savedVacanciesRef = this.props.firebase.database().child('savedVacancies').ref;
 
-        likedVacancies.once('value', snap => {
+        savedVacanciesRef.once('value', snap => {
             snap.forEach(snap1 => {
-                if (snap1.child('email').val() === this.state.authUser.email &&
-                    snap1.child('vacancyTitle').val() === this.props.vacancyTitle &&
-                    snap1.child('contactInfo').val() === this.props.contactInfo) {
-                    likedVacancies.child(snap1.key).remove()
-                        .then(this.setState({ likeStatus: 'Like' }))
+                if (snap1.child('email').val() === this.props.authUser.email &&
+                    snap1.child('positionTitle').val() === this.props.vacancyData.positionTitle &&
+                    snap1.child('contactInfo').val() === this.props.vacancyData.contactInfo) {
+                    savedVacanciesRef.child(snap1.key).remove()
+                        .then(this.setState({ saveStatus: 'Save' }))
                         .catch(error => console.log(error));
                 }
             })
@@ -227,6 +264,10 @@ class VacancyObject extends Component {
     }
 
     render() {
+
+        let vacancyData = this.props.vacancyData;
+        // console.log( "d ", vacancyData);
+
         return (
             <div>
                 <div style={{ display: 'table' }}>
@@ -234,25 +275,25 @@ class VacancyObject extends Component {
                         <IoMdPaper size={180} />
                     </div>
                     <div style={{ float: 'left', maxWidth: '25em', minWidth: '25em', margin: '0 2em', textAlign: 'left' }}>
-                        <h4>{this.props.vacancyTitle} {this.props.lastName}</h4>
-                        <h5>{this.props.sector}</h5>
-                        <h5>{this.props.type}</h5>
-                        <h6>{this.props.city}, {this.props.province}, {this.props.country}</h6>
+                        <h4>{vacancyData.positionTitle}</h4>
+                        <h5>{vacancyData.sector}</h5>
+                        <h5>{vacancyData.type}</h5>
+                        <h6>{vacancyData.city}, {vacancyData.province}, {vacancyData.country}</h6>
                     </div>
                     <div style={{ float: 'left', margin: '0 2em' }}>
                         <Button onClick={this.showAllInfo} variant="primary">{this.state.displayButton}</Button> <span />
                         <Button variant="primary">Send Email</Button> <span />
-                        <Button onClick={e => this.handleLike(e)} variant="danger">{this.state.likeStatus}</Button>
+                        <Button onClick={e => this.handleLike(e)} variant="danger" disabled={this.state.isSaveDisabled}>{this.state.saveStatus}</Button>
                     </div>
                 </div>
                 <div style={{ display: this.state.display, textAlign: 'left' }}>
                     <div style={{ margin: '2em' }}>
                         <h4>Description</h4>
-                        <h6>{this.props.description}</h6>
+                        <h6>{vacancyData.description}</h6>
                         <h4>Responsibilities</h4>
-                        <h6>{this.props.keyResponsibilities}</h6>
+                        <h6>{vacancyData.keyResponsibilities}</h6>
                         <h4>Requirements</h4>
-                        <h6>{this.props.requirements}</h6>
+                        <h6>{vacancyData.requirements}</h6>
                     </div>
                 </div>
             </div>
@@ -260,4 +301,7 @@ class VacancyObject extends Component {
     }
 }
 
-export default withFirebase(Vacancies);
+export default compose(withFirebase, connect(
+    mapStateToProps,
+    mapDispatchToProps,
+))(Vacancies);
