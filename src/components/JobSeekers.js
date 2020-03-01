@@ -161,6 +161,7 @@ class JobSeekers extends Component {
 
         // can now grab the users from redux here instead of firebase in ComponentDidMount ... maybe ¯\_(ツ)_/¯
         const { loading } = this.state;
+        // console.log(users);
 
         return (
             <div className="container" style={{ marginTop: "120px" }}>

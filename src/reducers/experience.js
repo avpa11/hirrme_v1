@@ -12,10 +12,10 @@ const INITIAL_STATE = {
   });
   function experienceReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
-      case 'MESSAGES_SET': {
+      case 'EXPERIENCE_SET': {
         return applySetExperiences(state, action);
       }
-      case 'MESSAGES_LIMIT_SET': {
+      case 'EXPERIENCE_LIMIT_SET': {
         return applySetExperiencesLimit(state, action);
       }
       default:
