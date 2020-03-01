@@ -5,6 +5,10 @@ import userReducer from './user';
 import educationReducer from './education';
 import experienceReducer from './experience';
 import companyReducer from './company';
+import likedUsersReducer from './likedUsers';
+import savedVacanciesReducer from './savedVacancies'
+import vacanciesReducer from './vacancies'
+
 const rootReducer = combineReducers({
   sessionState: sessionReducer,
   // list of users / job seekers
@@ -14,5 +18,8 @@ const rootReducer = combineReducers({
   educationState: educationReducer,
   experienceState: experienceReducer,
   companyState: companyReducer,
+  likedUsersState: likedUsersReducer,
+  savedVacanciesState: savedVacanciesReducer,
+  vacanciesState: vacanciesReducer
 });
 export default rootReducer;
