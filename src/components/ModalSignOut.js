@@ -31,6 +31,7 @@ class SignOutForm extends Component {
         .then(authUser => {
             this.setState({ ...initState });
             this.props.history.push('/');
+            this.props.onSetUser(null, 'user');
         })
         .catch(error => {
             this.setState({ error });
@@ -90,7 +91,11 @@ class SignOutForm extends Component {
 const mapStateToProps = state => ({
     authUser: state.sessionState.authUser,
   });
+
+  const mapDispatchToProps = dispatch => ({
+    onSetUser: (user, key) => dispatch({ type: 'USER_SET', user, key })
+  });
   
 
-const SignOut = compose(connect(mapStateToProps), withRouter, withFirebase)(SignOutForm);
+const SignOut = compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withFirebase)(SignOutForm);
 export default SignOut;
