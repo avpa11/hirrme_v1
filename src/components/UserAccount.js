@@ -11,6 +11,7 @@ import PasswordChangeForm from './PasswordChange';
 import { compose } from 'recompose';
 import { FaBriefcase, FaUserSecret, FaUserTie } from "react-icons/fa";
 import CompanyAccount from "./CompanyAccount";
+import SavedVacancies from './SavedVacancies'
 
 import { connect } from 'react-redux';
 
@@ -188,6 +189,9 @@ import { connect } from 'react-redux';
                                         <ListGroup.Item action href="#link4">
                                         Settings
                                         </ListGroup.Item>
+                                        <ListGroup.Item action href="#link5">
+                                        Saved Vacancies
+                                        </ListGroup.Item>
                                     </ListGroup>
                                     </Col>
                                     <Col sm={9} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '5px'}}>
@@ -213,6 +217,10 @@ import { connect } from 'react-redux';
                                         <Tab.Pane id="settingsTab" eventKey="#link4">
                                             <h2>Password Change</h2>
                                             <PasswordChangeForm />
+                                        </Tab.Pane>
+                                        <Tab.Pane id="settingsTab" eventKey="#link5">
+                                            <h2>Saved Vacancies</h2>
+                                            <SavedVacancies></SavedVacancies>
                                         </Tab.Pane>
                                     </Tab.Content>
                                     </Col>

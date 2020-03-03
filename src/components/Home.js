@@ -13,6 +13,8 @@ import { FiMapPin, FiPhone } from "react-icons/fi";
 import { withFirebase } from './Firebase';
 import {Link} from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
 
 class Home extends Component {
     constructor(props) {
@@ -83,13 +85,40 @@ class Home extends Component {
                         return {firstName, lastName, title, email, city, province, country}
                     });
                 })                
-            })
-                 
+            })                 
+    }
+
+    loadDataToState = () => {
+
+        var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('incognito').equalTo(null);
+
+        jobSeekersRef.on('value', snap => {
+            this.props.onSetUsers(snap.val());
+        })
+
+        var likedUsersRef = this.props.firebase.database().ref.child('companyLikes').ref;
+
+        likedUsersRef.on('value', snap => {
+            this.props.onSetLikedUsers(snap.val());
+        })
+
+        var vacanciesRef = this.props.firebase.database().child('vacancies').ref;
+
+        vacanciesRef.on('value', snap => {
+            this.props.onSetVacancies(snap.val());
+        })
+
+        var savedVacanciesRef = this.props.firebase.database().ref.child('savedVacancies').ref;
+
+        savedVacanciesRef.on('value', snap => {
+            this.props.onSetSavedVacancies(snap.val());
+        })
     }
 
     componentDidMount = () => {
         this.displayVacancies();
         this.displayJobSeekers();
+        this.loadDataToState();    
     }
 
     render() {
@@ -246,4 +275,27 @@ class Home extends Component {
     }
 }
 
-export default withFirebase(Home);
+const mapStateToProps = state => ({
+    users: Object.keys(state.usersState.users || {}).map(key => ({
+        ...state.usersState.users[key],
+        uid: key,
+    })),
+    likedUsers: Object.keys(state.likedUsersState.likedUsers || {}).map(key => ({
+        ...state.likedUsersState.likedUsers[key],
+        uid: key,
+    })),
+    authUser: state.sessionState.authUser,
+});
+
+const mapDispatchToProps = dispatch => ({
+    onSetUsers: users => dispatch({ type: 'USERS_SET', users }),
+    onSetLikedUsers: likedUsers => dispatch({ type: 'LIKED_USERS_SET', likedUsers }),
+    onSetVacancies: vacancies => dispatch({ type: 'VACANCIES_SET', vacancies }),
+    onSetSavedVacancies: savedVacancies => dispatch({ type: 'SAVED_VACANCIES_SET', savedVacancies })
+});
+
+// export default withFirebase(Home);
+export default compose(withFirebase, connect(
+    mapStateToProps,
+    mapDispatchToProps,
+))(Home);

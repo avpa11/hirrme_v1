@@ -8,37 +8,29 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-
-const mapStateToProps = state => ({
-    vacancies: Object.keys(state.vacanciesState.vacancies || {}).map(key => ({
-        ...state.vacanciesState.vacancies[key],
-        uid: key,
-    })),
-    savedVacancies: Object.keys(state.savedVacanciesState.savedVacancies || {}).map(key => ({
-        ...state.savedVacanciesState.savedVacancies[key],
-        uid: key,
-    })),
-    authUser: state.sessionState.authUser,
-});
-
-const mapDispatchToProps = dispatch => ({
-    onSetVacancies: vacancies => dispatch({ type: 'VACANCIES_SET', vacancies }),
-    onSetSavedVacancies: savedVacancies => dispatch({ type: 'SAVED_VACANCIES_SET', savedVacancies })
-});
+import { Link } from 'react-router-dom';
+import Nav from 'react-bootstrap/Nav';
 
 class Vacancies extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // authUser: this.props.firebase.auth.currentUser,
             search: '',
             loading: false,
-
+            savedVacanciesInvisible: true
         };
     }
 
     componentDidMount() {
-        this.displayVacancies();
+        if (this.props.authUser) {
+            this.props.firebase.database().ref.child('companies').orderByChild('email').equalTo(this.props.authUser.email).once('value', snap => {
+                if (!snap.exists()) {
+                    this.setState({ savedVacanciesInvisible: false })
+                }
+            });
+        }
+
+        this.fetchVacanciesData();
     }
 
     handleSubmit = (e) => {
@@ -87,7 +79,6 @@ class Vacancies extends Component {
                             />, document.getElementById(id));
                         }
                     }
-
                 })
             })
         })
@@ -98,54 +89,69 @@ class Vacancies extends Component {
     };
 
 
-    displayVacancies() {
-        // this.props.firebase.auth.onAuthStateChanged(authUser => {
-        //     authUser != null ? this.setState({ authUser }) : this.setState({ authUser: null })
-        // })
+    fetchVacanciesData() {
 
-        var savedVacanciesRef = this.props.firebase.database().ref.child('savedVacancies').ref;
+        if(this.props.vacancies.length === 0 || this.props.vacancies.length === 0){
 
-        savedVacanciesRef.on('value', snap => {
-            this.props.onSetSavedVacancies(snap.val());
-        })
+            var savedVacanciesRef = this.props.firebase.database().ref.child('savedVacancies').ref;
+    
+            savedVacanciesRef.on('value', snap => {
+                this.props.onSetSavedVacancies(snap.val());
+            })
+    
+            var vacanciesRef = this.props.firebase.database().child('vacancies').ref;
+    
+            vacanciesRef.on('value', snap => {
+                this.props.onSetVacancies(snap.val());
+            })
+    
+            this.setState({ loading: false });
+        }
 
+        this.displayVacancies();
+    }
+
+    displayVacancies = () => {
+
+        let vacanciesData = this.props.vacancies;
         let savedVacanciesData = this.props.savedVacancies;
+
+        if (document.getElementById('vacanciesList') != null) {
+            document.getElementById('vacanciesList').innerHTML = '';
+        }
 
         var id = 0;
 
-        var vacanciesRef = this.props.firebase.database().child('vacancies').ref;
+        for (var i in vacanciesData) {
+            var companyData = vacanciesData[i];
 
-        vacanciesRef.on('value', snap => {
+            for (var vacancy in companyData) {
+                if (companyData[vacancy].hasOwnProperty('positionTitle')) {
+                    id++;
 
-            this.props.onSetVacancies(snap.val());
-            // ¯\_(ツ)_/¯
-            this.setState({ loading: false });
+                    var div = document.createElement('div');
+                    div.setAttribute('id', id);
+                    div.setAttribute('class', 'vacancy');
+                    if (document.getElementById('vacanciesList') != null) {
+                        document.getElementById('vacanciesList').appendChild(div);
 
-            if (document.getElementById('vacanciesList') != null) {
-                document.getElementById('vacanciesList').innerHTML = '';
-            }
-
-            let vacanciesData = this.props.vacancies;
-
-            for (var i in vacanciesData) {
-                var companyData = vacanciesData[i];
-
-                for (var vacancy in companyData) {
-                    if (companyData[vacancy].hasOwnProperty('positionTitle')) {
-                        id++;
-
-                        var div = document.createElement('div');
-                        div.setAttribute('id', id);
-                        div.setAttribute('class', 'vacancy');
-                        if (document.getElementById('vacanciesList') != null) {
-                            document.getElementById('vacanciesList').appendChild(div);
-
-                            ReactDOM.render(<VacancyObject vacancyData={companyData[vacancy]} savedVacanciesData={savedVacanciesData} authUser={this.props.authUser} firebase={this.props.firebase} />, document.getElementById(id));
-                        }
+                        ReactDOM.render(<VacancyObject
+                            vacancyData={companyData[vacancy]}
+                            savedVacanciesData={savedVacanciesData}
+                            authUser={this.props.authUser}
+                            firebase={this.props.firebase}
+                            
+                        />, document.getElementById(id));
                     }
                 }
             }
-        })
+        }
+    }
+
+    componentDidUpdate = (nextProps) => {
+        if (this.props !== nextProps) {
+            this.displayVacancies()
+        }
     }
 
     render() {
@@ -170,6 +176,9 @@ class Vacancies extends Component {
                         type="submit">
                         Search
                     </Button>
+                    <Nav>
+                        <Nav.Link as={Link} to="/savedVacancies"><Button disabled={this.state.savedVacanciesInvisible} variant="warning">Saved Vacancies</Button></Nav.Link>
+                    </Nav>
                 </Form>
                 <p id='vacanciesList'></p>
             </div>
@@ -184,12 +193,11 @@ class VacancyObject extends Component {
             display: "none",
             displayButton: "Expand",
             isSaveDisabled: true,
-            saveStatus: 'Save'
+            saveStatus: 'Save',
         };
     }
 
     componentDidMount = () => {
-        // var savedVacancies = this.state.firebase.database().child('savedVacancies').ref;
 
         if (this.props.authUser != null) {
             this.props.firebase.database().ref.child('companies').orderByChild('email').equalTo(this.props.authUser.email).once('value', snap => {
@@ -200,23 +208,11 @@ class VacancyObject extends Component {
             this.props.savedVacanciesData.forEach(savedVacancyData => {
                 if (savedVacancyData.email === this.props.authUser.email &&
                     savedVacancyData.positionTitle === this.props.vacancyData.positionTitle &&
-                    savedVacancyData.positionTitle === this.props.vacancyData.positionTitle) {
+                    savedVacancyData.contactInfo === this.props.vacancyData.contactInfo) {
                     this.setState({ saveStatus: 'Remove' })
                 }
             });
         }
-
-        // if (this.state.authUser !== null) {
-        //     likedVacancies.on('value', snap => {
-        //         snap.forEach(snap1 => {
-        //             if (snap1.child('email').val() === this.state.authUser.email &&
-        //                 snap1.child('vacancyTitle').val() === this.props.vacancyTitle &&
-        //                 snap1.child('contactInfo').val() === this.props.contactInfo) {
-        //                 this.setState({ likeStatus: 'Dislike' })
-        //             }
-        //         })
-        //     })
-        // }
     }
 
     handleLike = (e) => {
@@ -266,7 +262,6 @@ class VacancyObject extends Component {
     render() {
 
         let vacancyData = this.props.vacancyData;
-        // console.log( "d ", vacancyData);
 
         return (
             <div>
@@ -301,7 +296,27 @@ class VacancyObject extends Component {
     }
 }
 
+const mapStateToProps = state => ({
+    vacancies: Object.keys(state.vacanciesState.vacancies || {}).map(key => ({
+        ...state.vacanciesState.vacancies[key],
+        uid: key,
+    })),
+    savedVacancies: Object.keys(state.savedVacanciesState.savedVacancies || {}).map(key => ({
+        ...state.savedVacanciesState.savedVacancies[key],
+        uid: key,
+    })),
+    authUser: state.sessionState.authUser,
+});
+
+const mapDispatchToProps = dispatch => ({
+    onSetVacancies: vacancies => dispatch({ type: 'VACANCIES_SET', vacancies }),
+    onSetSavedVacancies: savedVacancies => dispatch({ type: 'SAVED_VACANCIES_SET', savedVacancies })
+});
+
 export default compose(withFirebase, connect(
     mapStateToProps,
     mapDispatchToProps,
 ))(Vacancies);
+
+export {VacancyObject};
+

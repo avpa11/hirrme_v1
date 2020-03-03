@@ -11,24 +11,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 
-const mapStateToProps = state => ({
-    users: Object.keys(state.usersState.users || {}).map(key => ({
-        ...state.usersState.users[key],
-        uid: key,
-    })),
-    likedUsers: Object.keys(state.likedUsersState.likedUsers || {}).map(key => ({
-        ...state.likedUsersState.likedUsers[key],
-        uid: key,
-    })),
-    authUser: state.sessionState.authUser,
-});
-
-const mapDispatchToProps = dispatch => ({
-    onSetUsers: users => dispatch({ type: 'USERS_SET', users }),
-    onSetLikedUsers: likedUsers => dispatch({ type: 'LIKED_USERS_SET', likedUsers })
-});
-
 class JobSeekers extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -44,8 +28,7 @@ class JobSeekers extends Component {
             this.setState({ loading: true });
         }
 
-        this.displayJobSeekers()
-
+        this.fetchJobSeekersData()
     }
 
     componentWillUnmount() {
@@ -94,9 +77,6 @@ class JobSeekers extends Component {
                             userId={snap1.child('userId').val()}
                         />,
                             document.getElementById(id));
-
-                        // console.log(authUser);
-                        // console.log(this.state.authUser.uid);
                     }
                 }
             });
@@ -108,35 +88,38 @@ class JobSeekers extends Component {
     };
 
 
-    displayJobSeekers() {
+    fetchJobSeekersData() {
 
-        var likedUsersRef = this.props.firebase.database().ref.child('companyLikes').ref;
+        if (this.props.users.length === 0) {
+            var likedUsersRef = this.props.firebase.database().ref.child('companyLikes').ref;
 
-        likedUsersRef.on('value', snap => {
-            this.props.onSetLikedUsers(snap.val());
-        })
+            likedUsersRef.on('value', snap => {
+                this.props.onSetLikedUsers(snap.val());
+            })
+
+            var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('incognito').equalTo(null);
+
+            jobSeekersRef.on('value', snap => {
+                // store the users in redux after fetching them ¯\_(ツ)_/¯
+                this.props.onSetUsers(snap.val());
+            })
+            this.setState({ loading: false });
+            // ¯\_(ツ)_/¯ 
+        }
+        
+        this.displayJobSeekers();
+    }
+
+    displayJobSeekers = () => {
 
         let likedUsersData = this.props.likedUsers;
-
-        var id = 0;
-
-        var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('incognito').equalTo(null);
-
-        jobSeekersRef.on('value', snap => {
-            // store the users in redux after fetching them ¯\_(ツ)_/¯
-            this.props.onSetUsers(snap.val());
-        })
-        this.setState({ loading: false });
-        // ¯\_(ツ)_/¯   
+        let usersData = this.props.users;
 
         if (document.getElementById('jobSeekersList') != null) {
             document.getElementById('jobSeekersList').innerHTML = '';
         }
 
-        // console.log(this.props.users);
-
-        let usersData = this.props.users;
-        // alert(this.props.authUser.email);
+        var id = 0;
 
         usersData.forEach(userData => {
             // alert(userData.email);
@@ -149,11 +132,20 @@ class JobSeekers extends Component {
             if (document.getElementById('jobSeekersList') != null) {
                 document.getElementById('jobSeekersList').appendChild(div);
 
-                ReactDOM.render(<JobSeekerObject userData={userData} likedUsersData={likedUsersData} authUser={this.props.authUser} firebase={this.props.firebase} />, document.getElementById(id));
+                ReactDOM.render(<JobSeekerObject
+                    userData={userData}
+                    likedUsersData={likedUsersData}
+                    authUser={this.props.authUser}
+                    firebase={this.props.firebase}
+                />, document.getElementById(id));
             }
         })
+    }
 
-
+    componentDidUpdate = (nextProps) => {
+        if (this.props !== nextProps) {
+            this.displayJobSeekers()
+        }
     }
 
     render() {
@@ -196,12 +188,11 @@ class JobSeekerObject extends Component {
         super(props);
         this.state = {
             isLikeDisabled: true,
-            likeStatus: 'Like'
+            likeStatus: 'Like',
         }
     }
 
     componentDidMount = () => {
-
         if (this.props.authUser != null) {
             this.props.firebase.database().ref.child('companies').orderByChild('email').equalTo(this.props.authUser.email).once('value', snap => {
                 if (snap.exists()) {
@@ -281,7 +272,22 @@ class JobSeekerObject extends Component {
 }
 
 // ¯\_(ツ)_/¯
+const mapStateToProps = state => ({
+    users: Object.keys(state.usersState.users || {}).map(key => ({
+        ...state.usersState.users[key],
+        uid: key,
+    })),
+    likedUsers: Object.keys(state.likedUsersState.likedUsers || {}).map(key => ({
+        ...state.likedUsersState.likedUsers[key],
+        uid: key,
+    })),
+    authUser: state.sessionState.authUser,
+});
 
+const mapDispatchToProps = dispatch => ({
+    onSetUsers: users => dispatch({ type: 'USERS_SET', users }),
+    onSetLikedUsers: likedUsers => dispatch({ type: 'LIKED_USERS_SET', likedUsers })
+});
 
 export default compose(withFirebase, connect(
     mapStateToProps,
