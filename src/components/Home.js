@@ -89,30 +89,17 @@ class Home extends Component {
     }
 
     loadDataToState = () => {
+        if(this.props.users.length === 0){    
+            this.props.firebase.users().orderByChild('incognito').equalTo(null).on('value', snap => {
+                this.props.onSetUsers(snap.val());
+            })
+        }
 
-        var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('incognito').equalTo(null);
-
-        jobSeekersRef.on('value', snap => {
-            this.props.onSetUsers(snap.val());
-        })
-
-        var likedUsersRef = this.props.firebase.database().ref.child('companyLikes').ref;
-
-        likedUsersRef.on('value', snap => {
-            this.props.onSetLikedUsers(snap.val());
-        })
-
-        var vacanciesRef = this.props.firebase.database().child('vacancies').ref;
-
-        vacanciesRef.on('value', snap => {
-            this.props.onSetVacancies(snap.val());
-        })
-
-        var savedVacanciesRef = this.props.firebase.database().ref.child('savedVacancies').ref;
-
-        savedVacanciesRef.on('value', snap => {
-            this.props.onSetSavedVacancies(snap.val());
-        })
+        if(this.props.vacancies.length === 0){
+            this.props.firebase.vacancies().on('value', snap => {
+                this.props.onSetVacancies(snap.val());
+            })
+        }
     }
 
     componentDidMount = () => {
@@ -280,8 +267,8 @@ const mapStateToProps = state => ({
         ...state.usersState.users[key],
         uid: key,
     })),
-    likedUsers: Object.keys(state.likedUsersState.likedUsers || {}).map(key => ({
-        ...state.likedUsersState.likedUsers[key],
+    vacancies: Object.keys(state.vacanciesState.vacancies || {}).map(key => ({
+        ...state.vacanciesState.vacancies[key],
         uid: key,
     })),
     authUser: state.sessionState.authUser,
@@ -289,9 +276,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onSetUsers: users => dispatch({ type: 'USERS_SET', users }),
-    onSetLikedUsers: likedUsers => dispatch({ type: 'LIKED_USERS_SET', likedUsers }),
     onSetVacancies: vacancies => dispatch({ type: 'VACANCIES_SET', vacancies }),
-    onSetSavedVacancies: savedVacancies => dispatch({ type: 'SAVED_VACANCIES_SET', savedVacancies })
 });
 
 // export default withFirebase(Home);

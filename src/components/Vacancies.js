@@ -90,23 +90,19 @@ class Vacancies extends Component {
 
 
     fetchVacanciesData() {
-
-        if(this.props.vacancies.length === 0 || this.props.vacancies.length === 0){
-
-            var savedVacanciesRef = this.props.firebase.database().ref.child('savedVacancies').ref;
-    
-            savedVacanciesRef.on('value', snap => {
+        if (this.props.authUser && this.props.savedVacancies.length === 0) {
+            this.props.firebase.savedVacancies().orderByChild('email').equalTo(this.props.authUser.email).on('value', snap => {
                 this.props.onSetSavedVacancies(snap.val());
             })
-    
-            var vacanciesRef = this.props.firebase.database().child('vacancies').ref;
-    
-            vacanciesRef.on('value', snap => {
+        }
+
+        if (this.props.vacancies.length === 0) {
+            this.props.firebase.vacancies().on('value', snap => {
                 this.props.onSetVacancies(snap.val());
             })
-    
-            this.setState({ loading: false });
         }
+
+        this.setState({ loading: false });
 
         this.displayVacancies();
     }
@@ -140,7 +136,7 @@ class Vacancies extends Component {
                             savedVacanciesData={savedVacanciesData}
                             authUser={this.props.authUser}
                             firebase={this.props.firebase}
-                            
+
                         />, document.getElementById(id));
                     }
                 }
@@ -318,5 +314,5 @@ export default compose(withFirebase, connect(
     mapDispatchToProps,
 ))(Vacancies);
 
-export {VacancyObject};
+export { VacancyObject };
 

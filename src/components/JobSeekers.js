@@ -90,22 +90,38 @@ class JobSeekers extends Component {
 
     fetchJobSeekersData() {
 
-        if (this.props.users.length === 0) {
-            var likedUsersRef = this.props.firebase.database().ref.child('companyLikes').ref;
-
-            likedUsersRef.on('value', snap => {
+        if (this.props.authUser && this.props.likedUsers.length === 0) {
+            this.props.firebase.companyLikes().orderByChild('companyEmail').equalTo(this.props.authUser.email).on('value', snap => {
                 this.props.onSetLikedUsers(snap.val());
             })
+        }
 
-            var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('incognito').equalTo(null);
-
-            jobSeekersRef.on('value', snap => {
-                // store the users in redux after fetching them ¯\_(ツ)_/¯
+        if (this.props.users.length === 0) {
+            this.props.firebase.users().orderByChild('incognito').equalTo(null).on('value', snap => {
                 this.props.onSetUsers(snap.val());
             })
-            this.setState({ loading: false });
-            // ¯\_(ツ)_/¯ 
         }
+
+        this.setState({ loading: false });
+
+        /////
+
+        // if (this.props.users.length === 0) {
+        //     var likedUsersRef = this.props.firebase.database().ref.child('companyLikes').ref;
+
+        //     likedUsersRef.on('value', snap => {
+        //         this.props.onSetLikedUsers(snap.val());
+        //     })
+
+        //     var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('incognito').equalTo(null);
+
+        //     jobSeekersRef.on('value', snap => {
+        //         // store the users in redux after fetching them ¯\_(ツ)_/¯
+        //         this.props.onSetUsers(snap.val());
+        //     })
+        //     this.setState({ loading: false });
+        //     // ¯\_(ツ)_/¯ 
+        // }
         
         this.displayJobSeekers();
     }

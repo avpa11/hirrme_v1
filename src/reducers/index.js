@@ -8,6 +8,7 @@ import companyReducer from './company';
 import likedUsersReducer from './likedUsers';
 import savedVacanciesReducer from './savedVacancies'
 import vacanciesReducer from './vacancies'
+import userTypeReducer from './userType'
 
 const rootReducer = combineReducers({
   sessionState: sessionReducer,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   companyState: companyReducer,
   likedUsersState: likedUsersReducer,
   savedVacanciesState: savedVacanciesReducer,
-  vacanciesState: vacanciesReducer
+  vacanciesState: vacanciesReducer,
+  userTypeState: userTypeReducer
 });
 export default rootReducer;

@@ -114,11 +114,6 @@ class SavedVacancies extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    // onSetVacancies: vacancies => dispatch({ type: 'VACANCIES_SET', vacancies }),
-    onSetSavedVacancies: savedVacancies => dispatch({ type: 'SAVED_VACANCIES_SET', savedVacancies })
-});
-
 const mapStateToProps = state => ({
     vacancies: Object.keys(state.vacanciesState.vacancies || {}).map(key => ({
         ...state.vacanciesState.vacancies[key],
@@ -133,5 +128,4 @@ const mapStateToProps = state => ({
 
 export default compose(withFirebase, connect(
     mapStateToProps,
-    mapDispatchToProps,
 ))(SavedVacancies);
