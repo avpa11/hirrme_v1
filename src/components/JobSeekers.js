@@ -130,6 +130,7 @@ class JobSeekers extends Component {
 
         let likedUsersData = this.props.likedUsers;
         let usersData = this.props.users;
+        let userType = this.props.userType;
 
         if (document.getElementById('jobSeekersList') != null) {
             document.getElementById('jobSeekersList').innerHTML = '';
@@ -151,6 +152,7 @@ class JobSeekers extends Component {
                 ReactDOM.render(<JobSeekerObject
                     userData={userData}
                     likedUsersData={likedUsersData}
+                    userType={userType}
                     authUser={this.props.authUser}
                     firebase={this.props.firebase}
                 />, document.getElementById(id));
@@ -210,11 +212,16 @@ class JobSeekerObject extends Component {
 
     componentDidMount = () => {
         if (this.props.authUser != null) {
-            this.props.firebase.database().ref.child('companies').orderByChild('email').equalTo(this.props.authUser.email).once('value', snap => {
-                if (snap.exists()) {
-                    this.setState({ isLikeDisabled: false })
-                }
-            });
+            // this.props.firebase.database().ref.child('companies').orderByChild('email').equalTo(this.props.authUser.email).once('value', snap => {
+            //     if (snap.exists()) {
+            //         this.setState({ isLikeDisabled: false })
+            //     }
+            // });
+            // alert(this.props.userType)
+            
+            if(this.props.userType === 'company'){
+                this.setState({ isLikeDisabled: false })
+            }
             this.props.likedUsersData.forEach(likedUserData => {
                 if (likedUserData.companyEmail === this.props.authUser.email &&
                     likedUserData.jobSeekerEmail === this.props.userData.email) {
@@ -296,7 +303,8 @@ const mapStateToProps = state => ({
     likedUsers: Object.keys(state.likedUsersState.likedUsers || {}).map(key => ({
         ...state.likedUsersState.likedUsers[key],
         uid: key,
-    })),
+    })),    
+    userType: state.userTypeState.userType,
     authUser: state.sessionState.authUser,
 });
 

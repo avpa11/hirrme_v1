@@ -15,14 +15,28 @@ const withAuthentication = Component => {
     }
 
     componentDidMount() {
+      let userType;
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         authUser => {
           localStorage.setItem('authUser', JSON.stringify(authUser));
           this.props.onSetAuthUser(authUser);
+          if (authUser) {
+            this.props.firebase.database().ref.child('companies').orderByChild('email').equalTo(authUser.email).once('value', snap => {
+              if (!snap.exists()) {
+                userType = 'jobSeeker';
+              } else {
+                userType = 'company';
+              }
+              localStorage.setItem('userType', userType);
+              this.props.onSetUserType(userType)
+            })
+          }
         },
         () => {
           localStorage.removeItem('authUser');
           this.props.onSetAuthUser(null);
+          localStorage.removeItem('userType');
+          this.props.onSetUserType(null)
         },
       );
     }
@@ -38,6 +52,8 @@ const withAuthentication = Component => {
   const mapDispatchToProps = dispatch => ({
     onSetAuthUser: authUser =>
       dispatch({ type: 'AUTH_USER_SET', authUser }),
+    onSetUserType: userType =>
+      dispatch({ type: 'USER_TYPE_SET', userType })
   });
   return compose(
     withFirebase,
@@ -47,4 +63,4 @@ const withAuthentication = Component => {
     ),
   )(WithAuthentication);
 };
-  export default withAuthentication;
+export default withAuthentication;

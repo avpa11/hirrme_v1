@@ -32,6 +32,7 @@ class SignOutForm extends Component {
             this.setState({ ...initState });
             this.props.history.push('/');
             this.props.onSetUser(null, 'user');
+            this.props.onSetUserType(null, 'userType');
             this.props.onSetLikedUsers(null);
             this.props.onSetSavedVacancies(null);
 
@@ -98,7 +99,8 @@ const mapStateToProps = state => ({
   const mapDispatchToProps = dispatch => ({
     onSetUser: (user, key) => dispatch({ type: 'USER_SET', user, key }),
     onSetSavedVacancies: savedVacancies => dispatch({ type: 'SAVED_VACANCIES_SET', savedVacancies }),
-    onSetLikedUsers: likedUsers => dispatch({ type: 'LIKED_USERS_SET', likedUsers })
+    onSetLikedUsers: likedUsers => dispatch({ type: 'LIKED_USERS_SET', likedUsers }),
+    onSetUserType: userType => dispatch({ type: 'USER_TYPE_SET', userType })
   });
   
 

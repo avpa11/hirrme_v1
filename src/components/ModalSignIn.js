@@ -10,6 +10,8 @@ import Alert from 'react-bootstrap/Alert';
 
 import { withFirebase } from './Firebase';
 
+import { connect } from 'react-redux';
+
 const initState = {
     email: '',
     password: '',
@@ -87,7 +89,29 @@ class SignInForm extends Component {
     }
 }
 
-const SignIn = compose(withRouter, withFirebase)(SignInForm);
+const mapStateToProps = state => ({
+    users: Object.keys(state.usersState.users || {}).map(key => ({
+        ...state.usersState.users[key],
+        uid: key,
+    })),
+    vacancies: Object.keys(state.vacanciesState.vacancies || {}).map(key => ({
+        ...state.vacanciesState.vacancies[key],
+        uid: key,
+    })),
+    authUser: state.sessionState.authUser,
+});
+
+const mapDispatchToProps = dispatch => ({
+    onSetUserType: userType => dispatch({ type: 'USER_TYPE_SET', userType })
+});
+
+// const SignIn = compose(withRouter, withFirebase)(SignInForm);
+const SignIn = SignInForm;
 
 
-export default SignIn;
+// export default SignIn;
+
+export default compose(withRouter, withFirebase, connect(
+    mapStateToProps,
+    mapDispatchToProps,
+))(SignIn);

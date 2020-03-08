@@ -111,6 +111,7 @@ class Vacancies extends Component {
 
         let vacanciesData = this.props.vacancies;
         let savedVacanciesData = this.props.savedVacancies;
+        let userType = this.props.userType;
 
         if (document.getElementById('vacanciesList') != null) {
             document.getElementById('vacanciesList').innerHTML = '';
@@ -134,6 +135,7 @@ class Vacancies extends Component {
                         ReactDOM.render(<VacancyObject
                             vacancyData={companyData[vacancy]}
                             savedVacanciesData={savedVacanciesData}
+                            userType={userType}
                             authUser={this.props.authUser}
                             firebase={this.props.firebase}
 
@@ -196,11 +198,15 @@ class VacancyObject extends Component {
     componentDidMount = () => {
 
         if (this.props.authUser != null) {
-            this.props.firebase.database().ref.child('companies').orderByChild('email').equalTo(this.props.authUser.email).once('value', snap => {
-                if (!snap.exists()) {
-                    this.setState({ isSaveDisabled: false })
-                }
-            });
+            // this.props.firebase.database().ref.child('companies').orderByChild('email').equalTo(this.props.authUser.email).once('value', snap => {
+            //     if (!snap.exists()) {
+            //         this.setState({ isSaveDisabled: false })
+            //     }
+            // });
+            
+            if(this.props.userType === 'jobSeeker'){
+                this.setState({ isSaveDisabled: false })
+            }
             this.props.savedVacanciesData.forEach(savedVacancyData => {
                 if (savedVacancyData.email === this.props.authUser.email &&
                     savedVacancyData.positionTitle === this.props.vacancyData.positionTitle &&
@@ -301,6 +307,7 @@ const mapStateToProps = state => ({
         ...state.savedVacanciesState.savedVacancies[key],
         uid: key,
     })),
+    userType: state.userTypeState.userType,
     authUser: state.sessionState.authUser,
 });
 
