@@ -7,7 +7,7 @@ import Contact from './components/Contact';
 import Register from './components/Register';
 import CreateAccount from './components/CreateAccount';
 import UserAccount from './components/UserAccount';
-import User from './components/CreateUser';
+import User from './components/CreateUserProfile';
 import Company from './components/CreateCompany';
 import Education from './components/Education';
 import Experience from './components/Experience';

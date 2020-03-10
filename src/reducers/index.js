@@ -9,6 +9,7 @@ import likedUsersReducer from './likedUsers';
 import savedVacanciesReducer from './savedVacancies'
 import vacanciesReducer from './vacancies'
 import userTypeReducer from './userType'
+import profileFilesReducer from './profileFiles'
 
 const rootReducer = combineReducers({
   sessionState: sessionReducer,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   likedUsersState: likedUsersReducer,
   savedVacanciesState: savedVacanciesReducer,
   vacanciesState: vacanciesReducer,
-  userTypeState: userTypeReducer
+  userTypeState: userTypeReducer,
+  profileFilesState: profileFilesReducer 
 });
 export default rootReducer;

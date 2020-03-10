@@ -11,7 +11,8 @@ import PasswordChangeForm from './PasswordChange';
 import { compose } from 'recompose';
 import { FaBriefcase, FaUserSecret, FaUserTie } from "react-icons/fa";
 import CompanyAccount from "./CompanyAccount";
-import SavedVacancies from './SavedVacancies'
+import SavedVacancies from './SavedVacancies';
+import UserForm from './CreateUser';
 
 import { connect } from 'react-redux';
 
@@ -19,9 +20,10 @@ import { connect } from 'react-redux';
         constructor(props) {
             super(props);
             this.state = {
-            loading: false,
-            incognito: null,
-            key: ''
+                loading: false,
+                incognito: null,
+                key: '',
+                showProfileAdd: false
             };
         }
 
@@ -33,6 +35,9 @@ import { connect } from 'react-redux';
             let currentComponent = this;
             this.setState({ loading: true });
 
+            this.props.firebase.storage.ref(this.props.authUser.uid).child('ProfileImage.'+this.props.authUser.uid)
+            .getDownloadURL().then(url => { this.setState({ url: url}) });
+    
                 
                 var jobSeekersRef = this.props.firebase.users().orderByChild('userId')
                 .equalTo(this.props.authUser.uid)
@@ -162,9 +167,20 @@ import { connect } from 'react-redux';
             this.props.firebase.database().ref.child('experience').off();
             this.props.firebase.database().ref.child('educations').off();
         }
+
+        showAllInfo  = (e) => {
+            e.preventDefault();
+            if (this.state.showProfileAdd === true) {
+                this.setState({showProfileAdd: false});
+            } else {
+                this.setState({showProfileAdd: true});
+            }
+            // console.log(this.state.showProfileAdd);
+        }
         
         render () {
             // const { loading } = this.state;
+            // const { showProfileAdd } = this.state;
 
             return (
                     <div style={{marginTop: "120px"}}>
@@ -198,13 +214,29 @@ import { connect } from 'react-redux';
                                     <Tab.Content>
                                         <Tab.Pane eventKey="#link1">
                                             <h2 className="centerText" style={{marginBottom: 0}}>{this.props.user.firstName}
-                                            <span> {this.props.user.lastName}</span></h2>
-                                            <p style={{color: 'rgb(155,155,155)'}}>
-                                                <span>{this.props.user.city}</span>,
-                                                <span> {this.props.user.province}</span>, 
-                                                <span> {this.props.user.country}</span>
-                                            </p> <br />
-                                            <h4><FaBriefcase /> {this.props.user.title}</h4>
+                                                <span> {this.props.user.lastName}</span></h2>
+                                            <Row>
+                                                <Col sm={6}>
+                                                <p style={{color: 'rgb(155,155,155)'}}>
+                                                    <span>{this.props.user.city}</span>,
+                                                    <span> {this.props.user.province}</span>, 
+                                                    <span> {this.props.user.country}</span>
+                                                </p> <br />
+                                                <h4><FaBriefcase /> {this.props.user.title}</h4>
+                                                </Col>
+                                                <Col sm={6}>
+                                                <img
+                                                src={this.state.url || require('../img/logo.png')}
+                                                alt="Uploaded Profile"
+                                                width="100"
+                                                />
+                                                </Col>
+                                            </Row>
+                                            <Button onClick={this.showAllInfo} style={{marginLeft: '7px'}} type="button" variant="warning">
+                                                Change Profile
+                                            </Button>
+                                            { this.state.showProfileAdd ? <UserForm></UserForm> : null}
+                                            
 
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="#link2">
