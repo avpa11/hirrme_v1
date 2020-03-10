@@ -164,6 +164,11 @@ class CreateUserForm extends Component {
                                         Upload a photo
                                     </Button>
                                 </Form>
+                                <img
+                                src={this.state.url || require('../img/logo.png')}
+                                alt="Uploaded Image Profile"
+                                width="100"
+                                />
                             </Col>
                         </Row>
                     </div>
