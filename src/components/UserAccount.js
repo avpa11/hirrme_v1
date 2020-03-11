@@ -52,9 +52,14 @@ import { connect } from 'react-redux';
                     });
                 })
                 // Education
-                this.props.firebase.education(this.props.authUser.uid)
-                .once('value').then(function(snapshot) {
-                    snapshot.forEach(snap1 => {
+                var educationRef = this.props.firebase.education(this.props.authUser.uid)
+                educationRef.on('value', snapshot => {
+
+                    if (document.getElementById('education') != null) {
+                        document.getElementById('education').innerHTML = '';
+                    }
+
+                    snapshot.forEach(snap1=> {
                         currentComponent.setState({
                             educations: snapshot.val(),
                         });
@@ -75,11 +80,17 @@ import { connect } from 'react-redux';
                         if (document.getElementById('education')!= null) {
                             document.getElementById('education').appendChild(div);
                         }
-                    });
-                })
+                    })
+                } )
+    
                 // Experience
-                this.props.firebase.experience(this.props.authUser.uid)
-                .once('value').then(function(snapshot) {
+                var experienceRef = this.props.firebase.experience(this.props.authUser.uid);
+                experienceRef.on('value', snapshot => {
+
+                    if (document.getElementById('experience') != null) {
+                        document.getElementById('experience').innerHTML = '';
+                    }
+
                     snapshot.forEach(snap1 => {
                         currentComponent.setState({
                             experiences: snap1.val(),
@@ -231,7 +242,7 @@ import { connect } from 'react-redux';
                                 <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
                                     <h3 className="centerText">Education</h3>
                                     <div className="container" id="education"></div>
-                                    <Button onClick={this.addEducation} style={{marginLeft: '7px'}} type="button" variant="warning">
+                                    <Button onClick={this.addEducation} style={{marginLeft: '7px', marginBottom: '20px'}} type="button" variant="warning">
                                         Add Education
                                     </Button>
                                     { this.state.addEducation ? <FormEducation></FormEducation> : null}
@@ -239,7 +250,7 @@ import { connect } from 'react-redux';
                                 <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
                                     <h3 className="centerText">Experience</h3>
                                     <div className="container" id="experience"></div>
-                                    <Button onClick={this.addExperience} style={{marginLeft: '7px'}} type="button" variant="warning">
+                                    <Button onClick={this.addExperience} style={{marginLeft: '7px', marginBottom: '20px'}} type="button" variant="warning">
                                         Add Experience
                                     </Button>
                                     { this.state.addExperience ? <FormExperience></FormExperience> : null}
