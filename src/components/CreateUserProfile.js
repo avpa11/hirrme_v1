@@ -14,11 +14,13 @@ import { compose } from 'recompose';
 
 import { connect } from 'react-redux';
 
-import UserProfileForm from './CreateUser';
+import UserProfileForm from '../reusable/CreateUser';
 
 const initState = {
     img: null,
-    progress: 0
+    progress: 0,
+    key: null,
+    profileImage: null
 };
 
 
@@ -26,6 +28,28 @@ class CreateUserForm extends Component {
     constructor(props) {
         super(props);
         this.state = {...initState};
+    }
+
+    componentDidMount() {
+        let currentComponent = this;
+        var jobSeekersRef = this.props.firebase.users().orderByChild('userId')
+        .equalTo(this.props.authUser.uid)
+        jobSeekersRef.on('value', snapshot => {
+            snapshot.forEach(snap1 => {
+                // Redux
+                this.props.onSetUser(
+                    snap1.val(),
+                    // user object key
+                    Object.keys(snapshot.val())[0],
+                );
+                currentComponent.setState({ key: Object.keys(snapshot.val())[0]  });
+            });
+        })
+    }
+
+    componentWillUnmount() {
+        this.props.firebase.database().off();
+        this.props.firebase.database().ref.child('users').off();
     }
  
     handleImage = e => {
@@ -65,16 +89,20 @@ class CreateUserForm extends Component {
                 .child(imageName)
                 .getDownloadURL()
                 .then(url => {
-                  this.setState({ url });
+                    this.setState({ url });
+                    
+                    this.props.firebase.users().ref.child(this.props.userKey).update({
+                      profileImage: this.state.url
+                  })
                 })
             },
 
           )
+
     }
 
     render () {
         return (
-            // to grab the authenticated user info from React.Context hoc (may use Redux instead in the future)
                 <div className="rectangle registerect container" style={{ marginTop: "120px" }}>
                     <div className="container">
                         <h2 className="center">Almost done!</h2>
@@ -91,7 +119,7 @@ class CreateUserForm extends Component {
                             }
                                 <Form onSubmit={e => this.handleImageUpload(e, this.props.authUser)}>
                                     <FormControl type="file" onChange={this.handleImage} ></FormControl>
-                                    <Button type="submit" variant="warning">
+                                    <Button disabled={this.props.user == null} type="submit" variant="warning">
                                         Upload a photo
                                     </Button>
                                 </Form>
@@ -112,16 +140,17 @@ class CreateUserForm extends Component {
 
 const mapStateToProps = state => ({
     authUser: state.sessionState.authUser,
+    user: (state.userState.user || {})[Object.keys(state.userState.user  || {})],
+    userKey: Object.keys(state.userState.user  || {})[0]
   });
 
   const mapDispatchToProps = dispatch => ({
-      onSetProfileFiles: profileFiles => dispatch({ type: 'FILES_SET', profileFiles })
+      onSetProfileFiles: profileFiles => dispatch({ type: 'FILES_SET', profileFiles }),
+      onSetUser: (user, key) => dispatch({ type: 'USER_SET', user, key }),
+
   })
 
-// const UserForm = compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withFirebase)(CreateUserForm);
 // condtion to check for user authorization
 const condition = authUser => !!authUser;
 
 export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withFirebase, withAuthorization(condition))(CreateUserForm);
-
-// export { UserForm };

@@ -7,12 +7,14 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import PasswordChangeForm from './PasswordChange';
 import { compose } from 'recompose';
 import { FaBriefcase, FaUserSecret, FaUserTie } from "react-icons/fa";
 import CompanyAccount from "./CompanyAccount";
 import SavedVacancies from './SavedVacancies';
-import UserForm from './CreateUser';
+import PasswordChangeForm from '../reusable/PasswordChange';
+import UserForm from '../reusable/CreateUser';
+import FormEducation from '../reusable/FormEducation';
+import FormExperience from '../reusable/FormExperience';
 
 import { connect } from 'react-redux';
 
@@ -23,7 +25,8 @@ import { connect } from 'react-redux';
                 loading: false,
                 incognito: null,
                 key: '',
-                showProfileAdd: false
+                showProfileAdd: false,
+                addEducation: false
             };
         }
 
@@ -33,11 +36,7 @@ import { connect } from 'react-redux';
                 this.setState({ loading: true });
             }
             let currentComponent = this;
-            this.setState({ loading: true });
-
-            this.props.firebase.storage.ref(this.props.authUser.uid).child('ProfileImage.'+this.props.authUser.uid)
-            .getDownloadURL().then(url => { this.setState({ url: url}) });
-    
+            this.setState({ loading: true });   
                 
                 var jobSeekersRef = this.props.firebase.users().orderByChild('userId')
                 .equalTo(this.props.authUser.uid)
@@ -76,8 +75,6 @@ import { connect } from 'react-redux';
                         if (document.getElementById('education')!= null) {
                             document.getElementById('education').appendChild(div);
                         }
-
-                        // console.log(currentComponent.state.educations);
                     });
                 })
                 // Experience
@@ -104,39 +101,8 @@ import { connect } from 'react-redux';
                         if (document.getElementById('experience')!= null) {
                             document.getElementById('experience').appendChild(div);
                         }
-                        // console.log(currentComponent.state.experiences);
                     });
                 })
-                // Likes
-                var likesRef = this.props.firebase.database().ref.child('likes').ref.child(this.props.authUser.uid);
-                likesRef.on('value', snapshot => {
-                    if (document.getElementById('likes') != null) {
-                        document.getElementById('likes').innerHTML = '';
-                    } 
-                    snapshot.forEach(snap1 => {
-                        currentComponent.setState({
-                            likes: snapshot.val(),
-                        });
-                        var likeDiv = document.createElement('div');
-                        likeDiv.setAttribute('class', 'edu');
-                        var p = document.createElement('p');
-                        p.setAttribute('class', 'name');
-                        p.textContent = "Liked by " + snap1.child('email').val() + " on " + snap1.child('date').val();
-                        likeDiv.appendChild(p);
-    
-                        var hr = document.createElement('hr');
-                        likeDiv.appendChild(hr);
-                        if (document.getElementById('likes')!= null) {
-                            if (likeDiv !== '') {
-                                document.getElementById('likes').appendChild(likeDiv);
-                            } else {
-                                // NOT WORKING
-                                document.getElementById('likes').innerHTML = "You don't have any likes yet";
-                            }
-                        }
-                    });
-            });
-
         }   
         
         handleSubmit = (e) => {
@@ -149,11 +115,6 @@ import { connect } from 'react-redux';
             } else {
                 incognito = 1;
             }
-
-            // console.log(this.props.user);
-            // console.log(this.props.user.incognito);
-            // console.log(this.props.user.userId);
-
             
             this.props.firebase.users().ref.child(this.state.key).update({
                 incognito: incognito,
@@ -175,13 +136,27 @@ import { connect } from 'react-redux';
             } else {
                 this.setState({showProfileAdd: true});
             }
-            // console.log(this.state.showProfileAdd);
+        }
+
+        addEducation = (e) => {
+            e.preventDefault();
+            if (this.state.addEducation === true) {
+                this.setState({addEducation: false});
+            } else {
+                this.setState({addEducation: true});
+            }
+        }
+
+        addExperience = (e) => {
+            e.preventDefault();
+            if (this.state.addExperience === true) {
+                this.setState({addExperience: false});
+            } else {
+                this.setState({addExperience: true});
+            }
         }
         
         render () {
-            // const { loading } = this.state;
-            // const { showProfileAdd } = this.state;
-
             return (
                     <div style={{marginTop: "120px"}}>
                     <h1 style={{marginLeft: "20px"}}>Welcome to your account, {this.props.authUser.email}</h1>
@@ -195,9 +170,6 @@ import { connect } from 'react-redux';
                                     <ListGroup>
                                         <ListGroup.Item action href="#link1">
                                         User Account
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action href="#link2">
-                                        Invitations / Likes
                                         </ListGroup.Item>
                                         <ListGroup.Item action href="#link3">
                                         Applications
@@ -226,22 +198,18 @@ import { connect } from 'react-redux';
                                                 </Col>
                                                 <Col sm={6}>
                                                 <img
-                                                src={this.state.url || require('../img/logo.png')}
+                                                src={this.props.user.profileImage || require('../img/logo.png')}
                                                 alt="Uploaded Profile"
                                                 width="100"
                                                 />
                                                 </Col>
                                             </Row>
-                                            <Button onClick={this.showAllInfo} style={{marginLeft: '7px'}} type="button" variant="warning">
+                                            <Button onClick={this.showAllInfo} style={{marginLeft: '7px', marginBottom: '20px'}} type="button" variant="warning">
                                                 Change Profile
                                             </Button>
                                             { this.state.showProfileAdd ? <UserForm></UserForm> : null}
                                             
 
-                                        </Tab.Pane>
-                                        <Tab.Pane eventKey="#link2">
-                                            <h2>Likes</h2>
-                                            <div id="likes"></div>
                                         </Tab.Pane>
                                         <Tab.Pane eventKey="#link3">
                                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium nemo assumenda cumque, explicabo ex soluta eveniet accusantium corrupti labore! Ea inventore ab ut ullam cupiditate aut voluptates illum vel culpa.
@@ -263,10 +231,18 @@ import { connect } from 'react-redux';
                                 <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
                                     <h3 className="centerText">Education</h3>
                                     <div className="container" id="education"></div>
+                                    <Button onClick={this.addEducation} style={{marginLeft: '7px'}} type="button" variant="warning">
+                                        Add Education
+                                    </Button>
+                                    { this.state.addEducation ? <FormEducation></FormEducation> : null}
                                 </Col>
                                 <Col className="container" sm={4} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
                                     <h3 className="centerText">Experience</h3>
                                     <div className="container" id="experience"></div>
+                                    <Button onClick={this.addExperience} style={{marginLeft: '7px'}} type="button" variant="warning">
+                                        Add Experience
+                                    </Button>
+                                    { this.state.addExperience ? <FormExperience></FormExperience> : null}
                                 </Col>
                                 <Col className="container" sm={2} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px'}}>
                                     <h3 className="centerText">Account Visibility <br />
@@ -298,15 +274,8 @@ import { connect } from 'react-redux';
 // Redux stuff
 const mapStateToProps = (state, props) => ({
     authUser: state.sessionState.authUser,
-    // user: (state.userState.users || {})[props.match.params.id],
-    // user: Object.keys(state.userState.users || {}).map(key => ({
-    //     ...state.userState.users[key],
-    //     uid: key,
-    //   })),
-    // user: Object.keys(state.userState.users || {}).map(key => ({
-    //         ...state.userState.users,
-    //     }))
-    user: (state.userState.user || {})[Object.keys(state.userState.user  || {})]
+    user: (state.userState.user || {})[Object.keys(state.userState.user  || {})],
+    userKey: Object.keys(state.userState.user  || {})[0]
 
 });
      
@@ -317,5 +286,4 @@ const mapDispatchToProps = dispatch => ({
 
 const condition = authUser => !!authUser;
 
-// export default withAuthorization(condition)(UserAccount);
 export default compose(connect(mapStateToProps, mapDispatchToProps), withFirebase, withAuthorization(condition))(UserAccount);

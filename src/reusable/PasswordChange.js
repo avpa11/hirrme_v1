@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withFirebase } from './Firebase';
+import { withFirebase } from '../components/Firebase';
 
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';

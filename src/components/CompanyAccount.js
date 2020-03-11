@@ -10,7 +10,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import PasswordChangeForm from './PasswordChange';
+import PasswordChangeForm from '../reusable/PasswordChange';
 import { FaBriefcase } from "react-icons/fa";
 import { connect } from 'react-redux';
 

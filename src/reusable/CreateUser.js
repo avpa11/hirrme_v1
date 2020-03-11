@@ -3,9 +3,9 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
-import { withAuthorization } from './Session';
+import { withAuthorization } from '../components/Session';
 
-import { withFirebase } from './Firebase';
+import { withFirebase } from '../components/Firebase';
 // import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -46,9 +46,21 @@ class CreateUserForm extends Component {
         .then(() => {
             this.setState({...initState})
         })
-        // .then(() => {
-        //     this.props.history.push('/education');
-        // })
+        .then(() => {
+            // this.props.history.push('/education');
+            let jobSeekersRef = this.props.firebase.users().orderByChild('userId')
+                .equalTo(this.props.authUser.uid)
+                jobSeekersRef.on('value', snapshot => {
+                    snapshot.forEach(snap1 => {
+                        // Redux
+                        this.props.onSetUser(
+                            snap1.val(),
+                            // user object key
+                            Object.keys(snapshot.val())[0],
+                        );
+                    });
+            })
+        })
         .catch(error => console.log(error));
     }
 
@@ -80,9 +92,15 @@ class CreateUserForm extends Component {
 
 const mapStateToProps = (state, props) => ({
     authUser: state.sessionState.authUser,
+    user: (state.userState.user || {})[Object.keys(state.userState.user  || {})]
+
 });
 
-const UserForm = compose(connect(mapStateToProps), withFirebase)(CreateUserForm);
+const mapDispatchToProps = dispatch => ({
+    onSetUser: (user, key) => dispatch({ type: 'USER_SET', user, key }),
+  });
+
+const UserForm = compose(connect(mapStateToProps, mapDispatchToProps), withFirebase)(CreateUserForm);
 const condition = authUser => !!authUser;
 
 export default  withAuthorization(condition)(CreateUser);
