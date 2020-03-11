@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { Link } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
+import Modal from 'react-bootstrap/Modal';
 
 class Vacancies extends Component {
     constructor(props) {
@@ -94,6 +95,9 @@ class Vacancies extends Component {
             this.props.firebase.savedVacancies().orderByChild('email').equalTo(this.props.authUser.email).on('value', snap => {
                 this.props.onSetSavedVacancies(snap.val());
             })
+            this.props.firebase.vacanciesApplications().orderByChild('userEmail').equalTo(this.props.authUser.email).on('value', snap => {
+                this.props.onSetAppliedVacancies(snap.val());
+            })
         }
 
         if (this.props.vacancies.length === 0) {
@@ -111,6 +115,7 @@ class Vacancies extends Component {
 
         let vacanciesData = this.props.vacancies;
         let savedVacanciesData = this.props.savedVacancies;
+        let appliedVacanciesData = this.props.appliedVacancies;
         let userType = this.props.userType;
 
         if (document.getElementById('vacanciesList') != null) {
@@ -135,6 +140,7 @@ class Vacancies extends Component {
                         ReactDOM.render(<VacancyObject
                             vacancyData={companyData[vacancy]}
                             savedVacanciesData={savedVacanciesData}
+                            appliedVacanciesData={appliedVacanciesData}
                             userType={userType}
                             authUser={this.props.authUser}
                             firebase={this.props.firebase}
@@ -192,19 +198,17 @@ class VacancyObject extends Component {
             displayButton: "Expand",
             isSaveDisabled: true,
             saveStatus: 'Save',
+            applyStatus: 'Apply',
+            applyVariant: 'primary',
+            show: false,
+            modalText: 'Have something to say/show/attach? Do it here',
         };
     }
 
     componentDidMount = () => {
 
         if (this.props.authUser != null) {
-            // this.props.firebase.database().ref.child('companies').orderByChild('email').equalTo(this.props.authUser.email).once('value', snap => {
-            //     if (!snap.exists()) {
-            //         this.setState({ isSaveDisabled: false })
-            //     }
-            // });
-            
-            if(this.props.userType === 'jobSeeker'){
+            if (this.props.userType === 'jobSeeker') {
                 this.setState({ isSaveDisabled: false })
             }
             this.props.savedVacanciesData.forEach(savedVacancyData => {
@@ -214,6 +218,7 @@ class VacancyObject extends Component {
                     this.setState({ saveStatus: 'Remove' })
                 }
             });
+            this.appliedVacancies();
         }
     }
 
@@ -250,6 +255,21 @@ class VacancyObject extends Component {
         })
     }
 
+    appliedVacancies = () => {
+
+        this.props.appliedVacanciesData.forEach(appliedVacancyData => {
+                if (appliedVacancyData.userEmail === this.props.authUser.email &&
+                    appliedVacancyData.positionTitle === this.props.vacancyData.positionTitle &&
+                    appliedVacancyData.contactInfo === this.props.vacancyData.contactInfo) {
+                    this.setState({
+                        applyStatus: 'Applied',
+                        applyVariant: 'success'
+                    })
+
+                }
+        })
+    }
+
     showAllInfo = () => {
         if (this.state.display === 'none') {
             this.setState({ display: "contents" });
@@ -262,6 +282,27 @@ class VacancyObject extends Component {
     }
 
     render() {
+
+        const handleClose = () => this.setState({ show: false });
+        const handleShow = () => this.setState({ show: true });
+
+        const applyForJob = () => {
+            this.props.firebase.vacanciesApplications().push({
+                positionTitle: vacancyData.positionTitle,
+                userId: this.props.authUser.uid,
+                userEmail: this.props.authUser.email,
+                attachedFile: 'linkToFile',
+                date: (new Date()).toISOString().split('T')[0],
+                contactInfo: this.props.vacancyData.contactInfo,
+            })
+                .then(this.setState({
+                    applyStatus: 'Applied',
+                    modalText: 'Done! Wish you luck',
+                    applyVariant: 'success'
+                }))
+                .then(setTimeout(handleClose, 2000))
+                .catch(error => { console.log(error) });
+        }
 
         let vacancyData = this.props.vacancyData;
 
@@ -277,9 +318,34 @@ class VacancyObject extends Component {
                         <h5>{vacancyData.type}</h5>
                         <h6>{vacancyData.city}, {vacancyData.province}, {vacancyData.country}</h6>
                     </div>
+
+                    <Modal show={this.state.show} onHide={handleClose} size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered>
+                        <Modal.Header>
+                            <Modal.Title>Want to attach anything?</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            {/* Add styling in the future */}
+                            <div style={{ textAlign: 'center' }}>
+                                <h4>{this.state.modalText}</h4>
+                                <br />
+                                <input type="file" id="myfile" name="myfile"></input>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                                <Button variant="secondary" onClick={handleClose} style={{ margin: '0.25em' }}>
+                                    Close
+                            </Button>
+                                <Button variant="primary" onClick={applyForJob} >
+                                    Apply
+                            </Button>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+
                     <div style={{ float: 'left', margin: '0 2em' }}>
                         <Button onClick={this.showAllInfo} variant="primary">{this.state.displayButton}</Button> <span />
-                        <Button variant="primary">Send Email</Button> <span />
+                        <Button onClick={this.state.applyStatus === 'Apply' ? handleShow : null} variant={this.state.applyVariant} disabled={this.state.isSaveDisabled}>{this.state.applyStatus}</Button> <span />
                         <Button onClick={e => this.handleLike(e)} variant="danger" disabled={this.state.isSaveDisabled}>{this.state.saveStatus}</Button>
                     </div>
                 </div>
@@ -307,13 +373,18 @@ const mapStateToProps = state => ({
         ...state.savedVacanciesState.savedVacancies[key],
         uid: key,
     })),
+    appliedVacancies: Object.keys(state.appliedVacanciesState.appliedVacancies || {}).map(key => ({
+        ...state.appliedVacanciesState.appliedVacancies[key],
+        uid: key,
+    })),
     userType: state.userTypeState.userType,
     authUser: state.sessionState.authUser,
 });
 
 const mapDispatchToProps = dispatch => ({
     onSetVacancies: vacancies => dispatch({ type: 'VACANCIES_SET', vacancies }),
-    onSetSavedVacancies: savedVacancies => dispatch({ type: 'SAVED_VACANCIES_SET', savedVacancies })
+    onSetSavedVacancies: savedVacancies => dispatch({ type: 'SAVED_VACANCIES_SET', savedVacancies }),
+    onSetAppliedVacancies: appliedVacancies => dispatch({ type: 'APPLIED_VACANCIES_SET', appliedVacancies })
 });
 
 export default compose(withFirebase, connect(

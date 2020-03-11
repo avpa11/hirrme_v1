@@ -44,6 +44,9 @@ class SavedVacancies extends Component {
 
         let vacanciesData = this.props.vacancies;
         let savedVacanciesData = this.props.savedVacancies;
+        let userType = this.props.userType;
+        let appliedVacanciesData = this.props.appliedVacancies;
+
 
         if (document.getElementById('savedVacanciesList') != null) {
             document.getElementById('savedVacanciesList').innerHTML = '';
@@ -71,7 +74,9 @@ class SavedVacancies extends Component {
                                 ReactDOM.render(<VacancyObject
                                     vacancyData={companyData[vacancy]}
                                     savedVacanciesData={savedVacanciesData}
+                                    appliedVacanciesData={appliedVacanciesData}
                                     authUser={this.props.authUser}
+                                    userType={userType}
                                     firebase={this.props.firebase}
                                 />, document.getElementById(id));
                             }
@@ -123,6 +128,11 @@ const mapStateToProps = state => ({
         ...state.savedVacanciesState.savedVacancies[key],
         uid: key,
     })),
+    appliedVacancies: Object.keys(state.appliedVacanciesState.appliedVacancies || {}).map(key => ({
+        ...state.appliedVacanciesState.appliedVacancies[key],
+        uid: key,
+    })),
+    userType: state.userTypeState.userType,
     authUser: state.sessionState.authUser,
 });
 

@@ -10,6 +10,7 @@ import savedVacanciesReducer from './savedVacancies'
 import vacanciesReducer from './vacancies'
 import userTypeReducer from './userType'
 import profileFilesReducer from './profileFiles'
+import appliedVacanciesReducer from './appliedVacancies'
 
 const rootReducer = combineReducers({
   sessionState: sessionReducer,
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   savedVacanciesState: savedVacanciesReducer,
   vacanciesState: vacanciesReducer,
   userTypeState: userTypeReducer,
-  profileFilesState: profileFilesReducer 
+  profileFilesState: profileFilesReducer,
+  appliedVacanciesState: appliedVacanciesReducer
 });
 export default rootReducer;
