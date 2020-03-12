@@ -11,6 +11,8 @@ import { compose } from 'recompose';
 import { Link } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Modal from 'react-bootstrap/Modal';
+import ProgressBar from 'react-bootstrap/ProgressBar'
+
 
 class Vacancies extends Component {
     constructor(props) {
@@ -202,6 +204,8 @@ class VacancyObject extends Component {
             applyVariant: 'primary',
             show: false,
             modalText: 'Have something to say/show/attach? Do it here',
+            file: null,
+            progress: 0
         };
     }
 
@@ -258,15 +262,15 @@ class VacancyObject extends Component {
     appliedVacancies = () => {
 
         this.props.appliedVacanciesData.forEach(appliedVacancyData => {
-                if (appliedVacancyData.userEmail === this.props.authUser.email &&
-                    appliedVacancyData.positionTitle === this.props.vacancyData.positionTitle &&
-                    appliedVacancyData.contactInfo === this.props.vacancyData.contactInfo) {
-                    this.setState({
-                        applyStatus: 'Applied',
-                        applyVariant: 'success'
-                    })
+            if (appliedVacancyData.userEmail === this.props.authUser.email &&
+                appliedVacancyData.positionTitle === this.props.vacancyData.positionTitle &&
+                appliedVacancyData.contactInfo === this.props.vacancyData.contactInfo) {
+                this.setState({
+                    applyStatus: 'Applied',
+                    applyVariant: 'success'
+                })
 
-                }
+            }
         })
     }
 
@@ -281,7 +285,38 @@ class VacancyObject extends Component {
         }
     }
 
-    render() {
+    handleFile = e => {
+        if (e.target.files[0]) {
+            const file = e.target.files[0];
+            this.setState({ file });
+        }
+    }
+
+    handleFileUpload = (e, authUser) => {
+
+        e.preventDefault();
+
+        const { file } = this.state;
+        const fileName = 'applicationResume_' + authUser.uid + '_' + this.props.vacancyData.positionTitle;
+        const uploadTask = this.props.firebase.storage.ref(`${authUser.uid}/${fileName}`).put(file);
+        uploadTask.on(
+            "state_changed",
+            snapshot => {
+                const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+                this.setState({ progress });
+            },
+            error => {
+                // Error function ...
+                console.log(error);
+            }
+        )
+    }
+
+    render() {  
+
+        let vacancyData = this.props.vacancyData;
 
         const handleClose = () => this.setState({ show: false });
         const handleShow = () => this.setState({ show: true });
@@ -304,8 +339,6 @@ class VacancyObject extends Component {
                 .catch(error => { console.log(error) });
         }
 
-        let vacancyData = this.props.vacancyData;
-
         return (
             <div>
                 <div style={{ display: 'table' }}>
@@ -327,10 +360,19 @@ class VacancyObject extends Component {
                         </Modal.Header>
                         <Modal.Body>
                             {/* Add styling in the future */}
-                            <div style={{ textAlign: 'center' }}>
+                            <div style={{ margin: '0 auto' }}>
                                 <h4>{this.state.modalText}</h4>
                                 <br />
-                                <input type="file" id="myfile" name="myfile"></input>
+
+                                <Form onSubmit={e => this.handleFileUpload(e, this.props.authUser)}>
+                                    <input type="file" onChange={this.handleFile}></input>
+                                    {
+                                        this.state.progress !== 100 ? <ProgressBar animated now={this.state.progress} /> : <ProgressBar now={this.state.progress} />                                         
+                                    }
+                                    <Button type="submit" variant="warning">
+                                        Upload a file
+                                    </Button>
+                                </Form>
                             </div>
                             <div style={{ textAlign: 'right' }}>
                                 <Button variant="secondary" onClick={handleClose} style={{ margin: '0.25em' }}>
