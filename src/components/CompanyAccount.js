@@ -195,13 +195,13 @@ class ListVacancies extends Component {
             let option4 = 'option4Q'+key;
             let answer = 'answerQ'+key;
             this.props.fireb.quizes().push({
-                [question]: item.question,
-                [qusetionType]: item.questionType,
-                [option1]: item.option1,
-                [option2]: item.option2,
-                [option3]: item.option3,
-                [option4]: item.option4,
-                [answer]: item.answer,
+                question: item.question,
+                qusetionType: item.questionType,
+                option1: item.option1,
+                option2: item.option2,
+                option3: item.option3,
+                option4: item.option4,
+                answer: item.answer,
                 vacancyId: this.props.vacancy.vacancyID,
                 companyId: this.props.companyID
             })
