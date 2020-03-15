@@ -11,6 +11,7 @@ import vacanciesReducer from './vacancies'
 import userTypeReducer from './userType'
 import profileFilesReducer from './profileFiles'
 import appliedVacanciesReducer from './appliedVacancies'
+import companyVacanciesReducer from './companyVacancies'
 
 const rootReducer = combineReducers({
   sessionState: sessionReducer,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   vacanciesState: vacanciesReducer,
   userTypeState: userTypeReducer,
   profileFilesState: profileFilesReducer,
-  appliedVacanciesState: appliedVacanciesReducer
+  appliedVacanciesState: appliedVacanciesReducer,
+  comapanyVacanciesState: companyVacanciesReducer
 });
 export default rootReducer;

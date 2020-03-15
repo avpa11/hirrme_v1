@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import ReactDOM from 'react-dom';
 // import { AuthUserContext } from './Session';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import PasswordChangeForm from '../reusable/PasswordChange';
@@ -66,73 +68,34 @@ class CompanyAccount extends Component {
                         });
                         });
                     }
-                    // console.log(currentComponent.state.user.incognito);
-                    // console.log(currentComponent.state.user);
-                    // console.log(snapshot.val());
                 });
             })
             var vacanciesRef = this.props.firebase.database().ref.child('vacancies').ref.child(this.state.authUser.uid);
             vacanciesRef.on('value', snapshot => {
+
+                this.props.onSetCompanyVacancies(snapshot.val());
+                
                 if (document.getElementById('vacancies')!= null) {
                     document.getElementById('vacancies').innerHTML = '';
                 }
-                snapshot.forEach(snap1 => {
-                    currentComponent.setState({
-                        vacancies: snapshot.val(),
-                    });
+
+                let id = 0;
+                // console.log(this.props)
+                for (var i in this.props.vacancies) {
+                    id++;
+
                     var div = document.createElement('div');
-                    div.setAttribute('class', 'edu');
-                    var p = document.createElement('h3');    
-                    p.setAttribute('class', 'mainp');            
-                    p.textContent = snap1.child('positionTitle').val();
-                    var spanDate = document.createElement('span'); 
-                    spanDate.setAttribute('class', 'span_date'); 
-                    spanDate.textContent = snap1.child('salary').val() + "$/ " + snap1.child('salaryType').val();
-                    p.appendChild(spanDate);
-                    div.appendChild(p);
-                    // location
-                    var p2 = document.createElement('p');
-                    p2.setAttribute('class', 'name');
-                    p2.textContent = snap1.child('city').val() + ", " + snap1.child('province').val()  + ", " + snap1.child('country').val();
-                    div.appendChild(p2);
-                    // description
-                    var hDesc = document.createElement('h');
-                    hDesc.textContent = "Description";
-                    div.appendChild(hDesc);
-                    var p3 = document.createElement('p');
-                    p3.setAttribute('class', 'name');
-                    p3.textContent = snap1.child('description').val();
-                    div.appendChild(p3);
-                    // requirements
-                    var hRequirements = document.createElement('h');
-                    hRequirements.textContent = "Requirements";
-                    div.appendChild(hRequirements);
-                    var p4 = document.createElement('p');
-                    p4.setAttribute('class', 'name');
-                    p4.textContent = snap1.child('requirements').val();
-                    div.appendChild(p4);
-                    // keyResponsibilities
-                    var hResponsibilities = document.createElement('h');
-                    hResponsibilities.textContent = "Responsibilities";
-                    div.appendChild(hResponsibilities);
-                    var p5 = document.createElement('p');
-                    p5.setAttribute('class', 'name');
-                    p5.textContent = snap1.child('keyResponsibilities').val();
-                    div.appendChild(p5);
-                    var hr = document.createElement('hr');
-                    div.appendChild(hr);
-                    if (document.getElementById('vacancies')!= null) {
-                        if (div !== '') {
-                            document.getElementById('vacancies').appendChild(div);
-                        } else {
-                            // NOT WORKING
-                            document.getElementById('vacancies').innerHTML = "You don't have any vacancies yet";
-                        }
+                    div.setAttribute('id', id);
+                    if (document.getElementById('vacancies') != null) {
+                        document.getElementById('vacancies').appendChild(div);
+
+                        ReactDOM.render(<VacancyObject
+                            vacancy={this.props.vacancies[i]}
+                            fireb={this.props.firebase}
+                            companyID={this.props.authUser.uid}
+                        />, document.getElementById(id));
                     }
-                        
-    
-                    // console.log(currentComponent.state.vacancies);
-                });
+                }
         });
 
          }
@@ -197,6 +160,218 @@ class CompanyAccount extends Component {
                         <div id="vacancies"></div> 
                     </div>
                 </div>  
+        )
+    }
+}
+
+class ListVacancies extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            show: false,
+            questions: [{
+                question: '',
+                questionType: '',
+                option1: '',
+                option2: '',
+                option3: '',
+                option4:'',
+                answer: '',
+            }]
+        }
+    }
+
+    handleSubmit = (event) => {
+        // alert('A name was submitted: ' + JSON.stringify(this.state.educations));
+        event.preventDefault();
+
+        /* Creates Separate Objects for questions */
+        this.state.questions.map((item, key)=> {
+            let question = 'question'+key;
+            let qusetionType = 'question'+key+'Type';
+            let option1 = 'option1Q'+key;
+            let option2 = 'option2Q'+key;
+            let option3 = 'option3Q'+key;
+            let option4 = 'option4Q'+key;
+            let answer = 'answerQ'+key;
+            this.props.fireb.quizes().push({
+                [question]: item.question,
+                [qusetionType]: item.questionType,
+                [option1]: item.option1,
+                [option2]: item.option2,
+                [option3]: item.option3,
+                [option4]: item.option4,
+                [answer]: item.answer,
+                vacancyId: this.props.vacancy.vacancyID,
+                companyId: this.props.companyID
+            })
+            .then(setTimeout(this.handleClose, 2000))
+            .catch(error => { console.log(error) });
+        })
+
+        // var questionNumber = this.state.questions.map((item, key)=> {
+        //     var question = 'question'+key;
+        //     var qusetionType = 'question'+key+'Type';
+        //     var option1 = 'option1Q'+key;
+        //     var option2 = 'option2Q'+key;
+        //     var option3 = 'option3Q'+key;
+        //     var option4 = 'option4Q'+key;
+        //     var answer = 'answerQ'+key;
+
+        //     return question;
+        // })
+
+        // var questionValue = this.state.questions.map((item, key)=> {
+        //     var question = item.qusetionType;
+        //     return question;
+        // })
+
+        // this.props.fireb.quizes().push({
+        //     [questionNumber]: questionValue
+        // })
+        // .then(setTimeout(this.handleClose, 2000))
+        // .catch(error => { console.log(error) });
+
+        // console.log(questionNumber);
+    }
+
+    handleChange(i,e) {
+        const { name, value } = e.target;
+        let questions = [...this.state.questions];
+        questions[i] = {...questions[i], [name]:value};
+        this.setState({questions});
+
+        // console.log(questions);
+    };
+
+    removeClick(i){
+        let questions = [...this.state.questions];
+        questions.splice(i, 1);
+        this.setState({ questions });
+     }
+
+     addClick() {
+        this.setState(prevState => ({
+            questions: [...prevState.questions, {question: '',
+            questionType: '',
+            option1: '',
+            option2: '',
+            option3: '',
+            option4: '',
+            answer: '',
+            }]
+        }))
+    }
+
+    handleClose = () => this.setState({ show: false });
+    handleShow = () => this.setState({ show: true });
+
+    createUI() {
+        return this.state.questions.map((el, i) => (
+            <div key={i} style={{ marginBottom: '20px'}}>
+                <Row>
+                    <Col sm={8}>
+                        <Form.Group>
+                            <Form.Label>Question {i+1}:</Form.Label>
+                            <FormControl type="text" value={el.question} onChange={this.handleChange.bind(this, i)} name="question" placeholder="Type your question"></FormControl>                        
+                        </Form.Group>
+                    </Col>
+                    <Col sm={4}>
+                        <Form.Group>
+                            <Form.Label>Question Type:</Form.Label>
+                            <Form.Control onChange={this.handleChange.bind(this, i)} value={el.questionType} name="questionType" as="select">
+                                <option value="" disabled={true}>Select type...</option>
+                                <option value="openAnswer">Open Answer</option>
+                                <option value="multipleChoice">Multiple Choice</option>
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                {/* {el.questionType === 'multipleChoice' ? this.createOptions(el, i, this) : null} */}
+
+                {el.questionType === 'multipleChoice' ? (
+                    <React.Fragment>
+                        <Form.Group>
+                            <Form.Label>Option 1:</Form.Label>
+                            <FormControl type="text" value={el.option1} onChange={this.handleChange.bind(this, i)} name="option1" placeholder="Answer Option 1"></FormControl>                        
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Option 2:</Form.Label>
+                            <FormControl type="text" value={el.option2} onChange={this.handleChange.bind(this, i)} name="option2" placeholder="Answer Option 2"></FormControl>                        
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Option 3:</Form.Label>
+                            <FormControl type="text" value={el.option3} onChange={this.handleChange.bind(this, i)} name="option3" placeholder="Answer Option 3"></FormControl>                        
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Option 4:</Form.Label>
+                            <FormControl type="text" value={el.option4} onChange={this.handleChange.bind(this, i)} name="option4" placeholder="Answer Option 4"></FormControl>                        
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Answer:</Form.Label>
+                            <Form.Control onChange={this.handleChange.bind(this, i)} value={el.answer} name="answer" as="select">
+                                <option value="" disabled={true}>Select an answer from options...</option>
+                                <option value="option1">Option 1 : {el.option1}</option>
+                                <option value="option2">Option 2 : {el.option2}</option>
+                                <option value="option3">Option 3 : {el.option3}</option>
+                                <option value="option4">Option 4 : {el.option4}</option>
+                            </Form.Control>
+                        </Form.Group>
+                    </React.Fragment>
+                ) : null}
+
+                <Button type='button' variant="warning" onClick={this.addClick.bind(this)}>Add another question</Button>
+                <Button variant="danger" onClick={this.removeClick.bind(this, i)}>Remove</Button>                     
+            </div>
+        ))
+    }
+
+    render () {
+
+        return (
+            <React.Fragment>
+                <Row>
+                    <Col sm={8}>
+                        <h3>{this.props.vacancy.positionTitle} <span className="jobTypeSpan">#{this.props.vacancy.type}</span></h3>
+                        <h4>{this.props.vacancy.city}, {this.props.vacancy.province}, {this.props.vacancy.country}</h4>
+                        <p>{this.props.vacancy.description}</p>
+                    </Col>
+                    <Col sm={4}>
+                        <Button variant="warning" onClick={this.handleShow}>Add a quiz</Button>
+                    </Col>
+                </Row>
+                <hr />
+
+                <Modal show={this.state.show} onHide={this.handleClose} size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered>
+                        <Modal.Header>
+                            <Modal.Title>Add a Quiz for {this.props.vacancy.positionTitle} vacancy </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                        <Form onSubmit={e => this.handleSubmit(e)}>
+
+                            {this.createUI()}
+
+                            <hr />
+                            <div style={{ textAlign: 'right' }}>
+                                <Button onClick={this.handleClose} variant="secondary" style={{ margin: '0.25em' }}>
+                                    Close
+                            </Button>
+                                <Button type="submit" >
+                                    Create a quiz
+                            </Button>
+                            </div>
+                        </Form>
+
+                        </Modal.Body>
+                    </Modal>
+
+            </React.Fragment>
         )
     }
 }
@@ -306,14 +481,29 @@ class CreateVacancyForm extends Component {
 
 }
 
-const mapStateToProps = state => ({
-    authUser: state.sessionState.authUser,
-});
 
+// Redux stuff
+const mapStateToProps = (state, props) => ({
+    authUser: state.sessionState.authUser,
+
+    vacancies: Object.keys(state.comapanyVacanciesState.companyVacancies || {}).map(key => ({
+        ...state.comapanyVacanciesState.companyVacancies[key],
+        vacancyID: key,
+    })),
+    vacanciesKey: Object.keys(state.comapanyVacanciesState.companyVacancies  || {})
+
+});
+     
+const mapDispatchToProps = dispatch => ({
+    onSetCompanyVacancies: companyVacancies => dispatch({ type: 'COMPANY_VACANCIES_SET', companyVacancies }),
+  });
 
 
 const VacancyForm = compose(connect(mapStateToProps),withRouter, withFirebase)(CreateVacancyForm);
 
-export default withFirebase(CompanyAccount);
+const VacancyObject = withFirebase(ListVacancies);
+
+export default compose(withFirebase, connect(mapStateToProps, mapDispatchToProps))(CompanyAccount);
 
 export { VacancyForm };
+export { VacancyObject };
