@@ -11,6 +11,8 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { VacancyObject } from './Vacancies'
 
+// Fix applied vacancies
+
 class SavedVacancies extends Component {
     constructor(props) {
         super(props);

@@ -95,8 +95,9 @@ class Vacancies extends Component {
     fetchVacanciesData() {
         if (this.props.authUser && this.props.savedVacancies.length === 0) {
             this.props.firebase.savedVacancies().orderByChild('email').equalTo(this.props.authUser.email).on('value', snap => {
-                this.props.onSetSavedVacancies(snap.val());
+                this.props.onSetSavedVacancies(snap.val());                
             })
+            // this.props.firebase.vacanciesApplications().orderByChild('userId').equalTo(this.props.authUser.uid).on('value', snap => {
             this.props.firebase.vacanciesApplications().orderByChild('userEmail').equalTo(this.props.authUser.email).on('value', snap => {
                 this.props.onSetAppliedVacancies(snap.val());
             })
@@ -125,13 +126,18 @@ class Vacancies extends Component {
         }
 
         var id = 0;
+        let k = 0;
 
         for (var i in vacanciesData) {
-            var companyData = vacanciesData[i];
-
+            var companyData = vacanciesData[i];            
+            k = 0;
+            
+            let key = Object.keys(companyData); 
             for (var vacancy in companyData) {
+                
                 if (companyData[vacancy].hasOwnProperty('positionTitle')) {
                     id++;
+                    
 
                     var div = document.createElement('div');
                     div.setAttribute('id', id);
@@ -139,7 +145,12 @@ class Vacancies extends Component {
                     if (document.getElementById('vacanciesList') != null) {
                         document.getElementById('vacanciesList').appendChild(div);
 
+                        // console.log(key[k++]);
+                        
+
                         ReactDOM.render(<VacancyObject
+                            vacancyKey = {key[k++]}                            
+                            companyKey = {companyData.uid}                            
                             vacancyData={companyData[vacancy]}
                             savedVacanciesData={savedVacanciesData}
                             appliedVacanciesData={appliedVacanciesData}
@@ -217,11 +228,15 @@ class VacancyObject extends Component {
             }
             this.props.savedVacanciesData.forEach(savedVacancyData => {
                 if (savedVacancyData.email === this.props.authUser.email &&
+                    // savedVacancyData.vacancyKey === this.props.vacancyKey)
                     savedVacancyData.positionTitle === this.props.vacancyData.positionTitle &&
-                    savedVacancyData.contactInfo === this.props.vacancyData.contactInfo) {
-                    this.setState({ saveStatus: 'Remove' })
+                    savedVacancyData.contactInfo === this.props.vacancyData.contactInfo){
+
+                        this.setState({ saveStatus: 'Remove' })
+                    } 
+                    // console.log(this.props.vacancyKey);
                 }
-            });
+            );
             this.appliedVacancies();
         }
     }
@@ -238,6 +253,8 @@ class VacancyObject extends Component {
             contactInfo: this.props.vacancyData.contactInfo,
             email: this.props.authUser.email,
             date: (new Date()).toISOString().split('T')[0],
+            // vacancyKey: this.props.vacancyKey,
+            // companyKey: this.props.companyKey
         })
             .then(this.setState({ saveStatus: 'Remove' }))
             .catch(error => console.log(error));
@@ -251,6 +268,7 @@ class VacancyObject extends Component {
                 if (snap1.child('email').val() === this.props.authUser.email &&
                     snap1.child('positionTitle').val() === this.props.vacancyData.positionTitle &&
                     snap1.child('contactInfo').val() === this.props.vacancyData.contactInfo) {
+                    // snap1.child('vacancyKey').val() === this.props.vacancyKey) {
                     savedVacanciesRef.child(snap1.key).remove()
                         .then(this.setState({ saveStatus: 'Save' }))
                         .catch(error => console.log(error));
@@ -260,11 +278,13 @@ class VacancyObject extends Component {
     }
 
     appliedVacancies = () => {
-
         this.props.appliedVacanciesData.forEach(appliedVacancyData => {
+            // console.log(appliedVacancyData);
+            // if (appliedVacancyData.userId === this.props.authUser.uid &&
             if (appliedVacancyData.userEmail === this.props.authUser.email &&
                 appliedVacancyData.positionTitle === this.props.vacancyData.positionTitle &&
                 appliedVacancyData.contactInfo === this.props.vacancyData.contactInfo) {
+                // appliedVacancyData.vacancyKey === this.props.vacancyKey) {
                 this.setState({
                     applyStatus: 'Applied',
                     applyVariant: 'success'
@@ -297,7 +317,7 @@ class VacancyObject extends Component {
         e.preventDefault();
 
         const { file } = this.state;
-        const fileName = 'applicationResume_' + authUser.uid + '_' + this.props.vacancyData.positionTitle;
+        const fileName = 'applicationAttachment_' + authUser.uid + '_' + this.props.vacancyData.positionTitle;
         const uploadTask = this.props.firebase.storage.ref(`${authUser.uid}/${fileName}`).put(file);
         uploadTask.on(
             "state_changed",
@@ -324,11 +344,16 @@ class VacancyObject extends Component {
         const applyForJob = () => {
             this.props.firebase.vacanciesApplications().push({
                 positionTitle: vacancyData.positionTitle,
-                userId: this.props.authUser.uid,
+                // userId: this.props.authUser.uid,
                 userEmail: this.props.authUser.email,
                 attachedFile: 'linkToFile',
                 date: (new Date()).toISOString().split('T')[0],
                 contactInfo: this.props.vacancyData.contactInfo,
+                // vacancyKey: this.props.vacancyKey,
+                companyKey: this.props.companyKey,
+                userId: this.props.authUser.uid,
+                status: 'pending'
+
             })
                 .then(this.setState({
                     applyStatus: 'Applied',

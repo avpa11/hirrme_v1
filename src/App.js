@@ -14,6 +14,7 @@ import Experience from './components/Experience';
 import JobSeekers from './components/JobSeekers';
 import Vacancies from './components/Vacancies';
 import savedVacancies from './components/SavedVacancies';
+import VacanciesApplicants from './components/VacanciesApplicants';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { withAuthentication } from './components/Session';
@@ -39,6 +40,7 @@ class App extends Component {
             <Route path='/createcompany' component={Company} />
             <Route path='/education' component={Education} />
             <Route path='/experience' component={Experience} />
+            <Route path='/applicants' component={VacanciesApplicants} />
           </div>  
         </BrowserRouter>    
     )

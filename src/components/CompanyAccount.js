@@ -15,6 +15,10 @@ import Button from 'react-bootstrap/Button';
 import PasswordChangeForm from '../reusable/PasswordChange';
 import { FaBriefcase } from "react-icons/fa";
 import { connect } from 'react-redux';
+import Nav from 'react-bootstrap/Nav';
+import { Link } from 'react-router-dom';
+
+
 
 const initState = {
     //   for vacancies:
@@ -36,130 +40,149 @@ class CompanyAccount extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          company: [],
-          vacancies: [],
-          key: '',
+            company: [],
+            vacancies: [],
+            key: '',
         };
-      }
+    }
 
-      componentDidMount() {
+    componentDidMount() {
         let currentComponent = this;
         this.setState({ loading: true });
         this.props.firebase.auth.onAuthStateChanged(authUser => {
-          authUser
-            ? this.setState({ authUser })
-            : this.setState({ authUser: null });
+            authUser
+                ? this.setState({ authUser })
+                : this.setState({ authUser: null });
 
             if (this.state.authUser != null) {
 
-            var companyRef = this.props.firebase.database().ref.child('companies').orderByChild('companyId')
-            .equalTo(this.state.authUser.uid)
-            companyRef.on('value', snapshot => {
-                snapshot.forEach(snap1 => {
-                    currentComponent.setState({
-                        company: snap1.val(),
+                var companyRef = this.props.firebase.database().ref.child('companies').orderByChild('companyId')
+                    .equalTo(this.state.authUser.uid)
+                companyRef.on('value', snapshot => {
+                    snapshot.forEach(snap1 => {
+                        currentComponent.setState({
+                            company: snap1.val(),
+                        });
+                        if (snapshot.val() !== null) {
+                            Object.keys(snapshot.val()).forEach(key => {
+                                // The ID is the key
+                                //   console.log(key);
+                                currentComponent.setState({
+                                    key: key,
+                                });
+                            });
+                        }
                     });
-                    if (snapshot.val() !== null) {
-                        Object.keys(snapshot.val() ).forEach(key => {
-                          // The ID is the key
-                        //   console.log(key);
-                          currentComponent.setState({
-                            key: key,
-                        });
-                        });
+                })
+
+                this.props.firebase.vacanciesApplications().orderByChild('companyKey').equalTo(this.props.authUser.uid).on('value', snap => {
+                    this.props.onSetAppliedVacancies(snap.val());
+                })
+
+                this.props.firebase.users().orderByChild('incognito').equalTo(null).on('value', snap => {
+                    this.props.onSetUsers(snap.val());
+                })
+            
+
+                var vacanciesRef = this.props.firebase.database().ref.child('vacancies').ref.child(this.state.authUser.uid);
+                vacanciesRef.on('value', snapshot => {
+
+                    this.props.onSetCompanyVacancies(snapshot.val());
+
+                    if (document.getElementById('vacancies') != null) {
+                        document.getElementById('vacancies').innerHTML = '';
+                    }
+
+                    let id = 0;
+                    // console.log(this.props)
+                    for (var i in this.props.vacancies) {
+                        id++;
+
+                        var div = document.createElement('div');
+                        div.setAttribute('id', id);
+                        if (document.getElementById('vacancies') != null) {
+                            document.getElementById('vacancies').appendChild(div);
+
+                            ReactDOM.render(<VacancyObject
+                                vacancies={this.props.vacancies}
+                                vacancy={this.props.vacancies[i]}
+                                fireb={this.props.firebase}
+                                companyID={this.props.authUser.uid}
+                                authUser={this.props.authUser}
+                                id={id}
+                            />, document.getElementById(id));
+                        }
                     }
                 });
-            })
-            var vacanciesRef = this.props.firebase.database().ref.child('vacancies').ref.child(this.state.authUser.uid);
-            vacanciesRef.on('value', snapshot => {
 
-                this.props.onSetCompanyVacancies(snapshot.val());
-                
-                if (document.getElementById('vacancies')!= null) {
-                    document.getElementById('vacancies').innerHTML = '';
-                }
-
-                let id = 0;
-                // console.log(this.props)
-                for (var i in this.props.vacancies) {
-                    id++;
-
-                    var div = document.createElement('div');
-                    div.setAttribute('id', id);
-                    if (document.getElementById('vacancies') != null) {
-                        document.getElementById('vacancies').appendChild(div);
-
-                        ReactDOM.render(<VacancyObject
-                            vacancy={this.props.vacancies[i]}
-                            fireb={this.props.firebase}
-                            companyID={this.props.authUser.uid}
-                        />, document.getElementById(id));
-                    }
-                }
-        });
-
-         }
+            }
         })
     }
 
     componentWillUnmount() {
-      this.props.firebase.database().off();
-      this.props.firebase.database().ref.child('companies').off();
+        this.props.firebase.database().off();
+        this.props.firebase.database().ref.child('companies').off();
     }
 
-    render () {
+    render() {
         return (
-            <div>	                        
-                <div className="container" style={{marginBottom: '20px'}}>  
+            <div>
+                <div className="container" style={{ marginBottom: '20px' }}>
                     <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
-                    <Row>
-                        <Col sm={3}>
-                        <ListGroup>
-                            <ListGroup.Item action href="#link1">
-                            Company Account
+                        <Row>
+                            <Col sm={3}>
+                                <ListGroup>
+                                    <ListGroup.Item action href="#link1">
+                                        Company Account
                             </ListGroup.Item>
-                            <ListGroup.Item action href="#link2">
-                            Vacancies
+                                    <ListGroup.Item action href="#link2">
+                                        Vacancies
                             </ListGroup.Item>
-                            <ListGroup.Item action href="#link4">
-                            Settings
+                                    <ListGroup.Item action href="#link4">
+                                        Settings
                             </ListGroup.Item>
-                        </ListGroup>
-                        </Col>
-                        <Col sm={9} style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '5px'}}>
-                        <Tab.Content>
-                            <Tab.Pane eventKey="#link1">
-                                <h2 className="centerText" style={{marginBottom: 0}}>{this.state.company.name}</h2>
-                                <p style={{color: 'rgb(155,155,155)'}}>
-                                    <span>{this.state.company.city}</span>,
-                                    <span> {this.state.company.province}</span>, 
+                                    <Nav>
+                                        <Nav.Link as={Link} to={{
+                                            pathname: "/applicants",
+                                            data: 'kek'
+                                        }}><Button variant="warning">Show Applicants</Button></Nav.Link>
+                                    </Nav>
+                                </ListGroup>
+                            </Col>
+                            <Col sm={9} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '5px' }}>
+                                <Tab.Content>
+                                    <Tab.Pane eventKey="#link1">
+                                        <h2 className="centerText" style={{ marginBottom: 0 }}>{this.state.company.name}</h2>
+                                        <p style={{ color: 'rgb(155,155,155)' }}>
+                                            <span>{this.state.company.city}</span>,
+                                    <span> {this.state.company.province}</span>,
                                     <span> {this.state.company.country}</span>
-                                </p> <br />
-                                <h4><FaBriefcase /> {this.state.company.desrciption}</h4>
-                                <p style={{color: 'rgb(155,155,155)'}}>
-                                    <span> {this.state.company.field}</span>
-                                </p>
-                                <p>Director - {this.state.company.director}</p>
+                                        </p> <br />
+                                        <h4><FaBriefcase /> {this.state.company.desrciption}</h4>
+                                        <p style={{ color: 'rgb(155,155,155)' }}>
+                                            <span> {this.state.company.field}</span>
+                                        </p>
+                                        <p>Director - {this.state.company.director}</p>
 
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="#link2">
-                                <VacancyForm />
-                            </Tab.Pane>
-                            <Tab.Pane id="settingsTab" eventKey="#link4">
-                                <h2>Password Change</h2>
-                                <PasswordChangeForm />
-                            </Tab.Pane>
-                        </Tab.Content>
-                        </Col>
-                    </Row>
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="#link2">
+                                        <VacancyForm />
+                                    </Tab.Pane>
+                                    <Tab.Pane id="settingsTab" eventKey="#link4">
+                                        <h2>Password Change</h2>
+                                        <PasswordChangeForm />
+                                    </Tab.Pane>
+                                </Tab.Content>
+                            </Col>
+                        </Row>
                     </Tab.Container>
                 </div>
-                    <div className="container divcenter center" style={{backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px', maringTop: '30px', marginBottom: '50px'}}>
-                        <h3 className="centerText">Your vacancies</h3>
-                        {/* { console.log(this.state.vacancies) } */}
-                        <div id="vacancies"></div> 
-                    </div>
-                </div>  
+                <div className="container divcenter center" style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px', maringTop: '30px', marginBottom: '50px' }}>
+                    <h3 className="centerText">Your vacancies</h3>
+                    {/* { console.log(this.state.vacancies) } */}
+                    <div id="vacancies"></div>
+                </div>
+            </div >
         )
     }
 }
@@ -169,13 +192,15 @@ class ListVacancies extends Component {
         super(props);
         this.state = {
             show: false,
+            numberOfApplicants: 0,
+            numberOfSaves: 0,
             questions: [{
                 question: '',
                 questionType: '',
                 option1: '',
                 option2: '',
                 option3: '',
-                option4:'',
+                option4: '',
                 answer: '',
             }]
         }
@@ -186,14 +211,14 @@ class ListVacancies extends Component {
         event.preventDefault();
 
         /* Creates Separate Objects for questions */
-        this.state.questions.map((item, key)=> {
-            let question = 'question'+key;
-            let qusetionType = 'question'+key+'Type';
-            let option1 = 'option1Q'+key;
-            let option2 = 'option2Q'+key;
-            let option3 = 'option3Q'+key;
-            let option4 = 'option4Q'+key;
-            let answer = 'answerQ'+key;
+        this.state.questions.map((item, key) => {
+            let question = 'question' + key;
+            let qusetionType = 'question' + key + 'Type';
+            let option1 = 'option1Q' + key;
+            let option2 = 'option2Q' + key;
+            let option3 = 'option3Q' + key;
+            let option4 = 'option4Q' + key;
+            let answer = 'answerQ' + key;
             this.props.fireb.quizes().push({
                 question: item.question,
                 qusetionType: item.questionType,
@@ -205,8 +230,8 @@ class ListVacancies extends Component {
                 vacancyId: this.props.vacancy.vacancyID,
                 companyId: this.props.companyID
             })
-            .then(setTimeout(this.handleClose, 2000))
-            .catch(error => { console.log(error) });
+                .then(setTimeout(this.handleClose, 2000))
+                .catch(error => { console.log(error) });
         })
 
         // var questionNumber = this.state.questions.map((item, key)=> {
@@ -235,30 +260,35 @@ class ListVacancies extends Component {
         // console.log(questionNumber);
     }
 
-    handleChange(i,e) {
+    componentDidMount(){
+        this.showVacancyStat();
+    }
+
+    handleChange(i, e) {
         const { name, value } = e.target;
         let questions = [...this.state.questions];
-        questions[i] = {...questions[i], [name]:value};
-        this.setState({questions});
+        questions[i] = { ...questions[i], [name]: value };
+        this.setState({ questions });
 
         // console.log(questions);
     };
 
-    removeClick(i){
+    removeClick(i) {
         let questions = [...this.state.questions];
         questions.splice(i, 1);
         this.setState({ questions });
-     }
+    }
 
-     addClick() {
+    addClick() {
         this.setState(prevState => ({
-            questions: [...prevState.questions, {question: '',
-            questionType: '',
-            option1: '',
-            option2: '',
-            option3: '',
-            option4: '',
-            answer: '',
+            questions: [...prevState.questions, {
+                question: '',
+                questionType: '',
+                option1: '',
+                option2: '',
+                option3: '',
+                option4: '',
+                answer: '',
             }]
         }))
     }
@@ -266,14 +296,25 @@ class ListVacancies extends Component {
     handleClose = () => this.setState({ show: false });
     handleShow = () => this.setState({ show: true });
 
+    showVacancyStat = () => {        
+
+        this.props.fireb.vacanciesApplications().orderByChild('positionTitle').equalTo(this.props.vacancy.positionTitle).on('value', snap => {
+            this.setState({numberOfApplicants: snap.numChildren()})            
+            })  
+            
+        this.props.fireb.savedVacancies().orderByChild('positionTitle').equalTo(this.props.vacancy.positionTitle).on('value', snap => {
+            this.setState({numberOfSaves: snap.numChildren()})            
+            })  
+    }
+
     createUI() {
         return this.state.questions.map((el, i) => (
-            <div key={i} style={{ marginBottom: '20px'}}>
+            <div key={i} style={{ marginBottom: '20px' }}>
                 <Row>
                     <Col sm={8}>
                         <Form.Group>
-                            <Form.Label>Question {i+1}:</Form.Label>
-                            <FormControl type="text" value={el.question} onChange={this.handleChange.bind(this, i)} name="question" placeholder="Type your question"></FormControl>                        
+                            <Form.Label>Question {i + 1}:</Form.Label>
+                            <FormControl type="text" value={el.question} onChange={this.handleChange.bind(this, i)} name="question" placeholder="Type your question"></FormControl>
                         </Form.Group>
                     </Col>
                     <Col sm={4}>
@@ -293,22 +334,22 @@ class ListVacancies extends Component {
                     <React.Fragment>
                         <Form.Group>
                             <Form.Label>Option 1:</Form.Label>
-                            <FormControl type="text" value={el.option1} onChange={this.handleChange.bind(this, i)} name="option1" placeholder="Answer Option 1"></FormControl>                        
+                            <FormControl type="text" value={el.option1} onChange={this.handleChange.bind(this, i)} name="option1" placeholder="Answer Option 1"></FormControl>
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Option 2:</Form.Label>
-                            <FormControl type="text" value={el.option2} onChange={this.handleChange.bind(this, i)} name="option2" placeholder="Answer Option 2"></FormControl>                        
+                            <FormControl type="text" value={el.option2} onChange={this.handleChange.bind(this, i)} name="option2" placeholder="Answer Option 2"></FormControl>
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Option 3:</Form.Label>
-                            <FormControl type="text" value={el.option3} onChange={this.handleChange.bind(this, i)} name="option3" placeholder="Answer Option 3"></FormControl>                        
+                            <FormControl type="text" value={el.option3} onChange={this.handleChange.bind(this, i)} name="option3" placeholder="Answer Option 3"></FormControl>
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Option 4:</Form.Label>
-                            <FormControl type="text" value={el.option4} onChange={this.handleChange.bind(this, i)} name="option4" placeholder="Answer Option 4"></FormControl>                        
+                            <FormControl type="text" value={el.option4} onChange={this.handleChange.bind(this, i)} name="option4" placeholder="Answer Option 4"></FormControl>
                         </Form.Group>
 
                         <Form.Group>
@@ -325,13 +366,12 @@ class ListVacancies extends Component {
                 ) : null}
 
                 <Button type='button' variant="warning" onClick={this.addClick.bind(this)}>Add another question</Button>
-                <Button variant="danger" onClick={this.removeClick.bind(this, i)}>Remove</Button>                     
+                <Button variant="danger" onClick={this.removeClick.bind(this, i)}>Remove</Button>
             </div>
         ))
     }
 
-    render () {
-
+    render() {
         return (
             <React.Fragment>
                 <Row>
@@ -341,18 +381,33 @@ class ListVacancies extends Component {
                         <p>{this.props.vacancy.description}</p>
                     </Col>
                     <Col sm={4}>
-                        <Button variant="warning" onClick={this.handleShow}>Add a quiz</Button>
+                        <p>Number of Saves: {this.state.numberOfSaves}</p>
+                        <p>Number of Applications: {this.state.numberOfApplicants}</p>
+                        <Button variant="warning" onClick={this.handleShow}>Add a quiz</Button> <br />
+
+                        {/*  
+
+                        Alina, can you please take a look how to make Nav.Link working here?
+
+                        <Nav>
+                            <Nav.Link as={Link} to={{
+                                pathname: "/applicants",
+                                data: 'hey'
+                            }}><Button variant="warning">Show Applicants</Button></Nav.Link>
+                        </Nav> 
+                        
+                        */}
                     </Col>
                 </Row>
                 <hr />
 
                 <Modal show={this.state.show} onHide={this.handleClose} size="lg"
-                        aria-labelledby="contained-modal-title-vcenter"
-                        centered>
-                        <Modal.Header>
-                            <Modal.Title>Add a Quiz for {this.props.vacancy.positionTitle} vacancy </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered>
+                    <Modal.Header>
+                        <Modal.Title>Add a Quiz for {this.props.vacancy.positionTitle} vacancy </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
                         <Form onSubmit={e => this.handleSubmit(e)}>
 
                             {this.createUI()}
@@ -368,8 +423,8 @@ class ListVacancies extends Component {
                             </div>
                         </Form>
 
-                        </Modal.Body>
-                    </Modal>
+                    </Modal.Body>
+                </Modal>
 
             </React.Fragment>
         )
@@ -379,10 +434,10 @@ class ListVacancies extends Component {
 class CreateVacancyForm extends Component {
     constructor(props) {
         super(props);
-        this.state = {...initState}
+        this.state = { ...initState }
     }
 
-    
+
     handleSubmit = (e, authUser) => {
         e.preventDefault();
 
@@ -400,78 +455,78 @@ class CreateVacancyForm extends Component {
             salaryType: this.state.salaryType,
             contactInfo: this.state.contactInfo
         })
-        .then(() => {
-            this.setState({...initState})
-        })
-        .catch(error => console.log(error));
+            .then(() => {
+                this.setState({ ...initState })
+            })
+            .catch(error => console.log(error));
     }
 
     handleChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     };
 
-    render () {
+    render() {
         const { positionTitle, description, city, province, country, requirements, sector,
             keyResponsibilities, type, salary, salaryType, contactInfo } = this.state;
         return (
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
                 style={{ justifyContent: 'center', marginTop: "30px", marginBottom: "30px" }}>
-            
-                <FormControl type="text" value={positionTitle} onChange={this.handleChange} name="positionTitle" placeholder="Title"></FormControl>                        
-                <Form.Control as="textarea" value={description} onChange={this.handleChange} name="description" placeholder="Job Description" rows="3"></Form.Control> 
-                <Form.Group>  
-                    <Form.Label>Location</Form.Label>    
-                    <Row>  
+
+                <FormControl type="text" value={positionTitle} onChange={this.handleChange} name="positionTitle" placeholder="Title"></FormControl>
+                <Form.Control as="textarea" value={description} onChange={this.handleChange} name="description" placeholder="Job Description" rows="3"></Form.Control>
+                <Form.Group>
+                    <Form.Label>Location</Form.Label>
+                    <Row>
                         <Col m={4}>
-                            <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>                        
-                        </Col>               
+                            <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>
+                        </Col>
                         <Col m={4}>
-                            <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province"></FormControl>                        
-                        </Col>               
+                            <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province"></FormControl>
+                        </Col>
                         <Col m={4}>
-                            <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country"></FormControl>   
-                        </Col>               
+                            <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country"></FormControl>
+                        </Col>
                     </Row>
-                </Form.Group>   
-                <Form.Control as="textarea" value={requirements} onChange={this.handleChange} name="requirements" placeholder="Job Requirements" rows="3"></Form.Control>                        
+                </Form.Group>
+                <Form.Control as="textarea" value={requirements} onChange={this.handleChange} name="requirements" placeholder="Job Requirements" rows="3"></Form.Control>
                 <Form.Group>
                     <Form.Label>Job Sector</Form.Label>
                     <Form.Control onChange={this.handleChange} value={sector} name="sector" as="select">
-                    <option value=""></option>
-                    <option value="computer">Computer and Technology</option>
-                    <option value="marketing">Marketing</option>
-                    <option value="finance">Accounting and Finance</option>
+                        <option value=""></option>
+                        <option value="computer">Computer and Technology</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="finance">Accounting and Finance</option>
                     </Form.Control>
                 </Form.Group>
-                <Form.Control as="textarea" value={keyResponsibilities} onChange={this.handleChange} name="keyResponsibilities" placeholder="Key Responsibilities" rows="3"></Form.Control>                        
+                <Form.Control as="textarea" value={keyResponsibilities} onChange={this.handleChange} name="keyResponsibilities" placeholder="Key Responsibilities" rows="3"></Form.Control>
                 <Form.Group>
                     <Form.Label>Type</Form.Label>
                     <Form.Control onChange={this.handleChange} value={type} name="type" as="select">
-                    <option value="" ></option>
-                    <option value="full-time" >Full-time</option>
-                    <option value="part-time" >Part-time</option>
-                    <option value="contract" >Contract</option>
-                    <option value="internship" >Internship</option>
+                        <option value="" ></option>
+                        <option value="full-time" >Full-time</option>
+                        <option value="part-time" >Part-time</option>
+                        <option value="contract" >Contract</option>
+                        <option value="internship" >Internship</option>
                     </Form.Control>
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Salary</Form.Label>
                     <Row>
                         <Col m={6}>
-                            <FormControl type="text" value={salary} onChange={this.handleChange} name="salary" placeholder="Salary"></FormControl>   
-                        </Col>  
+                            <FormControl type="text" value={salary} onChange={this.handleChange} name="salary" placeholder="Salary"></FormControl>
+                        </Col>
                         <Col m={6}>
                             <Form.Control onChange={this.handleChange} value={salaryType} name="salaryType" as="select">
-                            <option value=""> </option>
-                            <option value="yearly">yearly</option>
-                            <option value="hourly">hourly</option>
+                                <option value=""> </option>
+                                <option value="yearly">yearly</option>
+                                <option value="hourly">hourly</option>
                             </Form.Control>
-                        </Col>  
+                        </Col>
                     </Row>
                 </Form.Group>
-                <FormControl type="email" value={contactInfo} onChange={this.handleChange} name="contactInfo" placeholder="Contact Email"></FormControl>      
-            
+                <FormControl type="email" value={contactInfo} onChange={this.handleChange} name="contactInfo" placeholder="Contact Email"></FormControl>
+
                 <Button type="submit" variant="warning">
                     Create
                 </Button>
@@ -479,6 +534,21 @@ class CreateVacancyForm extends Component {
         )
     }
 
+}
+
+class VacancyApplicant extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div>
+                <p>{this.props.firstName}</p>
+                <p>{this.props.lastName}</p>
+            </div>
+        )
+    }
 }
 
 
@@ -490,16 +560,21 @@ const mapStateToProps = (state, props) => ({
         ...state.comapanyVacanciesState.companyVacancies[key],
         vacancyID: key,
     })),
-    vacanciesKey: Object.keys(state.comapanyVacanciesState.companyVacancies  || {})
+    appliedVacancies: Object.keys(state.appliedVacanciesState.appliedVacancies || {}).map(key => ({
+        ...state.appliedVacanciesState.appliedVacancies[key],
+        uid: key,
+    })),
+    vacanciesKey: Object.keys(state.comapanyVacanciesState.companyVacancies || {})
 
 });
-     
+
 const mapDispatchToProps = dispatch => ({
     onSetCompanyVacancies: companyVacancies => dispatch({ type: 'COMPANY_VACANCIES_SET', companyVacancies }),
-  });
+    onSetAppliedVacancies: appliedVacancies => dispatch({ type: 'APPLIED_VACANCIES_SET', appliedVacancies }),
+    onSetUsers: users => dispatch({ type: 'USERS_SET', users })
+});
 
-
-const VacancyForm = compose(connect(mapStateToProps),withRouter, withFirebase)(CreateVacancyForm);
+const VacancyForm = compose(connect(mapStateToProps), withRouter, withFirebase)(CreateVacancyForm);
 
 const VacancyObject = withFirebase(ListVacancies);
 
