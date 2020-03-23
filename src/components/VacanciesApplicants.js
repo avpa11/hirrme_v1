@@ -2,16 +2,12 @@ import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
-import { FaSearch, FaSearchLocation } from "react-icons/fa";
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import { Link } from 'react-router-dom';
-import Nav from 'react-bootstrap/Nav';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { VacancyObject } from './Vacancies'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import emailjs from 'emailjs-com';
+
 
 class VacanciesApplicants extends Component {
     constructor(props) {
@@ -92,10 +88,24 @@ class VacancyApplicant extends Component {
         this.props.firebase.vacanciesApplications().orderByChild('positionTitle').equalTo(this.props.applicationData.positionTitle).once('value', snap => {
             snap.forEach(snap1 => {
                 if (snap1.child('userEmail').val() === this.props.userEmail) {
-                    // console.log(snap1.key);
                     this.props.firebase.vacanciesApplications().child(snap1.key).update({
                         status: e.target.value
                     })
+
+                    if(e.target.value === 'accepted'){
+                        var template_params = {
+                            "applicantEmail": "rkmnslt@gmail.com",
+                            "applicantEmail": this.props.userEmail,
+                            "companyEmail": this.props.applicationData.contactInfo,
+                            "positionTitle": this.props.applicationData.positionTitle
+                        }
+                        emailjs.send('default_service', 'template_iZWkUrIo', template_params, 'user_uO9vrokcldxCjrl8HAWdk')
+                        .then((result) => {
+                        console.log(result.text);
+                        }, (error) => {
+                        console.log('error.text');
+                        });
+                    }                    
                 }
             })
         })
@@ -154,7 +164,7 @@ class VacancyApplicant extends Component {
                             <p>{application.userEmail} applied for {application.positionTitle} position on {application.date}. Status: {application.status}</p>
                             <h4>{applicant.firstName} {applicant.lastName}, {applicant.title}</h4>
                             <p>{applicant.city}, {applicant.province}, {applicant.country}</p>
-                            <p>// User default text</p>
+                            <p>User default text</p>
                             {this.state.attachmentsUrl ? <a href={this.state.attachmentsUrl} target="_blank">View attached files</a> : ''}
                         </div>
                     </Col>
