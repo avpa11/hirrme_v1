@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link , withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form';
 import { withFirebase } from './Firebase';
 // import { AuthUserContext } from './Session';
 import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, IoIosDocument, IoMdSettings } from "react-icons/io";
+import { NavHashLink } from 'react-router-hash-link';
 
 import { connect } from 'react-redux';
 
@@ -48,53 +49,70 @@ class SignOutForm extends Component {
     }
 
     render() {
+        // Waldi, please check the userType
+        let userType = this.props.userType;
+        // console.log(this.props.userType);
         return (
-            // <AuthUserContext.Consumer>
-            //     {authUser => (
-                    <div>
-                        <Button variant="light" className="logoutButton" onClick={this.changeVisibility}>
-                            <IoIosPerson size={40} />
-                            {this.props.authUser.email}
-                        </Button>
 
-                        <Modal show={this.state.show} onHide={this.changeVisibility} className="modal" id='modalSignOut'>
-                            <Modal.Body>
-                                <Form
-                                    onSubmit={this.handleSubmit}>
-                                    <div id='modalSignOutItems'>
-                                        <div onClick={this.changeVisibility}>                                             
-                                            <Link className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount">
-                                            <IoIosPersonAdd size={40} /><span>User's profile</span>                                            
-                                            </Link>
-                                        </div>
-                                        <div>
-                                            <IoIosThumbsUp size={40} /><span>My invitations</span>                                            
-                                        </div>
-                                        <div>
-                                            <IoIosDocument size={40} /><span>My applications</span>                                            
-                                        </div>
-                                        <div>
-                                            <IoMdSettings size={40} /><span>Settings</span>                                            
-                                        </div>
-                                    </div>
+                <div>
+                    <Button variant="light" className="logoutButton" onClick={this.changeVisibility}>
+                        <IoIosPerson size={40} />
+                        {this.props.authUser.email}
+                    </Button>
 
-                                    <div id='buttonLogoutPlaceholder'>
-                                        <Button type="submit" variant="light" id="buttonLogout">
-                                            Logout
-                                        </Button>
+                    <Modal show={this.state.show} onHide={this.changeVisibility} className="modal" id='modalSignOut'>
+                        <Modal.Body>
+                            <Form
+                                onSubmit={this.handleSubmit}>
+                                <div id='modalSignOutItems'>
+                                    <div onClick={this.changeVisibility}>                                             
+                                        <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount#link1">
+                                        <IoIosPersonAdd size={40} /><span>User's profile</span>                                            
+                                        </NavHashLink>
                                     </div>
-                                </Form>
-                            </Modal.Body>
-                        </Modal>
-                    </div>
-            //     )}
-            // </AuthUserContext.Consumer>
+                                    {userType === 'jobSeeker' ? (
+                                        <React.Fragment>
+                                            <div>
+                                                <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link3">
+                                                    <IoIosDocument size={40} /><span>My applications</span>     
+                                                </NavHashLink>                                       
+                                            </div>
+                                            <div>
+                                                <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link4">
+                                                    <IoMdSettings size={40} /><span>Settings</span>   
+                                                </NavHashLink>                                         
+                                            </div>
+                                            <div>
+                                                <NavHashLink  as={Link} className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link5">
+                                                    <IoIosThumbsUp size={40} /><span>Saved Vacancies</span>
+                                                </NavHashLink>                                            
+                                            </div>
+                                        </React.Fragment>
+                                        ) : (
+                                        <div>
+                                            <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link4">
+                                                <IoMdSettings size={40} /><span>Settings</span>   
+                                            </NavHashLink>                                         
+                                        </div>
+                                        )
+                                        }
+                                </div> 
+                                <div id='buttonLogoutPlaceholder'>
+                                    <Button type="submit" variant="light" id="buttonLogout">
+                                        Logout
+                                    </Button>
+                                </div>
+                            </Form>
+                        </Modal.Body>
+                    </Modal>
+                </div>
         )
     }
 }
 
 const mapStateToProps = state => ({
     authUser: state.sessionState.authUser,
+    userType: state.userTypeState.userType,
   });
 
   const mapDispatchToProps = dispatch => ({

@@ -26,7 +26,8 @@ import { connect } from 'react-redux';
                 incognito: null,
                 key: '',
                 showProfileAdd: false,
-                addEducation: false
+                addEducation: false,
+                // openTabLocation: this.props.location.hash
             };
         }
 
@@ -175,7 +176,7 @@ import { connect } from 'react-redux';
                     { this.props.user != null ? (
                         <div>	                        
                             <div className="container">  
-                                <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+                                <Tab.Container id="list-group-tabs-example" activeKey={this.props.location.hash} defaultActiveKey= "#link1" >
                                 <Row>
                                     <Col sm={3}>
                                     <ListGroup>

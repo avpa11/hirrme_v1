@@ -16,17 +16,16 @@ class VacanciesApplicants extends Component {
             authUser: this.props.firebase.auth.currentUser,
             search: '',
             firebase: this.props.firebase,
+            // passed the whole vacancy object here ...
+            vacancyProp: this.props.location.state.vacancy
         };
     }
 
     componentDidMount() {
-        this.props.authUser ? this.displayApplicants() : window.location.replace("/");
-        // need to also account for undefined, when a user comes to this link not using the button
-        if (this.props.location.state.vacancy !== undefined) {
-            console.log(this.props.location.state.vacancy)
-        }
-
-       
+        this.props.authUser ? this.displayApplicants() : window.location.replace("/");  
+            // need to also account for undefined, when a user comes to this link not using "Show Applicants" button
+     
+        // console.log(this.state.vacancyProp);
     }
 
     componentDidUpdate = (nextProps) => {
@@ -73,6 +72,7 @@ class VacanciesApplicants extends Component {
     render() {
         // To pass vacancy id from previous page
         // const { data } = this.props.location;
+
         return (
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Applications</h4>

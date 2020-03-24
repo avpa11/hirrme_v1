@@ -129,7 +129,7 @@ class CompanyAccount extends Component {
         return (
             <div>
                 <div className="container" style={{ marginBottom: '20px' }}>
-                    <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+                    <Tab.Container id="list-group-tabs-example" activeKey={this.props.location.hash} defaultActiveKey="#link1">
                         <Row>
                             <Col sm={3}>
                                 <ListGroup>
@@ -266,8 +266,9 @@ class ListVacancies extends Component {
     handleShow = () => this.setState({ show: true });
 
     goToApplications = () => {
-        this.props.pathHistory.push({pathname: '/applicants',
-                                    state: { vacancy: this.props.vacancy.vacancyID }});
+        this.props.pathHistory.push({
+            pathname: '/applicants',
+            state: { vacancy: this.props.vacancy }});
     }
 
     showVacancyStat = () => {        
@@ -358,7 +359,7 @@ class ListVacancies extends Component {
                         <p>Number of Saves: {this.state.numberOfSaves}</p>
                         <p>Number of Applications: {this.state.numberOfApplicants}</p>
                         <Button variant="warning" onClick={this.handleShow}>Add a quiz</Button> <br />
-                        <Button style={{marginTop: '20px', position: 'relative', left: '20%'}} onClick={this.goToApplications} variant="warning">Show Applicants</Button>
+                        <Button style={{marginTop: '20px'}} onClick={this.goToApplications} variant="warning">Show Applicants</Button>
 
                         {/*  
 
