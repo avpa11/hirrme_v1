@@ -110,6 +110,7 @@ class CompanyAccount extends Component {
                                 companyID={this.props.authUser.uid}
                                 authUser={this.props.authUser}
                                 id={id}
+                                pathHistory={this.props.history}
                             />, document.getElementById(id));
                         }
                     }
@@ -141,12 +142,12 @@ class CompanyAccount extends Component {
                                     <ListGroup.Item action href="#link4">
                                         Settings
                             </ListGroup.Item>
-                                    <Nav>
+                                    {/* <Nav>
                                         <Nav.Link as={Link} to={{
                                             pathname: "/applicants",
                                             data: 'kek'
                                         }}><Button variant="warning">Show Applicants</Button></Nav.Link>
-                                    </Nav>
+                                    </Nav> */}
                                 </ListGroup>
                             </Col>
                             <Col sm={9} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '5px' }}>
@@ -212,13 +213,6 @@ class ListVacancies extends Component {
 
         /* Creates Separate Objects for questions */
         this.state.questions.map((item, key) => {
-            let question = 'question' + key;
-            let qusetionType = 'question' + key + 'Type';
-            let option1 = 'option1Q' + key;
-            let option2 = 'option2Q' + key;
-            let option3 = 'option3Q' + key;
-            let option4 = 'option4Q' + key;
-            let answer = 'answerQ' + key;
             this.props.fireb.quizes().push({
                 question: item.question,
                 qusetionType: item.questionType,
@@ -233,31 +227,6 @@ class ListVacancies extends Component {
                 .then(setTimeout(this.handleClose, 2000))
                 .catch(error => { console.log(error) });
         })
-
-        // var questionNumber = this.state.questions.map((item, key)=> {
-        //     var question = 'question'+key;
-        //     var qusetionType = 'question'+key+'Type';
-        //     var option1 = 'option1Q'+key;
-        //     var option2 = 'option2Q'+key;
-        //     var option3 = 'option3Q'+key;
-        //     var option4 = 'option4Q'+key;
-        //     var answer = 'answerQ'+key;
-
-        //     return question;
-        // })
-
-        // var questionValue = this.state.questions.map((item, key)=> {
-        //     var question = item.qusetionType;
-        //     return question;
-        // })
-
-        // this.props.fireb.quizes().push({
-        //     [questionNumber]: questionValue
-        // })
-        // .then(setTimeout(this.handleClose, 2000))
-        // .catch(error => { console.log(error) });
-
-        // console.log(questionNumber);
     }
 
     componentDidMount(){
@@ -295,6 +264,11 @@ class ListVacancies extends Component {
 
     handleClose = () => this.setState({ show: false });
     handleShow = () => this.setState({ show: true });
+
+    goToApplications = () => {
+        this.props.pathHistory.push({pathname: '/applicants',
+                                    state: { vacancy: this.props.vacancy.vacancyID }});
+    }
 
     showVacancyStat = () => {        
 
@@ -384,6 +358,7 @@ class ListVacancies extends Component {
                         <p>Number of Saves: {this.state.numberOfSaves}</p>
                         <p>Number of Applications: {this.state.numberOfApplicants}</p>
                         <Button variant="warning" onClick={this.handleShow}>Add a quiz</Button> <br />
+                        <Button style={{marginTop: '20px', position: 'relative', left: '20%'}} onClick={this.goToApplications} variant="warning">Show Applicants</Button>
 
                         {/*  
 
@@ -578,7 +553,7 @@ const VacancyForm = compose(connect(mapStateToProps), withRouter, withFirebase)(
 
 const VacancyObject = withFirebase(ListVacancies);
 
-export default compose(withFirebase, connect(mapStateToProps, mapDispatchToProps))(CompanyAccount);
+export default compose(withFirebase, withRouter, connect(mapStateToProps, mapDispatchToProps))(CompanyAccount);
 
 export { VacancyForm };
 export { VacancyObject };

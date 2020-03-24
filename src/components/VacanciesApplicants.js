@@ -21,6 +21,12 @@ class VacanciesApplicants extends Component {
 
     componentDidMount() {
         this.props.authUser ? this.displayApplicants() : window.location.replace("/");
+        // need to also account for undefined, when a user comes to this link not using the button
+        if (this.props.location.state.vacancy !== undefined) {
+            console.log(this.props.location.state.vacancy)
+        }
+
+       
     }
 
     componentDidUpdate = (nextProps) => {
