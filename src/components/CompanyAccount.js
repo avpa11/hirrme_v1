@@ -15,8 +15,8 @@ import Button from 'react-bootstrap/Button';
 import PasswordChangeForm from '../reusable/PasswordChange';
 import { FaBriefcase } from "react-icons/fa";
 import { connect } from 'react-redux';
-import Nav from 'react-bootstrap/Nav';
-import { Link } from 'react-router-dom';
+// import Nav from 'react-bootstrap/Nav';
+// import { Link } from 'react-router-dom';
 
 
 
@@ -512,24 +512,8 @@ class CreateVacancyForm extends Component {
 
 }
 
-class VacancyApplicant extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div>
-                <p>{this.props.firstName}</p>
-                <p>{this.props.lastName}</p>
-            </div>
-        )
-    }
-}
-
-
 // Redux stuff
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = (state) => ({
     authUser: state.sessionState.authUser,
 
     vacancies: Object.keys(state.comapanyVacanciesState.companyVacancies || {}).map(key => ({

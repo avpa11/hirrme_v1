@@ -48,12 +48,7 @@ class Navibar extends Component {
                   <Nav.Link as={Link} to="/about">About</Nav.Link>
                   <Nav.Link as={Link} to="/vacancies">Vacancies</Nav.Link>
                   <Nav.Link as={Link} to="/jobseekers">Job Seekers</Nav.Link>
-                  <NavHashLink smooth className="nav-link" as={Link} to="/#contactFooter">Contact</NavHashLink>
-                  {/* <Nav.Link as={Link} to="/" onClick={() => {
-                  if(window.location.href === 'http://localhost:3000/'){
-                      window.scrollTo(0,document.body.scrollHeight)                  
-                  }}}
-                    >Contact</Nav.Link>        */}
+                  <NavHashLink smooth className="nav-link" as={Link} to="/#contactFooter">Contact</NavHashLink>                  
               </Nav>
           {
               this.props.authUser != null ? 

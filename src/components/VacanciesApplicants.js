@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import emailjs from 'emailjs-com';
+// import emailjs from 'emailjs-com';
 
 
 class VacanciesApplicants extends Component {
@@ -22,9 +22,9 @@ class VacanciesApplicants extends Component {
     }
 
     componentDidMount() {
-        this.props.authUser ? this.displayApplicants() : window.location.replace("/");  
-            // need to also account for undefined, when a user comes to this link not using "Show Applicants" button
-     
+        this.props.authUser ? this.displayApplicants() : window.location.replace("/");
+        // need to also account for undefined, when a user comes to this link not using "Show Applicants" button
+
         // console.log(this.state.vacancyProp);
     }
 
@@ -40,6 +40,8 @@ class VacanciesApplicants extends Component {
 
     displayApplicants() {
 
+        console.log(this.state.vacancyProp);
+
         let applicantId = 0;
 
         let applicant = null;
@@ -51,21 +53,23 @@ class VacanciesApplicants extends Component {
                     applicant = user;
                 }
             })
-        
-            applicantId++;
-            var div = document.createElement('div');
-            div.setAttribute('id', applicantId);
 
-            if (document.getElementById('applicantsList') != null) {
-                document.getElementById('applicantsList').appendChild(div);
+            if (application.positionTitle === this.state.vacancyProp.positionTitle) {
+                applicantId++;
+                var div = document.createElement('div');
+                div.setAttribute('id', applicantId);
 
-                ReactDOM.render(<VacancyApplicant
-                    firebase={this.props.firebase}
-                    applicationData={application}
-                    applicantData={applicant}
-                    userEmail={application.userEmail}
+                if (document.getElementById('applicantsList') != null) {
+                    document.getElementById('applicantsList').appendChild(div);
+
+                    ReactDOM.render(<VacancyApplicant
+                        firebase={this.props.firebase}
+                        applicationData={application}
+                        applicantData={applicant}
+                        userEmail={application.userEmail}
                     />, document.getElementById(applicantId));
-            }                  
+                }
+            }
         });
     }
 
@@ -75,7 +79,7 @@ class VacanciesApplicants extends Component {
 
         return (
             <div className="container" style={{ marginTop: "120px" }}>
-                <h4 className="text-center">Applications</h4>
+                <h2 className="text-center">{this.state.vacancyProp.positionTitle}</h2>
                 <p id='applicantsList'></p>
             </div>
         )
@@ -98,20 +102,21 @@ class VacancyApplicant extends Component {
                         status: e.target.value
                     })
 
-                    if(e.target.value === 'accepted'){
-                        var template_params = {
-                            "applicantEmail": "rkmnslt@gmail.com",
-                            "applicantEmail": this.props.userEmail,
-                            "companyEmail": this.props.applicationData.contactInfo,
-                            "positionTitle": this.props.applicationData.positionTitle
-                        }
-                        emailjs.send('default_service', 'template_iZWkUrIo', template_params, 'user_uO9vrokcldxCjrl8HAWdk')
-                        .then((result) => {
-                        console.log(result.text);
-                        }, (error) => {
-                        console.log('error.text');
-                        });
-                    }                    
+                    // 190 emails left ¯\_(ツ)_/¯
+                    // if(e.target.value === 'accepted'){
+                    //     var template_params = {
+                    //         "applicantEmail": "rkmnslt@gmail.com",
+                    //         "applicantEmail": this.props.userEmail,
+                    //         "companyEmail": this.props.applicationData.contactInfo,
+                    //         "positionTitle": this.props.applicationData.positionTitle
+                    //     }
+                    //     emailjs.send('default_service', 'template_iZWkUrIo', template_params, 'user_uO9vrokcldxCjrl8HAWdk')
+                    //     .then((result) => {
+                    //     console.log(result.text);
+                    //     }, (error) => {
+                    //     console.log('error.text');
+                    //     });
+                    // }                    
                 }
             })
         })
@@ -122,15 +127,15 @@ class VacancyApplicant extends Component {
     }
 
     getAttachmentsUrls = () => {
-            this.props.firebase.storage
+        this.props.firebase.storage
             .ref(this.props.applicantData.userId)
             .child('applicationAttachment_' + this.props.applicantData.userId + '_' + this.props.applicationData.positionTitle)
             .getDownloadURL()
-            .then( url => {
-                this.setState({attachmentsUrl: url})    
-            }).catch(error => {})
+            .then(url => {
+                this.setState({ attachmentsUrl: url })
+            }).catch(error => { })
     }
-    
+
 
     render() {
         let applicantStyle = {
@@ -155,7 +160,7 @@ class VacancyApplicant extends Component {
         let applicant = this.props.applicantData;
 
         return (
-            
+
             <div style={applicantStyle}>
                 <Row>
                     <Col sm={2}>

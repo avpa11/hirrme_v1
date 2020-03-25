@@ -15,7 +15,7 @@ import JobSeekers from './components/JobSeekers';
 import Vacancies from './components/Vacancies';
 import savedVacancies from './components/SavedVacancies';
 import VacanciesApplicants from './components/VacanciesApplicants';
-import CompanyAccount from "./components/CompanyAccount";
+// import CompanyAccount from "./components/CompanyAccount";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { withAuthentication } from './components/Session';
