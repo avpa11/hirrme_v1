@@ -4,7 +4,7 @@ import 'firebase/database';
 import 'firebase/analytics';
 import 'firebase/storage'
 
-var firebaseConfig = {
+const firebaseConfig = {
           apiKey: "AIzaSyBrd47aC5DMfPk2D3_ejrFD9uqi0GQ1m30",
           authDomain: "hirr-12.firebaseapp.com",
           databaseURL: "https://hirr-12.firebaseio.com",
@@ -15,9 +15,23 @@ var firebaseConfig = {
           measurementId: "G-QNL3PHTCVC"
       };
 
+
+const firebaseConfigProduction = {
+          apiKey: "AIzaSyAtvGKxO5slXwpjqdkbnHqkG201uonx2Ak",
+          authDomain: "hirrproduction.firebaseapp.com",
+          databaseURL: "https://hirrproduction.firebaseio.com",
+          projectId: "hirrproduction",
+          storageBucket: "hirrproduction.appspot.com",
+          messagingSenderId: "1009908311945",
+          appId: "1:1009908311945:web:acac06697fe9cd6e052358",
+          measurementId: "G-ZE85J52CFR"
+      };
+
+const config = process.env.NODE_ENV === 'production' ? firebaseConfigProduction : firebaseConfig;
+
 class Firebase {
     constructor() {
-        app.initializeApp(firebaseConfig);
+        app.initializeApp(config);
         app.analytics();
 
         this.auth = app.auth();
