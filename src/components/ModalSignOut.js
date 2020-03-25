@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { withFirebase } from './Firebase';
 // import { AuthUserContext } from './Session';
-import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, IoIosDocument, IoMdSettings } from "react-icons/io";
+import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, IoIosDocument, IoMdSettings, IoMdClipboard } from "react-icons/io";
 import { NavHashLink } from 'react-router-hash-link';
 
 import { connect } from 'react-redux';
@@ -89,11 +89,18 @@ class SignOutForm extends Component {
                                             </div>
                                         </React.Fragment>
                                         ) : (
-                                        <div>
-                                            <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link4">
-                                                <IoMdSettings size={40} /><span>Settings</span>   
-                                            </NavHashLink>                                         
-                                        </div>
+                                            <React.Fragment>
+                                                <div>
+                                                    <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link2">
+                                                        <IoMdClipboard size={40} /><span>New Vacancy</span>   
+                                                    </NavHashLink>     
+                                                </div>
+                                                <div>                                    
+                                                    <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link4">
+                                                        <IoMdSettings size={40} /><span>Settings</span>   
+                                                    </NavHashLink>                                         
+                                                </div>
+                                            </React.Fragment>
                                         )
                                         }
                                 </div> 

@@ -11,6 +11,12 @@ import { compose } from 'recompose';
 
 class CreateAccount extends Component {
 
+    componentDidMount() {
+        if (this.props.userType !== null) {
+            this.props.history.push('/');
+        }
+    }
+
     handleSubmit = e => {
         e.preventDefault();
     }
@@ -61,6 +67,7 @@ class CreateAccount extends Component {
 
 const mapStateToProps = state => ({
     authUser: state.sessionState.authUser,
+    userType: state.userTypeState.userType,
   });
 
 
