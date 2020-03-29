@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
-import { IoMdPerson } from "react-icons/io";
 import Button from 'react-bootstrap/Button';
 import { FaSearch, FaSearchLocation } from "react-icons/fa";
 import Form from 'react-bootstrap/Form';
@@ -122,7 +121,7 @@ class JobSeekers extends Component {
         //     this.setState({ loading: false });
         //     // ¯\_(ツ)_/¯ 
         // }
-        
+
         this.displayJobSeekers();
     }
 
@@ -155,6 +154,7 @@ class JobSeekers extends Component {
                     userType={userType}
                     authUser={this.props.authUser}
                     firebase={this.props.firebase}
+                    pathHistory={this.props.history}
                 />, document.getElementById(id));
             }
         })
@@ -218,8 +218,8 @@ class JobSeekerObject extends Component {
             //     }
             // });
             // alert(this.props.userType)
-            
-            if(this.props.userType === 'company'){
+
+            if (this.props.userType === 'company') {
                 this.setState({ isLikeDisabled: false })
             }
             this.props.likedUsersData.forEach(likedUserData => {
@@ -268,14 +268,32 @@ class JobSeekerObject extends Component {
         })
     }
 
+    goToProfile = () => {
+        this.props.pathHistory.push({
+            pathname: 'profile',
+            userData: this.props.userData
+        })
+    }
+
     render() {
 
         let userData = this.props.userData;
 
+        let imageStyle = {
+            width: '8em',
+            height: '8em',
+            borderRadius: '10em'
+        }
+
         return (
             <div style={{ display: 'table' }}>
                 <div style={{ float: 'left', margin: '0 2em 0 1em' }}>
-                    <IoMdPerson size={180} />
+                    <img style={imageStyle} src={
+                        userData.profileImage ?
+                            userData.profileImage :
+                            'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                            alt=''>
+                    </img>
                 </div>
                 <div style={{ float: 'left', maxWidth: '25em', minWidth: '25em', margin: '0 2em', textAlign: 'left' }}>
                     <h4>{userData.firstName} {userData.lastName}</h4>
@@ -284,7 +302,7 @@ class JobSeekerObject extends Component {
                     <h6>{userData.city}, {userData.province}, {userData.country}</h6>
                 </div>
                 <div style={{ float: 'left', margin: '0 2em' }}>
-                    <Button variant="primary">View Profile</Button> <span />
+                    <Button variant="primary" onClick={this.goToProfile}>View Profile</Button> <span />
                     <Button variant="primary">Send Email</Button> <span />
                     <Button variant="primary">Invite</Button> <span />
                     <Button onClick={e => this.handleLike(e)} variant="danger" disabled={this.state.isLikeDisabled}>{this.state.likeStatus}</Button>
@@ -303,7 +321,7 @@ const mapStateToProps = state => ({
     likedUsers: Object.keys(state.likedUsersState.likedUsers || {}).map(key => ({
         ...state.likedUsersState.likedUsers[key],
         uid: key,
-    })),    
+    })),
     userType: state.userTypeState.userType,
     authUser: state.sessionState.authUser,
 });

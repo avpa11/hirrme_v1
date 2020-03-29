@@ -15,6 +15,7 @@ import JobSeekers from './components/JobSeekers';
 import Vacancies from './components/Vacancies';
 import savedVacancies from './components/SavedVacancies';
 import VacanciesApplicants from './components/VacanciesApplicants';
+import JobSeekerPublicProfile from './components/JobSeekerPublicProfile';
 // import CompanyAccount from "./components/CompanyAccount";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -42,6 +43,7 @@ class App extends Component {
             <Route path='/education' component={Education} />
             <Route path='/experience' component={Experience} />
             <Route path='/applicants' component={VacanciesApplicants} />
+            <Route path='/profile' component={JobSeekerPublicProfile} />
           </div>  
         </BrowserRouter>    
     )
