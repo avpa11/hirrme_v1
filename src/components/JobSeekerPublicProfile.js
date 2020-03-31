@@ -3,6 +3,7 @@ import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
 import { compose } from 'recompose';
+import { connect } from 'react-redux';
 
 class JobSeekerPublicProfile extends Component {
     constructor(props) {
@@ -12,11 +13,14 @@ class JobSeekerPublicProfile extends Component {
         }
     }
 
-    componentDidMount = () => {
-        this.getExperience();
-        this.getEducation();
+    componentDidMount = () => { 
+        try{
+            this.getExperience();
+            this.getEducation()  
+        } 
+        catch(error){}
+              
     }
-
 
     getExperience = () => {
         let id = 0;
@@ -42,6 +46,7 @@ class JobSeekerPublicProfile extends Component {
     }
 
     render() {
+
         let mainDivStyle = {
             marginTop: '5em',
             padding: '2em'
@@ -78,22 +83,27 @@ class JobSeekerPublicProfile extends Component {
             margin: 'auto'
         }
 
-        return (
+        let userData = this.props.location.userData ? this.props.location.userData : {
+            profileImage: 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png',
+            firstName: 'You can view users only from user list for now, sorry ¯\\_(ツ)_/¯'
+        
+        };
 
-            <div style={mainDivStyle}>
+        return (
+            <div style={mainDivStyle}>                
                 <div style={generalInfoDivStyle}>
                     <div className='text-center'>
                         <img style={imageStyle} src={
-                            this.props.location.userData.profileImage ?
-                                this.props.location.userData.profileImage :
+                            userData.profileImage ?
+                            userData.profileImage :
                                 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
                                 alt=''></img>
                     </div>
                     <div>
-                        <h3>{this.props.location.userData.firstName} {this.props.location.userData.lastName}</h3>
-                        <h6>{this.props.location.userData.title}</h6>
+                        <h3>{userData.firstName} {userData.lastName}</h3>
+                        <h6>{userData.title}</h6>
                         <h6>{this.state.education}</h6>
-                        <h6>Vancouver, Canada</h6>
+                        <h6>{userData.city} {userData.province} {userData.country}</h6>
                         <div style={buttonStyle}>
                             <Button onClick={() => alert('Cool')}>Want to hire</Button>
                         </div>
@@ -130,4 +140,12 @@ class ExperienceComponent extends Component {
     }
 }
 
-export default compose(withFirebase)(JobSeekerPublicProfile);
+const mapStateToProps = state => ({
+    users: Object.keys(state.usersState.users || {}).map(key => ({
+        ...state.usersState.users[key],
+        uid: key,
+    })),    
+});
+
+export default compose(withFirebase, connect(mapStateToProps))(JobSeekerPublicProfile);
+
