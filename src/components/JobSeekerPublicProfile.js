@@ -4,28 +4,60 @@ import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
+import app from 'firebase/app';
 
 class JobSeekerPublicProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            education: null
+            profileUid: window.location.href.substr(window.location.href.length - 28),
+            education: null,
+            userProfile: {
+                firstName: '',
+                lastName: '',
+                email: '',
+                title: '',
+                country: '',
+                province: '',
+                city: '',
+                profileImage: ''
+            }
         }
     }
 
-    componentDidMount = () => { 
-        try{
-            this.getExperience();
-            this.getEducation()  
-        } 
-        catch(error){}
-              
+    componentDidMount = () => {
+        this.getProfileData();
+        this.getExperience();
+        this.getEducation()
+    }
+
+    getProfileData = () => {
+        if (!this.props.location.userData) {
+            app.database().ref('users').orderByChild('userId').equalTo(this.state.profileUid).once('value', snap1 => {
+                snap1.forEach(snap => {
+                    if (snap.child('userId').val() === this.state.profileUid) {
+                        this.setState({
+                            userProfile: {
+                                firstName: snap.child('firstName').val(),
+                                lastName: snap.child('lastName').val(),
+                                email: snap.child('email').val(),
+                                title: snap.child('title').val(),
+                                country: snap.child('country').val(),
+                                province: snap.child('province').val(),
+                                city: snap.child('city').val(),
+                                profileImage: snap.child('profileImage').val()
+                            }
+                        })
+                    }
+                });
+            });
+        }
     }
 
     getExperience = () => {
         let id = 0;
-        this.props.firebase.experience(this.props.location.userData.userId).once('value', snap => {
-            snap.forEach(snap1 => {            
+        app.database().ref('experience').child(this.state.profileUid).once('value', snap => {
+            snap.forEach(snap1 => {
                 let div = document.createElement('div');
                 div.setAttribute('id', ++id);
                 if (document.getElementById('experienceDiv') != null) {
@@ -38,9 +70,9 @@ class JobSeekerPublicProfile extends Component {
     }
 
     getEducation = () => {
-        this.props.firebase.education(this.props.location.userData.userId).once('value', snap => {
+        app.database().ref('educations').child(this.state.profileUid).once('value', snap => {
             snap.forEach(snap1 => {
-                this.setState({education: snap1.child('programName').val() + ', ' + snap1.child('schoolName').val() + ', ' + snap1.child('programType').val()})
+                this.setState({ education: snap1.child('programName').val() + ', ' + snap1.child('schoolName').val() + ', ' + snap1.child('programType').val() })
             })
         })
     }
@@ -83,24 +115,21 @@ class JobSeekerPublicProfile extends Component {
             margin: 'auto'
         }
 
-        let userData = this.props.location.userData ? this.props.location.userData : {
-            profileImage: 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png',
-            firstName: 'You can view users only from user list for now, sorry ¯\\_(ツ)_/¯'
-        
-        };
+        let userData = this.props.location.userData ? this.props.location.userData : this.state.userProfile;
 
         return (
-            <div style={mainDivStyle}>                
+            <div style={mainDivStyle}>
                 <div style={generalInfoDivStyle}>
                     <div className='text-center'>
                         <img style={imageStyle} src={
                             userData.profileImage ?
-                            userData.profileImage :
+                                userData.profileImage :
                                 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
-                                alt=''></img>
+                            alt=''></img>
                     </div>
                     <div>
                         <h3>{userData.firstName} {userData.lastName}</h3>
+                        <h6>{userData.email}</h6>
                         <h6>{userData.title}</h6>
                         <h6>{this.state.education}</h6>
                         <h6>{userData.city} {userData.province} {userData.country}</h6>
@@ -112,7 +141,7 @@ class JobSeekerPublicProfile extends Component {
                 </div>
                 <div style={experienceDivStyle}>
                     <div className='text-center'>
-                        <h2>Previous Experience</h2>                        
+                        <h2>Previous Experience</h2>
                     </div>
                     <div id='experienceDiv'>
                         <div className='text-center'>No experience ... yet</div>
@@ -129,12 +158,12 @@ class ExperienceComponent extends Component {
 
         return (
 
-            <div>                
+            <div>
                 <p>{experience.position}</p>
                 <p>{experience.company}</p>
                 <p>{experience.location}</p>
                 <p>{experience.startDate} - {experience.endDate}</p>
-                <hr/> 
+                <hr />
             </div>
         )
     }
@@ -144,7 +173,7 @@ const mapStateToProps = state => ({
     users: Object.keys(state.usersState.users || {}).map(key => ({
         ...state.usersState.users[key],
         uid: key,
-    })),    
+    })),
 });
 
 export default compose(withFirebase, connect(mapStateToProps))(JobSeekerPublicProfile);

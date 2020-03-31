@@ -270,7 +270,7 @@ class JobSeekerObject extends Component {
 
     goToProfile = () => {
         this.props.pathHistory.push({
-            pathname: `profile/${this.props.userData.uid}`,
+            pathname: `profile/${this.props.userData.userId}`,
             userData: this.props.userData
         })
     }
