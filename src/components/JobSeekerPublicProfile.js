@@ -17,10 +17,6 @@ class JobSeekerPublicProfile extends Component {
         this.getEducation();
     }
 
-    getUserAvatar = () => {
-        this.props.firebase.storage.ref(this.props.location.userData.profileImage)
-
-    }
 
     getExperience = () => {
         let id = 0;
@@ -94,7 +90,7 @@ class JobSeekerPublicProfile extends Component {
                                 alt=''></img>
                     </div>
                     <div>
-                        <h3>John Smith</h3>
+                        <h3>{this.props.location.userData.firstName} {this.props.location.userData.lastName}</h3>
                         <h6>{this.props.location.userData.title}</h6>
                         <h6>{this.state.education}</h6>
                         <h6>Vancouver, Canada</h6>

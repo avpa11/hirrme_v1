@@ -43,7 +43,7 @@ class App extends Component {
             <Route path='/education' component={Education} />
             <Route path='/experience' component={Experience} />
             <Route path='/applicants' component={VacanciesApplicants} />
-            <Route path='/profile' component={JobSeekerPublicProfile} />
+            <Route path='/profile/:id' component={JobSeekerPublicProfile} />
           </div>  
         </BrowserRouter>    
     )
