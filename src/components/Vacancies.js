@@ -13,12 +13,11 @@ import Nav from 'react-bootstrap/Nav';
 import Modal from 'react-bootstrap/Modal';
 import ProgressBar from 'react-bootstrap/ProgressBar'
 
-
 class Vacancies extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            search: '',
+            searchParameter: '',
             loading: false,
             savedVacanciesInvisible: true
         };
@@ -36,26 +35,36 @@ class Vacancies extends Component {
         this.fetchVacanciesData();
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
+    displayVacanciesWithSearchParameter = searchParameterArg => {
+        let vacanciesData = this.props.vacancies;
+        let savedVacanciesData = this.props.savedVacancies;
+        let appliedVacanciesData = this.props.appliedVacancies;
+        let userType = this.props.userType;
+
+        let searchParameter = searchParameterArg.toLowerCase();
+
+        if (document.getElementById('vacanciesList') != null) {
+            document.getElementById('vacanciesList').innerHTML = '';
+        }
+
         var id = 0;
+        let k = 0;
 
-        var vacanciesByTitle = this.props.firebase.database().child('vacancies').ref;
+        for (var i in vacanciesData) {
+            var companyData = vacanciesData[i];
+            k = 0;
 
-        vacanciesByTitle.on('value', snap => {
-            if (document.getElementById('vacanciesList') != null) {
-                document.getElementById('vacanciesList').innerHTML = '';
-            }
-            snap.forEach(snap => {
-                snap.forEach(snap1 => {
-                    id++;
+            let key = Object.keys(companyData);
+            for (var vacancy in companyData) {
 
-                    if (snap1.child('positionTitle').val().toLowerCase().indexOf(this.state.search) >= 0 ||
-                        snap1.child('sector').val().toLowerCase().indexOf(this.state.search) >= 0 ||
-                        snap1.child('description').val().toLowerCase().indexOf(this.state.search) >= 0 ||
-                        snap1.child('requirements').val().toLowerCase().indexOf(this.state.search) >= 0 ||
-                        snap1.child('keyResponsibilities').val().toLowerCase().indexOf(this.state.search) >= 0 ||
-                        snap1.child('type').val().toLowerCase().indexOf(this.state.search) >= 0) {
+                if (companyData[vacancy].hasOwnProperty('positionTitle')) {
+                    if (companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0 ||
+                        companyData[vacancy].sector.toLowerCase().indexOf(searchParameter) >= 0 ||
+                        companyData[vacancy].type.toLowerCase().indexOf(searchParameter) >= 0 ||
+                        companyData[vacancy].city.toLowerCase().indexOf(searchParameter) >= 0 ||
+                        companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0) {
+
+                        id++;
 
                         var div = document.createElement('div');
                         div.setAttribute('id', id);
@@ -64,38 +73,34 @@ class Vacancies extends Component {
                             document.getElementById('vacanciesList').appendChild(div);
 
                             ReactDOM.render(<VacancyObject
-                                vacancyTitle={snap1.child('positionTitle').val()}
-                                sector={snap1.child('sector').val()}
-                                type={snap1.child('type').val()}
-                                salaryType={snap1.child('salaryType').val()}
-                                salary={snap1.child('salary').val()}
-                                city={snap1.child('city').val()}
-                                province={snap1.child('province').val()}
-                                country={snap1.child('country').val()}
-                                contactInfo={snap1.child('contactInfo').val()}
-                                description={snap1.child('description').val()}
-                                keyResponsibilities={snap1.child('keyResponsibilities').val()}
-                                requirements={snap1.child('requirements').val()}
-                                authUser={this.state.authUser}
+                                vacancyKey={key[k++]}
+                                companyKey={companyData.uid}
+                                vacancyData={companyData[vacancy]}
+                                savedVacanciesData={savedVacanciesData}
+                                appliedVacanciesData={appliedVacanciesData}
+                                userType={userType}
+                                authUser={this.props.authUser}
                                 firebase={this.props.firebase}
-                                userId={snap.key}
+
                             />, document.getElementById(id));
                         }
                     }
-                })
-            })
-        })
+                }
+            }
+        }
     }
 
     handleChange = e => {
         this.setState({ [e.target.name]: e.target.value });
-    };
 
+        this.displayVacanciesWithSearchParameter(e.target.value);
+
+    };
 
     fetchVacanciesData() {
         if (this.props.authUser && this.props.savedVacancies.length === 0) {
             this.props.firebase.savedVacancies().orderByChild('email').equalTo(this.props.authUser.email).on('value', snap => {
-                this.props.onSetSavedVacancies(snap.val());                
+                this.props.onSetSavedVacancies(snap.val());
             })
             // this.props.firebase.vacanciesApplications().orderByChild('userId').equalTo(this.props.authUser.uid).on('value', snap => {
             this.props.firebase.vacanciesApplications().orderByChild('userEmail').equalTo(this.props.authUser.email).on('value', snap => {
@@ -111,7 +116,13 @@ class Vacancies extends Component {
 
         this.setState({ loading: false });
 
-        this.displayVacancies();
+        if (this.props.location.searchParameter !== undefined) {
+            this.setState({ searchParameter: this.props.location.searchParameter });
+            this.displayVacanciesWithSearchParameter(this.props.location.searchParameter);
+        }
+        else {
+            this.displayVacancies()
+        }
     }
 
     displayVacancies = () => {
@@ -129,15 +140,14 @@ class Vacancies extends Component {
         let k = 0;
 
         for (var i in vacanciesData) {
-            var companyData = vacanciesData[i];            
+            var companyData = vacanciesData[i];
             k = 0;
-            
-            let key = Object.keys(companyData); 
+
+            let key = Object.keys(companyData);
             for (var vacancy in companyData) {
-                
+
                 if (companyData[vacancy].hasOwnProperty('positionTitle')) {
                     id++;
-                    
 
                     var div = document.createElement('div');
                     div.setAttribute('id', id);
@@ -145,12 +155,9 @@ class Vacancies extends Component {
                     if (document.getElementById('vacanciesList') != null) {
                         document.getElementById('vacanciesList').appendChild(div);
 
-                        // console.log(key[k++]);
-                        
-
                         ReactDOM.render(<VacancyObject
-                            vacancyKey = {key[k++]}                            
-                            companyKey = {companyData.uid}                            
+                            vacancyKey={key[k++]}
+                            companyKey={companyData.uid}
                             vacancyData={companyData[vacancy]}
                             savedVacanciesData={savedVacanciesData}
                             appliedVacanciesData={appliedVacanciesData}
@@ -167,12 +174,19 @@ class Vacancies extends Component {
 
     componentDidUpdate = (nextProps) => {
         if (this.props !== nextProps) {
-            this.displayVacancies()
+
+            if (this.props.location.searchParameter !== undefined) {
+                this.setState({ searchParameter: this.props.location.searchParameter });
+                this.displayVacanciesWithSearchParameter(this.props.location.searchParameter);
+            }
+            else {
+                this.displayVacancies()
+            }
         }
     }
 
     render() {
-        const { search } = this.state;
+        const { searchParameter } = this.state;
         return (
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Vacancies</h4>
@@ -181,7 +195,7 @@ class Vacancies extends Component {
                         <span className="input-group-text">
                             <FaSearch />
                         </span>
-                        <FormControl value={search} onChange={this.handleChange} name="search" type="text" placeholder="Keyword or Title" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
+                        <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder="Keyword or Title" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
                     </div>
                     <div className="input-group-prepend">
                         <span className="input-group-text">
@@ -190,7 +204,8 @@ class Vacancies extends Component {
                         <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
                     </div>
                     <Button variant="warning"
-                        type="submit">
+                        type="submit"
+                        disabled={true}>
                         Search
                     </Button>
                     <Nav>
@@ -230,12 +245,12 @@ class VacancyObject extends Component {
                 if (savedVacancyData.email === this.props.authUser.email &&
                     // savedVacancyData.vacancyKey === this.props.vacancyKey)
                     savedVacancyData.positionTitle === this.props.vacancyData.positionTitle &&
-                    savedVacancyData.contactInfo === this.props.vacancyData.contactInfo){
+                    savedVacancyData.contactInfo === this.props.vacancyData.contactInfo) {
 
-                        this.setState({ saveStatus: 'Remove' })
-                    } 
-                    // console.log(this.props.vacancyKey);
+                    this.setState({ saveStatus: 'Remove' })
                 }
+                // console.log(this.props.vacancyKey);
+            }
             );
             this.appliedVacancies();
         }
@@ -334,7 +349,7 @@ class VacancyObject extends Component {
         )
     }
 
-    render() {  
+    render() {
 
         let vacancyData = this.props.vacancyData;
 
@@ -392,7 +407,7 @@ class VacancyObject extends Component {
                                 <Form onSubmit={e => this.handleFileUpload(e, this.props.authUser)}>
                                     <input type="file" onChange={this.handleFile}></input>
                                     {
-                                        this.state.progress !== 100 ? <ProgressBar animated now={this.state.progress} /> : <ProgressBar now={this.state.progress} />                                         
+                                        this.state.progress !== 100 ? <ProgressBar animated now={this.state.progress} /> : <ProgressBar now={this.state.progress} />
                                     }
                                     <Button type="submit" variant="warning">
                                         Upload a file
@@ -424,6 +439,8 @@ class VacancyObject extends Component {
                         <h6>{vacancyData.keyResponsibilities}</h6>
                         <h4>Requirements</h4>
                         <h6>{vacancyData.requirements}</h6>
+                        <h4>Salary</h4>
+                        <h6>{vacancyData.salary}</h6>
                     </div>
                 </div>
             </div>

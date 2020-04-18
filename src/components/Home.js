@@ -31,7 +31,9 @@ class Home extends Component {
           email: [],          
           city: [],          
           province: [],          
-          country: [],          
+          country: [], 
+          searchParameterVacancies: '',        
+          searchParameterJobSeekers: ''        
         };
       }
 
@@ -108,7 +110,29 @@ class Home extends Component {
         this.loadDataToState();    
     }
 
+    goToVacancies = () => {
+        this.props.history.push({
+            pathname: `vacancies`,
+            searchParameter: this.state.searchParameterVacancies
+        })
+    }
+
+    goToJobSeekers = () => {
+        this.props.history.push({
+            pathname: `jobseekers`,
+            searchParameter: this.state.searchParameterJobSeekers
+        })
+    }
+
+    handleChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    }
+
     render() {
+
+        let {searchParameterVacancies} = this.state;
+        let {searchParameterJobSeekers} = this.state;
+
         return (
             
             <div>
@@ -122,7 +146,7 @@ class Home extends Component {
                     <span className="input-group-text">
                         <FaSearch />
                     </span>
-                    <FormControl type="text" placeholder="Keyword or Title" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                    <FormControl type="text" value={searchParameterVacancies} name="searchParameterVacancies" placeholder="Keyword or Title" className="mr-sm-2" onChange={this.handleChange} style={{borderColor: "#FFC107" }} />
                 </div>
                 <div className="input-group-prepend">
                     <span className="input-group-text">
@@ -131,7 +155,7 @@ class Home extends Component {
                     <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
                 </div>
                     <Button variant="warning"
-                        onClick={this.display}>
+                        onClick={this.goToVacancies}>
                         Search
                     </Button>
                 </Form>
@@ -185,7 +209,7 @@ class Home extends Component {
                     <span className="input-group-text">
                         <FaSearch />
                     </span>
-                    <FormControl type="text" placeholder="Name, Keyword or Title" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                    <FormControl type="text" value={searchParameterJobSeekers} name="searchParameterJobSeekers" placeholder="Name, Keyword or Title" onChange={this.handleChange} className="mr-sm-2" style={{borderColor: "#FFC107" }} />
                 </div>
                 <div className="input-group-prepend">
                     <span className="input-group-text">
@@ -194,7 +218,7 @@ class Home extends Component {
                     <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
                 </div>
                     <Button variant="warning"
-                        onClick={this.display}>
+                        onClick={this.goToJobSeekers}>
                         Search
                     </Button>
                 </Form>

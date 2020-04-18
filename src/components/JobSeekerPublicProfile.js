@@ -3,7 +3,6 @@ import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
 import { compose } from 'recompose';
-import { connect } from 'react-redux';
 import app from 'firebase/app';
 
 class JobSeekerPublicProfile extends Component {
@@ -169,12 +168,5 @@ class ExperienceComponent extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    users: Object.keys(state.usersState.users || {}).map(key => ({
-        ...state.usersState.users[key],
-        uid: key,
-    })),
-});
-
-export default compose(withFirebase, connect(mapStateToProps))(JobSeekerPublicProfile);
+export default compose(withFirebase)(JobSeekerPublicProfile);
 

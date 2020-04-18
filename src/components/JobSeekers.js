@@ -15,7 +15,7 @@ class JobSeekers extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchPosition: '',
+            searchParameter: '',
             //   loading indicator for Firebase listener on Redux update ¯\_(ツ)_/¯
             loading: false,
         };
@@ -34,58 +34,52 @@ class JobSeekers extends Component {
         this.props.firebase.users().off();
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
+    displayJobSeekersWithSearchParameter = searchParameterArg => {
         var id = 0;
 
-        // FIREBASE SEARCH IS TOO BASIC ONLY FOR ONE "WHERE" CLAUSE AND CASE-SENSITIVE
-        // var jseekerByTitle = this.props.firebase.database().ref.child('users').orderByChild('title')
-        // .startAt(this.state.searchPosition).endAt(this.state.searchPosition+"\uf8ff");
+        let likedUsersData = this.props.likedUsers;
+        let usersData = this.props.users;
+        let userType = this.props.userType;
 
-        var jseekerByTitle = this.props.firebase.database().ref.child('users').orderByChild('incognito')
-            .equalTo(null);
+        let searchParameter = searchParameterArg.toLowerCase();
 
+        document.getElementById('jobSeekersList').innerHTML = '';
 
-        jseekerByTitle.on('value', snap => {
-            if (document.getElementById('jobSeekersList') != null) {
-                document.getElementById('jobSeekersList').innerHTML = '';
-            }
-            snap.forEach(snap1 => {
+        usersData.forEach(userData => {
+
+            if (userData.email.toLowerCase().indexOf(searchParameter) >= 0 ||
+                userData.firstName.toLowerCase().indexOf(searchParameter) >= 0 ||
+                userData.lastName.toLowerCase().indexOf(searchParameter) >= 0 ||
+                userData.title.toLowerCase().indexOf(searchParameter) >= 0 ||
+                userData.city.toLowerCase().indexOf(searchParameter) >= 0) {
+
                 id++;
 
-                if (snap1.child('title').val().toLowerCase().indexOf(this.state.searchPosition) >= 0 ||
-                    snap1.child('firstName').val().toLowerCase().indexOf(this.state.searchPosition) >= 0 ||
-                    snap1.child('lastName').val().toLowerCase().indexOf(this.state.searchPosition) >= 0) {
-                    var div = document.createElement('div');
-                    div.setAttribute('id', id);
-                    div.setAttribute('class', 'jobSeeker');
-                    if (document.getElementById('jobSeekersList') != null) {
-                        document.getElementById('jobSeekersList').appendChild(div);
+                var div = document.createElement('div');
+                div.setAttribute('id', id);
+                div.setAttribute('class', 'jobSeeker');
+                if (document.getElementById('jobSeekersList') != null) {
+                    document.getElementById('jobSeekersList').appendChild(div);
 
-                        ReactDOM.render(<JobSeekerObject
-                            firstName={snap1.child('firstName').val()}
-                            lastName={snap1.child('lastName').val()}
-                            title={snap1.child('title').val()}
-                            email={snap1.child('email').val()}
-                            city={snap1.child('city').val()}
-                            province={snap1.child('province').val()}
-                            country={snap1.child('country').val()}
-                            authUser={this.state.authUser != null ? this.state.authUser.uid : null}
-                            authEmail={this.state.authUser != null ? this.state.authUser.email : null}
-                            firebase={this.props.firebase}
-                            userId={snap1.child('userId').val()}
-                        />,
-                            document.getElementById(id));
-                    }
+                    ReactDOM.render(<JobSeekerObject
+                        userData={userData}
+                        likedUsersData={likedUsersData}
+                        userType={userType}
+                        authUser={this.props.authUser}
+                        firebase={this.props.firebase}
+                        pathHistory={this.props.history}
+                    />, document.getElementById(id));
                 }
-            });
+            }
         })
     }
 
     handleChange = e => {
         this.setState({ [e.target.name]: e.target.value });
-    };
 
+        this.displayJobSeekersWithSearchParameter(e.target.value);
+
+    };
 
     fetchJobSeekersData() {
 
@@ -103,26 +97,14 @@ class JobSeekers extends Component {
 
         this.setState({ loading: false });
 
-        /////
+        if (this.props.location.searchParameter !== undefined) {
+            this.setState({ searchParameter: this.props.location.searchParameter });
+            this.displayJobSeekersWithSearchParameter(this.props.location.searchParameter);
+        }
+        else {
 
-        // if (this.props.users.length === 0) {
-        //     var likedUsersRef = this.props.firebase.database().ref.child('companyLikes').ref;
-
-        //     likedUsersRef.on('value', snap => {
-        //         this.props.onSetLikedUsers(snap.val());
-        //     })
-
-        //     var jobSeekersRef = this.props.firebase.database().ref.child('users').orderByChild('incognito').equalTo(null);
-
-        //     jobSeekersRef.on('value', snap => {
-        //         // store the users in redux after fetching them ¯\_(ツ)_/¯
-        //         this.props.onSetUsers(snap.val());
-        //     })
-        //     this.setState({ loading: false });
-        //     // ¯\_(ツ)_/¯ 
-        // }
-
-        this.displayJobSeekers();
+            this.displayJobSeekers()
+        }
     }
 
     displayJobSeekers = () => {
@@ -138,7 +120,6 @@ class JobSeekers extends Component {
         var id = 0;
 
         usersData.forEach(userData => {
-            // alert(userData.email);
 
             id++;
 
@@ -162,12 +143,18 @@ class JobSeekers extends Component {
 
     componentDidUpdate = (nextProps) => {
         if (this.props !== nextProps) {
-            this.displayJobSeekers()
+            if (this.props.location.searchParameter !== undefined) {
+                this.setState({ searchParameter: this.props.location.searchParameter });
+                this.displayJobSeekersWithSearchParameter(this.props.location.searchParameter);
+            }
+            else {
+                this.displayJobSeekers()
+            }
         }
     }
 
     render() {
-        const { searchPosition } = this.state;
+        const { searchParameter } = this.state;
 
         // can now grab the users from redux here instead of firebase in ComponentDidMount ... maybe ¯\_(ツ)_/¯
         const { loading } = this.state;
@@ -181,7 +168,7 @@ class JobSeekers extends Component {
                         <span className="input-group-text">
                             <FaSearch />
                         </span>
-                        <FormControl value={searchPosition} onChange={this.handleChange} name="searchPosition" type="text" placeholder="Name, Keyword or Title" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
+                        <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder="Name, Keyword or Title" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
                     </div>
                     <div className="input-group-prepend">
                         <span className="input-group-text">
@@ -190,7 +177,8 @@ class JobSeekers extends Component {
                         <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
                     </div>
                     <Button variant="warning"
-                        type="submit">
+                        type="submit"
+                        disabled={true}>
                         Search
                     </Button>
                 </Form>
@@ -275,7 +263,7 @@ class JobSeekerObject extends Component {
         })
     }
 
-    render() {        
+    render() {
 
         let userData = this.props.userData;
 
@@ -292,7 +280,7 @@ class JobSeekerObject extends Component {
                         userData.profileImage ?
                             userData.profileImage :
                             'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
-                            alt=''>
+                        alt=''>
                     </img>
                 </div>
                 <div style={{ float: 'left', maxWidth: '25em', minWidth: '25em', margin: '0 2em', textAlign: 'left' }}>
