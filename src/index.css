@@ -158,6 +158,16 @@ input[type="email"]:focus,
   margin: 0 20px;
 }
 
+@media (max-width: 991px) {
+  .navbar {
+    background: white;
+  }
+
+  #modalSignIn {
+    width: 100% !important;
+  }
+}
+
 /* add a background color on scroll */
 .scrolled {
   background-color: rgba(255, 255, 255, 0.9);
