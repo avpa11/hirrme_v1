@@ -15,6 +15,7 @@ import Button from 'react-bootstrap/Button';
 import PasswordChangeForm from '../reusable/PasswordChange';
 import { FaBriefcase } from "react-icons/fa";
 import { connect } from 'react-redux';
+import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 // import Nav from 'react-bootstrap/Nav';
 // import { Link } from 'react-router-dom';
 
@@ -349,13 +350,16 @@ class ListVacancies extends Component {
                         </Form.Group>
                     </React.Fragment>
                 ) : null}
-
-                {i !== 4 ?
-                <Button type='button' variant="warning" onClick={this.addClick.bind(this)}>Add another question</Button>
-                :
-                null
-                }
-                <Button variant="danger" onClick={this.removeClick.bind(this, i)}>Remove</Button>
+                <div className="center">
+                    {i !== 4 ?
+                        <AiFillPlusCircle size={50} style={{color: '#ffc107', marginTop: '20px'}} type='button' onClick={this.addClick.bind(this)}>Add another question</AiFillPlusCircle>
+                    : null
+                    }
+                    {i !== 0 ?
+                        <AiFillMinusCircle size={50} style={{color: '#dc3545', marginTop: '20px'}} onClick={this.removeClick.bind(this, i)}>Remove</AiFillMinusCircle>
+                    : null}
+                </div>
+                <hr />
             </div>
         ))
     }

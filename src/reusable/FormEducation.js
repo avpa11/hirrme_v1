@@ -2,6 +2,9 @@ import React, { Component }  from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 
 import { withAuthorization } from '../components/Session';
 
@@ -42,6 +45,9 @@ class FormEducation extends Component {
                 location: item.location,
             })
         ))
+        if (this.props.location.pathname === '/education') {
+            this.props.history.push('/experience');
+        }
     }
 
     handleChange(i,e) {
@@ -69,15 +75,28 @@ class FormEducation extends Component {
      }
 
     createUI() {
-        return this.state.educations.map((el, i) => (
+        return this.state.educations.slice(0, 5).map((el, i) => (
             <div key={i} style={{ marginBottom: '20px'}}>
-                <FormControl type="text" value={el.schoolName} onChange={this.handleChange.bind(this, i)} name="schoolName" placeholder="School Name"></FormControl>                        
-                <FormControl type="text" value={el.programType} onChange={this.handleChange.bind(this, i)} name="programType" placeholder="Program Type"></FormControl>                        
-                <FormControl type="text" value={el.programName} onChange={this.handleChange.bind(this, i)} name="programName" placeholder="Program Name"></FormControl>                        
-                <FormControl type="text" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder="Start Date"></FormControl>                        
-                <FormControl type="text" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder="End Date"></FormControl>                        
-                <FormControl type="text" value={el.location} onChange={this.handleChange.bind(this, i)} name="location" placeholder="Location"></FormControl>   
-                <Button variant="danger" onClick={this.removeClick.bind(this, i)}>Remove</Button>                     
+                <Row>
+                    <Col sm={6}>
+                        <FormControl type="text" value={el.schoolName} onChange={this.handleChange.bind(this, i)} name="schoolName" placeholder="School Name"></FormControl>                        
+                        <FormControl type="text" value={el.programType} onChange={this.handleChange.bind(this, i)} name="programType" placeholder="Program Type"></FormControl>                        
+                        <FormControl type="text" value={el.programName} onChange={this.handleChange.bind(this, i)} name="programName" placeholder="Program Name"></FormControl>                                
+                    </Col>
+                    <Col sm={6}>
+                        <FormControl type="text" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder="Start Date"></FormControl>                        
+                        <FormControl type="text" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder="End Date"></FormControl>                        
+                        <FormControl type="text" value={el.location} onChange={this.handleChange.bind(this, i)} name="location" placeholder="Location"></FormControl>   
+                    </Col>
+                </Row>
+                <div className="center">
+                    {i > 0 ? 
+                    <AiFillMinusCircle size={50} style={{color: '#dc3545', marginTop: '20px'}} onClick={this.removeClick.bind(this, i)}>Remove</AiFillMinusCircle>
+                    : null}
+                    {i < 4 ? 
+                    <AiFillPlusCircle size={50} style={{color: '#ffc107', marginTop: '20px'}} type='button' variant="warning" onClick={this.addClick.bind(this)}>Add More</AiFillPlusCircle> 
+                    : null}                   
+                </div>
             </div>
         ))
     }
@@ -86,12 +105,13 @@ class FormEducation extends Component {
         return (
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
-                style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                {this.createUI()} 
-                <Button type='button' variant="warning" onClick={this.addClick.bind(this)}>Add More</Button>
-                <Button type="submit" variant="warning">
-                    Register
-                </Button>
+                style={{ justifyContent: 'center', marginTop: "50px" }}>
+                {this.createUI()}
+                <div className="center" style={{marginTop: "50px"}}>
+                    <Button type="submit" className="loginButton" variant="warning">
+                        Register
+                    </Button>
+                </div> 
             </Form>
         )
     }

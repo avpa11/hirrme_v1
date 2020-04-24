@@ -17,18 +17,22 @@ const Education = () => (
 
 class CreateEducationForm extends Component {
 
-    
     redirect = e => {
         this.props.history.push('/experience');
     }
 
     render () {
         return (
-            <div className="rectangle registerect container" style={{ marginTop: "120px", marginBottom: "500px" }}>
+            <div className="container registerCard" style={{ marginTop: "120px", marginBottom: "500px" }}>
                 <div className="container">
                     <h1>Almost done</h1>
+                    <h2>Your Education...</h2>
                         <FormEducation />
-                        <Button type="button" variant="warning" onClick={this.redirect}>Next</Button>
+                        <div className="center" style={{paddingBottom: "50px"}}>
+                            <Button type="button" style={{color: '#6c757d', background: 'transparent', border: 'none'}}
+                            onClick={this.redirect}>Skip this step</Button>
+                        </div>
+
                 </div>
             </div>
         )

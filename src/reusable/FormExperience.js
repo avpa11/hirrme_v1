@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 
 import { withAuthorization } from '../components/Session';
 
@@ -37,6 +40,9 @@ class FormExperience extends Component {
                 location: item.location,
             })
         ))
+        if (this.props.location.pathname === '/experience') {
+            this.props.history.push('/useraccount#link1');
+        }
     }
 
     handleChange(i,e) {
@@ -63,14 +69,27 @@ class FormExperience extends Component {
      }
 
     createUI() {
-        return this.state.experiences.map((el, i) => (
+        return this.state.experiences.slice(0, 5).map((el, i) => (
             <div key={i} style={{ marginBottom: '20px'}}>
-                <FormControl type="text" value={el.position} onChange={this.handleChange.bind(this, i)} name="position" placeholder="Position"></FormControl>                        
-                <FormControl type="text" value={el.company} onChange={this.handleChange.bind(this, i)} name="company" placeholder="Company"></FormControl>                        
-                <FormControl type="text" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder="Start Date"></FormControl>                        
-                <FormControl type="text" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder="End Date"></FormControl>                        
-                <FormControl type="text" value={el.location} onChange={this.handleChange.bind(this, i)} name="location" placeholder="Location"></FormControl>   
-                <Button variant="danger" onClick={this.removeClick.bind(this, i)}>Remove</Button>                     
+                <Row>
+                    <Col sm={6}>
+                        <FormControl type="text" value={el.position} onChange={this.handleChange.bind(this, i)} name="position" placeholder="Position"></FormControl>                        
+                        <FormControl type="text" value={el.company} onChange={this.handleChange.bind(this, i)} name="company" placeholder="Company"></FormControl>                        
+                        <FormControl type="text" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder="Start Date"></FormControl>                        
+                    </Col>
+                    <Col sm={6}>
+                        <FormControl type="text" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder="End Date"></FormControl>                        
+                        <FormControl type="text" value={el.location} onChange={this.handleChange.bind(this, i)} name="location" placeholder="Location"></FormControl>   
+                    </Col>
+                </Row>
+                <div className="center">
+                {i > 0 ? 
+                    <AiFillMinusCircle size={50} style={{color: '#dc3545', marginTop: '20px'}} onClick={this.removeClick.bind(this, i)}>Remove</AiFillMinusCircle>                     
+                : null}
+                {i < 5 ? 
+                    <AiFillPlusCircle size={50} type='button' style={{color: '#ffc107', marginTop: '20px'}}  onClick={this.addClick.bind(this)}>Add More</AiFillPlusCircle>
+                : null}
+                </div>
             </div>
         ))
     }
@@ -79,12 +98,13 @@ class FormExperience extends Component {
         return (
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
-                style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                style={{ justifyContent: 'center', marginTop: "50px" }}>
                 {this.createUI()} 
-                <Button type='button' variant="warning" onClick={this.addClick.bind(this)}>Add More</Button>
-                <Button type="submit" variant="warning">
-                    Register
-                </Button>
+                <div className="center" style={{marginTop: "50px"}}>
+                    <Button type="submit" className="loginButton" variant="warning">
+                        Register
+                    </Button>
+                </div> 
             </Form>
         )
     }

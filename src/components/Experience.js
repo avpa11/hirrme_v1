@@ -19,16 +19,20 @@ const Experience = () => (
 class CreateExperienceForm extends Component {
 
     redirect = e => {
-        this.props.history.push('/useraccount');
+        this.props.history.push('/useraccount#link1');
     }
 
     render () {
         return (
-            <div className="rectangle registerect container" style={{ marginTop: "120px", marginBottom: "500px" }}>
+            <div className="container registerCard" style={{ marginTop: "120px", marginBottom: "500px" }}>
                 <div className="container">
                     <h1>Last step</h1>
+                    <h2>Your Experience</h2>
                     <FormExperience />
-                    <Button type="button" variant="warning" onClick={this.redirect}>Next</Button>
+                    <div className="center" style={{paddingBottom: "50px"}}>
+                        <Button type="button" style={{color: '#6c757d', background: 'transparent', border: 'none'}}
+                        onClick={this.redirect}>Skip this step</Button>
+                    </div>
                 </div>
             </div>
         )
