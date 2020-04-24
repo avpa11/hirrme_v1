@@ -82,10 +82,9 @@ class CompanyAccount extends Component {
                 this.props.firebase.users().orderByChild('incognito').equalTo(null).on('value', snap => {
                     this.props.onSetUsers(snap.val());
                 })
-            
-
+                
                 var vacanciesRef = this.props.firebase.database().ref.child('vacancies').ref.child(this.state.authUser.uid);
-                vacanciesRef.on('value', snapshot => {
+                vacanciesRef.on('value', snapshot => {                 
 
                     this.props.onSetCompanyVacancies(snapshot.val());
 
@@ -94,10 +93,9 @@ class CompanyAccount extends Component {
                     }
 
                     let id = 0;
-                    // console.log(this.props)
                     for (var i in this.props.vacancies) {
                         id++;
-
+      
                         var div = document.createElement('div');
                         div.setAttribute('id', id);
                         if (document.getElementById('vacancies') != null) {
@@ -123,6 +121,9 @@ class CompanyAccount extends Component {
     componentWillUnmount() {
         this.props.firebase.database().off();
         this.props.firebase.database().ref.child('companies').off();
+        this.props.firebase.database().ref.child('quizes').off();
+        this.props.firebase.database().ref.child('vacanciesApplications').off();
+        this.props.firebase.database().ref.child('companyLikes').off();
     }
 
     render() {
@@ -142,12 +143,6 @@ class CompanyAccount extends Component {
                                     <ListGroup.Item action href="#link4">
                                         Settings
                             </ListGroup.Item>
-                                    {/* <Nav>
-                                        <Nav.Link as={Link} to={{
-                                            pathname: "/applicants",
-                                            data: 'kek'
-                                        }}><Button variant="warning">Show Applicants</Button></Nav.Link>
-                                    </Nav> */}
                                 </ListGroup>
                             </Col>
                             <Col sm={9} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '5px' }}>
@@ -193,17 +188,19 @@ class ListVacancies extends Component {
         super(props);
         this.state = {
             show: false,
+            showReview: false,
             numberOfApplicants: 0,
             numberOfSaves: 0,
             questions: [{
-                question: '',
-                questionType: '',
-                option1: '',
-                option2: '',
-                option3: '',
-                option4: '',
-                answer: '',
-            }]
+                question: null,
+                questionType: null,
+                option1: null,
+                option2: null,
+                option3: null,
+                option4: null,
+                answer: null,
+            }],
+            hasQuiz: []
         }
     }
 
@@ -213,9 +210,9 @@ class ListVacancies extends Component {
 
         /* Creates Separate Objects for questions */
         this.state.questions.map((item, key) => {
-            this.props.fireb.quizes().push({
+            this.props.fireb.quiz(this.props.vacancy.vacancyID).push({
                 question: item.question,
-                qusetionType: item.questionType,
+                questionType: item.questionType,
                 option1: item.option1,
                 option2: item.option2,
                 option3: item.option3,
@@ -231,6 +228,7 @@ class ListVacancies extends Component {
 
     componentDidMount(){
         this.showVacancyStat();
+        this.showQuizButton();     
     }
 
     handleChange(i, e) {
@@ -238,8 +236,6 @@ class ListVacancies extends Component {
         let questions = [...this.state.questions];
         questions[i] = { ...questions[i], [name]: value };
         this.setState({ questions });
-
-        // console.log(questions);
     };
 
     removeClick(i) {
@@ -251,19 +247,26 @@ class ListVacancies extends Component {
     addClick() {
         this.setState(prevState => ({
             questions: [...prevState.questions, {
-                question: '',
-                questionType: '',
-                option1: '',
-                option2: '',
-                option3: '',
-                option4: '',
-                answer: '',
+                question: null,
+                questionType: null,
+                option1: null,
+                option2: null,
+                option3: null,
+                option4: null,
+                answer: null,
             }]
         }))
     }
 
     handleClose = () => this.setState({ show: false });
     handleShow = () => this.setState({ show: true });
+    handleQuizReviewClose = () => this.setState({ showReview: false });
+    handleQuizReview = () => this.setState({ showReview: true });
+
+    handleQuizDelete = () => {
+        this.props.fireb.database().ref.child('quizes').ref.child(this.props.vacancy.vacancyID).remove();
+        this.setState({ showReview: false })
+    }
 
     goToApplications = () => {
         this.props.pathHistory.push({
@@ -282,8 +285,15 @@ class ListVacancies extends Component {
             })  
     }
 
+    showQuizButton = () => {
+        this.props.fireb.database().ref.child('quizes').ref.child(this.props.vacancy.vacancyID).on('value', snap => {   
+            this.setState({hasQuiz: snap.val()} )
+        })
+    }
+
+    // quiz form
     createUI() {
-        return this.state.questions.map((el, i) => (
+        return this.state.questions.slice(0, 5).map((el, i) => (
             <div key={i} style={{ marginBottom: '20px' }}>
                 <Row>
                     <Col sm={8}>
@@ -331,19 +341,87 @@ class ListVacancies extends Component {
                             <Form.Label>Answer:</Form.Label>
                             <Form.Control onChange={this.handleChange.bind(this, i)} value={el.answer} name="answer" as="select">
                                 <option value="" disabled={true}>Select an answer from options...</option>
-                                <option value="option1">Option 1 : {el.option1}</option>
-                                <option value="option2">Option 2 : {el.option2}</option>
-                                <option value="option3">Option 3 : {el.option3}</option>
-                                <option value="option4">Option 4 : {el.option4}</option>
+                                <option value={el.option1}>Option 1 : {el.option1}</option>
+                                <option value={el.option2}>Option 2 : {el.option2}</option>
+                                <option value={el.option3}>Option 3 : {el.option3}</option>
+                                <option value={el.option4}>Option 4 : {el.option4}</option>
                             </Form.Control>
                         </Form.Group>
                     </React.Fragment>
                 ) : null}
 
+                {i !== 4 ?
                 <Button type='button' variant="warning" onClick={this.addClick.bind(this)}>Add another question</Button>
+                :
+                null
+                }
                 <Button variant="danger" onClick={this.removeClick.bind(this, i)}>Remove</Button>
             </div>
         ))
+    }
+
+    reviewQuiz() {
+        if (this.state.hasQuiz !== null) {
+
+            return Object.keys(this.state.hasQuiz).map((item, i) => (
+                <div className="container" key={i} style={{ marginBottom: '20px' }}>
+
+                    
+                    { this.state.hasQuiz[item].question }
+                    
+                    <br />
+                    { (this.state.hasQuiz[item].questionType === 'multipleChoice') ? (
+                        <React.Fragment>
+                            <div className="radio">
+                                <label>
+                                    {
+                                        (this.state.hasQuiz[item].option1 === this.state.hasQuiz[item].answer ? 
+                                            <input type="radio" value={this.state.hasQuiz[item].option1} defaultChecked /> :
+                                            <input type="radio" value={this.state.hasQuiz[item].option1} disabled />)
+                                    }
+                                    {this.state.hasQuiz[item].option1}
+                                </label>
+                            </div>
+                            <div className="radio">
+                                <label>
+                                    {
+                                        (this.state.hasQuiz[item].option2 === this.state.hasQuiz[item].answer ? 
+                                            <input type="radio" value={this.state.hasQuiz[item].option2} defaultChecked /> :
+                                            <input type="radio" value={this.state.hasQuiz[item].option2} disabled />)
+                                    }
+                                    {this.state.hasQuiz[item].option2}
+                                </label>
+                            </div>
+                            <div className="radio">
+                                <label>
+                                    {
+                                        (this.state.hasQuiz[item].option3 === this.state.hasQuiz[item].answer ? 
+                                            <input type="radio" value={this.state.hasQuiz[item].option3} defaultChecked /> :
+                                            <input type="radio" value={this.state.hasQuiz[item].option3} disabled />)
+                                    }
+                                    {this.state.hasQuiz[item].option3}
+                                </label>
+                            </div>
+                            <div className="radio">
+                                <label>
+                                    {
+                                        (this.state.hasQuiz[item].option4 === this.state.hasQuiz[item].answer ? 
+                                            <input type="radio" value={this.state.hasQuiz[item].option4} defaultChecked /> :
+                                            <input type="radio" value={this.state.hasQuiz[item].option4} disabled />)
+                                    }
+                                    {this.state.hasQuiz[item].option4}
+                                </label>
+                            </div>
+                        </React.Fragment>
+                        ) : (
+                            <textarea style={{width: '100%'}} disabled value="Placeholder for an answer" />
+                        )
+                    }
+                </div>
+            )
+                // console.log(this.state.hasQuiz[item].question)
+            )
+        }
     }
 
     render() {
@@ -358,21 +436,18 @@ class ListVacancies extends Component {
                     <Col sm={4}>
                         <p>Number of Saves: {this.state.numberOfSaves}</p>
                         <p>Number of Applications: {this.state.numberOfApplicants}</p>
-                        <Button variant="warning" onClick={this.handleShow}>Add a quiz</Button> <br />
+                        <div id="quizButton">
+
+                        </div>
+                        { (this.state.hasQuiz == null) ? (
+                                <Button variant="warning" onClick={this.handleShow}>Add a quiz</Button>
+                            ) : (
+                                <Button type='button' variant="warning" onClick={this.handleQuizReview}>Review Quiz</Button>
+                            )
+                        }
+                        <br />
                         <Button style={{marginTop: '20px'}} onClick={this.goToApplications} variant="warning">Show Applicants</Button>
 
-                        {/*  
-
-                        Alina, can you please take a look how to make Nav.Link working here?
-
-                        <Nav>
-                            <Nav.Link as={Link} to={{
-                                pathname: "/applicants",
-                                data: 'hey'
-                            }}><Button variant="warning">Show Applicants</Button></Nav.Link>
-                        </Nav> 
-                        
-                        */}
                     </Col>
                 </Row>
                 <hr />
@@ -399,6 +474,23 @@ class ListVacancies extends Component {
                             </div>
                         </Form>
 
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={this.state.showReview} onHide={this.handleQuizReviewClose} size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered>
+                    <Modal.Header>
+                        <Modal.Title>Review a Quiz for {this.props.vacancy.positionTitle} vacancy </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {this.reviewQuiz()}
+                        <Button onClick={this.handleQuizReviewClose} variant="secondary" style={{ margin: '0.25em' }}>
+                                Close
+                        </Button>
+                        <Button onClick={this.handleQuizDelete} variant="danger" style={{ margin: '0.25em' }}>
+                                Delete quiz
+                        </Button>
                     </Modal.Body>
                 </Modal>
 
