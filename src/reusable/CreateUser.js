@@ -70,10 +70,11 @@ class CreateUserForm extends Component {
 
     render () {
         const { firstName, lastName, title, city, province, country } = this.state;
+        // console.log(this.props.user);
         return (
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
-                style={{ justifyContent: 'center', marginTop: "40px", marginBottom: "40px" }}>
+                style={{ justifyContent: 'center', marginTop: "40px", marginBottom: "20px" }}>
             
                 <FormControl type="text" value={firstName} onChange={this.handleChange} name="firstName" placeholder="First Name"></FormControl>                        
                 <FormControl type="text" value={lastName} onChange={this.handleChange} name="lastName" placeholder="Last Name"></FormControl>                        
@@ -82,7 +83,11 @@ class CreateUserForm extends Component {
                 <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province"></FormControl>                        
                 <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country"></FormControl>                        
                 <Button type="submit" variant="warning">
-                    Register
+                    {(this.props.user!== null && this.props.user!== undefined) ? 
+                        'Change'
+                        :
+                        'Next'
+                    } 
                 </Button>
             </Form>
         )

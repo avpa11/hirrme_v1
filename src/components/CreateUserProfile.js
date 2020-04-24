@@ -102,35 +102,56 @@ class CreateUserForm extends Component {
     }
 
     render () {
+        console.log(this.props.user);
         return (
-                <div className="rectangle registerect container" style={{ marginTop: "120px" }}>
+                <div className="registerCard container" style={{ marginTop: "120px" }}>
                     <div className="container">
                         <h2 className="center">Almost done!</h2>
                         <Row>
                             <Col sm={6}>
+                            {/* { (this.props.user === null || this.props.user === undefined) ? (
+                                <UserProfileForm></UserProfileForm>
+                            ) : null} */}
+
                                 <UserProfileForm></UserProfileForm>
                             </Col>
-                            <Col sm={6}>
-                            {
-                                this.state.progress !== 100 ? (
-                                    <ProgressBar animated  now={this.state.progress} />
-                                ) :
-                                <h4>Done</h4>
-                            }
-                                <Form onSubmit={e => this.handleImageUpload(e, this.props.authUser)}>
-                                    <FormControl type="file" onChange={this.handleImage} ></FormControl>
-                                    <Button disabled={this.props.user == null} type="submit" variant="warning">
-                                        Upload a photo
-                                    </Button>
-                                </Form>
-                                <img
-                                src={this.state.url || require('../img/logo.png')}
-                                alt="Uploaded Profile"
-                                width="100"
-                                />
+                            <Col sm={6} className="center" style={{marginTop: '40px'}}>
+                                {
+                                (this.props.user!== null && this.props.user!== undefined) ? 
+                                    this.state.progress !== 100 ? (
+                                        <ProgressBar animated striped variant="warning" label={`${this.state.progress}%`} now={this.state.progress} />
+                                    ) :
+                                    <ProgressBar variant="success" label={`${this.state.progress}%`} now={this.state.progress} />
+                                    :
+                                    null
+                                }
+
+                                { (this.props.user!== null && this.props.user!== undefined) ? 
+                                
+                                    <Form onSubmit={e => this.handleImageUpload(e, this.props.authUser)}>
+                                        <FormControl type="file" onChange={this.handleImage} ></FormControl>
+                                        <img
+                                        src={this.state.url || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                                        alt="Uploaded Profile"
+                                        width="100"
+                                        /><br />
+                                        {this.state.progress !== 100 ? (
+                                        <Button disabled={this.props.user == null} type="submit" variant="warning">
+                                            Upload a photo
+                                        </Button>
+                                        ) : null}
+                                    </Form>
+                                 : null
+                                }
                             </Col>
                         </Row>
-                        <Button type="button" variant="warning" onClick={this.redirect}>Next</Button>
+                        {(this.props.user!== null && this.props.user!== undefined) ? 
+                            <div className="center" style={{marginTop: '15px', paddingBottom: '50px'}}>
+                                <Button type="button"  className="loginButton" variant="warning" onClick={this.redirect}>Continue</Button>
+                            </div> 
+                            :
+                            null
+                        }
                     </div>
                 </div>
         )

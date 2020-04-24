@@ -12,9 +12,9 @@ import { compose } from 'recompose';
 class CreateAccount extends Component {
 
     componentDidMount() {
-        if (this.props.userType !== null) {
-            this.props.history.push('/');
-        }
+        // if (this.props.userType !== null) {
+        //     this.props.history.push('/');
+        // }
     }
 
     handleSubmit = e => {
@@ -22,9 +22,6 @@ class CreateAccount extends Component {
     }
 
     handleChange = e => {
-        // this.setState({ [e.target.name]: e.target.value });
-        // console.log(e.target.value);
-
 
         if (e.target.value === 'jobseeker') {
             this.props.history.push('/createuser');
@@ -50,11 +47,6 @@ class CreateAccount extends Component {
                         <label htmlFor="rdbjobseeker">Job Seeker</label>
                         <FormControl value="employer" onChange={this.handleChange} type="radio" name="usertype" className="mr-sm-2 col-12 col-xs-12" id='rdbemployer' />
                         <label htmlFor="rdbemployer">Employer</label>
-                        {/* <Row>
-                    <Button type="submit" variant="warning" className="container center">
-                        Continue
-                    </Button>
-                </Row> */}
                     </Form>
                 </div>
                 <div id="createCompanyPagePlaceholder" style={{display:"none"}}>

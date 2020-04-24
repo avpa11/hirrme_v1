@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 import { withAuthorization } from './Session';
 
@@ -53,7 +55,7 @@ class CreateCompanyForm extends Component {
                 this.setState({...initState})
             })
             .then(() => {
-                this.props.history.push('/useraccount');
+                this.props.history.push('/useraccount#link1');
             })
             .catch(error => console.log(error));
 
@@ -82,22 +84,30 @@ class CreateCompanyForm extends Component {
     render() {
         const { companyName, companyField, companyDesrciption, companyDirector, companyCity, companyProvince, companyCountry } = this.state;
         return (
-                <div className="rectangle registerect container" style={{ marginTop: "120px" }}>
+                <div className="registerCard container" style={{ marginTop: "120px" }}>
                     <div className="container">
                         <h1>Let us know more about your company!</h1>
                         <Form
                             onSubmit={e => this.handleSubmit(e, this.props.authUser)}
                             style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                            <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder="Name"></FormControl>
-                            <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder="Field"></FormControl>
-                            <FormControl type="text" value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder="Description"></FormControl>
-                            <FormControl type="text" value={companyDirector} onChange={this.handleChange} name="companyDirector" placeholder="Director"></FormControl>
-                            <FormControl type="text" value={companyCity} onChange={this.handleChange} name="companyCity" placeholder="City"></FormControl>
-                            <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="Province"></FormControl>
-                            <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="Country"></FormControl>
-                            <Button type="submit" variant="warning">
-                                Register
-                        </Button>
+                                <Row>
+                                    <Col sm={6}>
+                                        <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder="Name"></FormControl>
+                                        <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder="Field"></FormControl>
+                                        <FormControl type="text" value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder="Description"></FormControl>
+                                        <FormControl type="text" value={companyDirector} onChange={this.handleChange} name="companyDirector" placeholder="Director"></FormControl>
+                                    </Col>
+                                    <Col sm={6}>
+                                        <FormControl type="text" value={companyCity} onChange={this.handleChange} name="companyCity" placeholder="City"></FormControl>
+                                        <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="Province"></FormControl>
+                                        <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="Country"></FormControl>
+                                    </Col>
+                                </Row>
+                                <div className="center" style={{marginTop: "50px", paddingBottom: '50px'}}>
+                                    <Button type="submit" className="loginButton" variant="warning">
+                                        Register
+                                    </Button>
+                                </div> 
                         </Form>
                     </div>
                 </div>
