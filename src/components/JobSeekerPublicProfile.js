@@ -133,7 +133,7 @@ class JobSeekerPublicProfile extends Component {
                         <h6>{this.state.education}</h6>
                         <h6>{userData.city} {userData.province} {userData.country}</h6>
                         <div style={buttonStyle}>
-                            <Button onClick={() => alert('Cool')}>Want to hire</Button>
+                            <Button className="loginButton" variant="warning" onClick={() => alert('Cool')}>Want to hire</Button>
                         </div>
                     </div>
 

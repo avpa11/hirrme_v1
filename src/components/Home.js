@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-// import CardDeck from 'react-bootstrap/CardDeck';
-// import Card from 'react-bootstrap/Card';
-// import Carousel from 'react-bootstrap/Carousel';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
@@ -143,16 +140,16 @@ class Home extends Component {
                 <p className="text-center">Let us help you to get work/ers</p>
                 <Form inline style={{ display: 'flex', justifyContent: 'center', marginTop: "120px", marginBottom: "80px" }}>
                 <div className="input-group-prepend" style={{backgroundColor: 'none',borderColor: "#FFC107"}}>
-                    <span className="input-group-text">
+                    {/* <span className="input-group-text">
                         <FaSearch />
-                    </span>
-                    <FormControl type="text" value={searchParameterVacancies} name="searchParameterVacancies" placeholder="Keyword or Title" className="mr-sm-2" onChange={this.handleChange} style={{borderColor: "#FFC107" }} />
+                    </span> */}
+                    <FormControl type="text" value={searchParameterVacancies} name="searchParameterVacancies" placeholder=" &#xF002; Keyword or Title" className="mr-sm-2" onChange={this.handleChange} style={{borderColor: "#FFC107", fontFamily: "FontAwesome" }} />
                 </div>
                 <div className="input-group-prepend">
-                    <span className="input-group-text">
+                    {/* <span className="input-group-text">
                         <FaSearchLocation />                   
-                    </span>
-                    <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                    </span> */}
+                    <FormControl disabled={true} type="text" placeholder=" &#xf015; BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107", fontFamily: "FontAwesome" }} />
                 </div>
                     <Button variant="warning"
                         onClick={this.goToVacancies}>
@@ -160,38 +157,17 @@ class Home extends Component {
                     </Button>
                 </Form>
                 <div className="container">
-                    {/* <Carousel interval={4000} slide={true} wrap={true} >
-                    {Array.apply(null, Array(6)).map(function(item, i){                                        
-                        return (
-                            <Carousel.Item>
-                            <Card className="card col-4 img-fluid" style={{ width: '15rem' }}>
-                                <Card.Body>
-                                    <Card.Title>Card Title</Card.Title>
-                                    <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
-                                    <Card.Text>
-                                        Some quick example text to build on the card title and make up the bulk of
-                                        the card's content.
-                                </Card.Text>
-                                    <Card.Link href="#">Card Link</Card.Link>
-                                </Card.Body>
-                            </Card>
-                        </Carousel.Item>
-                        );                
-                    }, this)}
-                        
-
-                    </Carousel> */}
                     <h2>Vacancies</h2>
                     <div className="scrolling-wrapper center">                        
                     {Array.apply(null, Array(6)).map(function(item, i){                                                                    
                             return (
-                                <div className="scroll_card rectangle" style={{padding: '1em 1em 2em 1em'}}>
+                                <div className="scroll_card rectangle" style={{padding: '1em 1em 2em 1em'}} key={i}>
                                     <div className="card_inside" style={{margin: 'auto', display: 'table', textAlign : 'left', verticalAlign: 'center'}}>                                                                                                                                                  
                                             <p style={{fontWeight: "bold"}}>{this.state.vacanciesTitle[i] ? this.state.vacanciesTitle[i] : "Coming soon"}</p>
-                                            <h7>Sector: {this.state.sector[i] ? this.state.sector[i] : "Coming soon"}</h7> <br/>
-                                            <h7>Type: {this.state.type[i] ? this.state.type[i] : "Coming soon"}</h7> <br/>
-                                            <h7>Salary Type: {this.state.salaryType[i] ? this.state.salaryType[i] : "Coming soon"}</h7> <br/>
-                                            <h7>Salary: ${this.state.salary[i] ? this.state.salary[i] : "Coming soon"}</h7> <br/>  
+                                            <p className="cardText">Sector: {this.state.sector[i] ? this.state.sector[i] : "Coming soon"}</p> 
+                                            <p className="cardText">Type: {this.state.type[i] ? this.state.type[i] : "Coming soon"}</p>
+                                            <p className="cardText">Salary Type: {this.state.salaryType[i] ? this.state.salaryType[i] : "Coming soon"}</p>
+                                            <p className="cardText">Salary: ${this.state.salary[i] ? this.state.salary[i] : "Coming soon"}</p> 
                                             <Nav>
                                                 <Nav.Link as={Link} to="/vacancies"><Button variant="primary" size="sm">View vacancy</Button> </Nav.Link>                                                                        
                                             </Nav>
@@ -226,12 +202,12 @@ class Home extends Component {
                     <div className="scrolling-wrapper center">
                     {Array.apply(null, Array(6)).map(function(item, i){                                                                    
                             return (
-                                <div className="scroll_card rectangle" style={{padding: '1em 1em 2em 1em'}}>
+                                <div className="scroll_card rectangle" style={{padding: '1em 1em 2em 1em'}} key={i}>
                                     <div className="card_inside" style={{margin: 'auto', display: 'table', textAlign : 'left', verticalAlign: 'center'}}>                                                                                                                                                  
                                             <p style={{fontWeight: "bold"}}>{this.state.firstName[i]} {this.state.lastName[i]}</p>
-                                            <h7>Title: {this.state.title[i]}</h7> <br/>
-                                            <h7>Email: {this.state.email[i]}</h7> <br/>
-                                            <h7>From: {this.state.city[i]}</h7> <br/> <br/>
+                                            <p className="cardText">Title: {this.state.title[i]}</p> 
+                                            <p className="cardText">Email: {this.state.email[i]}</p>
+                                            <p className="cardText">From: {this.state.city[i]}</p>
                                             <Nav>
                                                 <Nav.Link as={Link} to="/jobseekers"><Button variant="primary" size="sm">View profile</Button> </Nav.Link>                                                                        
                                             </Nav>                                                                                     
@@ -253,10 +229,10 @@ class Home extends Component {
                 <div className="inputs">
                     <Form onSubmit={this.subscribeForSpam}>
                         <div className="input-group-prepend">
-                            <span className="input-group-text">
+                            {/* <span className="input-group-text">
                                 <FaRegEnvelope />
-                            </span>
-                            <FormControl type="email" id="emailInput" placeholder="email@gmail.com" className="form-control" />
+                            </span> */}
+                            <FormControl type="email" id="emailInput" placeholder="&#xf0e0; email@gmail.com" style={{fontFamily: "FontAwesome" }} className="form-control" />
                             <Button type="submit" id='buttonSubscribeForEmails' className="btn btn-warning" >
                                 Subscribe
                             </Button>

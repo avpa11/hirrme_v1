@@ -176,7 +176,7 @@ class VacancyApplicant extends Component {
                             <h4>{applicant.firstName} {applicant.lastName}, {applicant.title}</h4>
                             <p>{applicant.city}, {applicant.province}, {applicant.country}</p>
                             <p>User default text</p>
-                            {this.state.attachmentsUrl ? <a href={this.state.attachmentsUrl} target="_blank">View attached files</a> : ''}
+                            {this.state.attachmentsUrl ? <a href={this.state.attachmentsUrl} target="_blank" rel="noopener noreferrer">View attached files</a> : ''}
                         </div>
                     </Col>
                 </Row>

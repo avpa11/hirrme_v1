@@ -229,7 +229,7 @@ class ListVacancies extends Component {
 
         /* Creates Separate Objects for questions */
         this.state.questions.map((item, key) => {
-            this.props.fireb.quiz(this.props.vacancy.vacancyID).push({
+            return this.props.fireb.quiz(this.props.vacancy.vacancyID).push({
                 question: item.question,
                 questionType: item.questionType,
                 option1: item.option1,

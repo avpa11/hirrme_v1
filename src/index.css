@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i");
 @import url("https://fonts.googleapis.com/css?family=Varela+Round");
+/* @import "//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css"; */
+@import url("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
 body, html {
   font-family: "Nunito", 'Varela' !important;
@@ -29,9 +31,9 @@ body {
   margin-right: auto !important;
 }
 
-input[type=text] {
+input[type=text], input[type=password] {
   border: none;
-  border-bottom: 1px solid #6c757d;
+  border-bottom: 1px solid #ced4da;
   color: black;
 }
 
@@ -150,6 +152,14 @@ input[type="email"]:focus,
   border-radius: .5rem;
   margin: 0 10px;
 }
+
+.cardText {
+  margin: 0 !important;
+  margin-inline-start: 0 !important;
+  margin-block-end: 0 !important;
+  margin-block-start: 0 !important;
+}
+
 /* nav bar */
 .nav-link, .loginButton {
   color: black !important;
@@ -196,6 +206,7 @@ p>a:hover {
 
 /* cards scroll in home page */
 .scrolling-wrapper {
+  overflow: auto;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
@@ -317,10 +328,6 @@ p>a:hover {
 
 .span_date {
   float: right;
-}
-
-#visibility {
-  color: #FFAC11;
 }
 
 .buttonDivider{
