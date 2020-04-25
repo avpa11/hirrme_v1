@@ -214,9 +214,28 @@ class UserAccount extends Component {
                                                         <ProfileImage></ProfileImage>
                                                     </Col>
                                                 </Row>
-                                                <Button onClick={this.showAllInfo} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
-                                                    Change Profile
-                                            </Button>
+                                                {/* Account Visibility Section */}
+                                                <Row className="container">
+                                                    <Col sm={12}><h5>Account Visibility </h5></Col> 
+
+                                                    <Col sm={12}>
+                                                        {this.props.user.incognito === 1 ? (
+                                                            <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserSecret /> Incognito</p></React.Fragment>
+                                                        ) : <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserTie /> Visible</p></React.Fragment>}
+                                                        <Form style={{display: 'inline'}} onSubmit={e => this.handleSubmit(e)}>
+                                                            <Button style={{ marginLeft: '7px', borderRadius: '20px' }} type="submit" variant="warning">
+                                                                Change
+                                                            </Button>
+                                                        </Form>
+                                                    </Col>             
+                                                </Row>
+
+                                                {/* Change Profile Section */}
+                                                <div className="center">
+                                                    <Button onClick={this.showAllInfo}  style={{ marginLeft: '7px', marginBottom: '20px', marginTop: '20px' }} type="button" variant="danger">
+                                                        Change Profile
+                                                    </Button>
+                                                </div>
                                                 {this.state.showProfileAdd ? <UserForm></UserForm> : null}
 
 
@@ -237,8 +256,8 @@ class UserAccount extends Component {
                                 </Row>
                             </Tab.Container>
                         </div>
-                        <Row style={{ marginTop: "50px", marginBottom: "50px" }}>
-                            <Col className="container" sm={4} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
+                        <Row className="container divcenter" style={{ marginTop: "50px", marginBottom: "50px" }}>
+                            <Col className="container" sm={5} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
                                 <h3 className="centerText">Education</h3>
                                 <div className="container" id="education"></div>
                                 <Button onClick={this.addEducation} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
@@ -246,31 +265,14 @@ class UserAccount extends Component {
                                     </Button>
                                 {this.state.addEducation ? <FormEducation></FormEducation> : null}
                             </Col>
-                            <Col className="container" sm={4} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
+                            <Col sm={2}></Col>
+                            <Col className="container" sm={5} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
                                 <h3 className="centerText">Experience</h3>
                                 <div className="container" id="experience"></div>
                                 <Button onClick={this.addExperience} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
                                     Add Experience
                                     </Button>
                                 {this.state.addExperience ? <FormExperience></FormExperience> : null}
-                            </Col>
-                            <Col className="container" sm={2} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
-                                <h3 className="centerText">Account Visibility <br />
-                                    {this.props.user.incognito === 1 ? (
-                                        <FaUserSecret />
-                                    ) : <FaUserTie />}
-                                </h3>
-                                {this.props.user.incognito === 1 ? (
-                                    <p className="container" id="visibility">Incognito</p>
-                                ) : <p className="container" id="visibility">Visible</p>}
-                                {/* <p id="visibility"></p> */}
-                                <Form
-                                    onSubmit={e => this.handleSubmit(e)}>
-                                    {/* <FormControl style={{display: 'hidden'}} value={this.state.incognito} onChange={this.handleChange} type="checkbox" name="incognito" id='chbincognito' /> */}
-                                    <Button style={{ marginLeft: '7px' }} type="submit" variant="warning">
-                                        Change
-                                    </Button>
-                                </Form>
                             </Col>
                         </Row>
                     </div>
