@@ -15,6 +15,7 @@ import PasswordChangeForm from '../reusable/PasswordChange';
 import UserForm from '../reusable/CreateUser';
 import FormEducation from '../reusable/FormEducation';
 import FormExperience from '../reusable/FormExperience';
+import ProfileImage from '../reusable/ProfileImage';
 
 import { connect } from 'react-redux';
 
@@ -210,11 +211,7 @@ class UserAccount extends Component {
                                                         <h4><FaBriefcase /> {this.props.user.title}</h4>
                                                     </Col>
                                                     <Col sm={6}>
-                                                        <img
-                                                            src={this.props.user.profileImage || require('../img/logo.png')}
-                                                            alt="Uploaded Profile"
-                                                            width="100"
-                                                        />
+                                                        <ProfileImage></ProfileImage>
                                                     </Col>
                                                 </Row>
                                                 <Button onClick={this.showAllInfo} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">

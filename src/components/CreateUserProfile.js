@@ -1,10 +1,7 @@
 import React, { Component }  from 'react';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import ProgressBar from 'react-bootstrap/ProgressBar'
 
 import { withAuthorization } from './Session';
 
@@ -15,6 +12,7 @@ import { compose } from 'recompose';
 import { connect } from 'react-redux';
 
 import UserProfileForm from '../reusable/CreateUser';
+import ProfileImage from '../reusable/ProfileImage';
 
 const initState = {
     img: null,
@@ -51,58 +49,12 @@ class CreateUserForm extends Component {
         this.props.firebase.database().off();
         this.props.firebase.database().ref.child('users').off();
     }
- 
-    handleImage = e => {
-        if (e.target.files[0]) {
-            const image = e.target.files[0];
-            this.setState(() => ({ image }));
-        }
-    }
 
     redirect = e => {
         this.props.history.push('/education');
     }
 
-    handleImageUpload = (e, authUser) => {
-        e.preventDefault();
-
-        const { image } = this.state;
-        const imageName = 'ProfileImage.'+authUser.uid;
-        const uploadTask = this.props.firebase.storage.ref(`${authUser.uid}/${imageName}`).put(image);
-        uploadTask.on(
-            "state_changed",
-            snapshot => {
-              // progress function ...
-              const progress = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-              );
-              this.setState({ progress });
-            },
-            error => {
-              // Error function ...
-              console.log(error);
-            },
-            () => {
-              // complete function ...
-              this.props.firebase.storage
-                .ref(authUser.uid)
-                .child(imageName)
-                .getDownloadURL()
-                .then(url => {
-                    this.setState({ url });
-                    
-                    this.props.firebase.users().ref.child(this.props.userKey).update({
-                      profileImage: this.state.url
-                  })
-                })
-            },
-
-          )
-
-    }
-
     render () {
-        console.log(this.props.user);
         return (
                 <div className="registerCard container" style={{ marginTop: "120px" }}>
                     <div className="container">
@@ -116,33 +68,7 @@ class CreateUserForm extends Component {
                                 <UserProfileForm></UserProfileForm>
                             </Col>
                             <Col sm={6} className="center" style={{marginTop: '40px'}}>
-                                {
-                                (this.props.user!== null && this.props.user!== undefined) ? 
-                                    this.state.progress !== 100 ? (
-                                        <ProgressBar animated striped variant="warning" label={`${this.state.progress}%`} now={this.state.progress} />
-                                    ) :
-                                    <ProgressBar variant="success" label={`${this.state.progress}%`} now={this.state.progress} />
-                                    :
-                                    null
-                                }
-
-                                { (this.props.user!== null && this.props.user!== undefined) ? 
-                                
-                                    <Form onSubmit={e => this.handleImageUpload(e, this.props.authUser)}>
-                                        <FormControl type="file" onChange={this.handleImage} ></FormControl>
-                                        <img
-                                        src={this.state.url || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
-                                        alt="Uploaded Profile"
-                                        width="100"
-                                        /><br />
-                                        {this.state.progress !== 100 ? (
-                                        <Button disabled={this.props.user == null} type="submit" variant="warning">
-                                            Upload a photo
-                                        </Button>
-                                        ) : null}
-                                    </Form>
-                                 : null
-                                }
+                                <ProfileImage></ProfileImage>
                             </Col>
                         </Row>
                         {(this.props.user!== null && this.props.user!== undefined) ? 

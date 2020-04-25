@@ -109,7 +109,7 @@ class FormEducation extends Component {
                 {this.createUI()}
                 <div className="center" style={{marginTop: "50px"}}>
                     <Button type="submit" className="loginButton" variant="warning">
-                        Register
+                        Continue
                     </Button>
                 </div> 
             </Form>
