@@ -17,6 +17,12 @@ const Education = () => (
 
 class CreateEducationForm extends Component {
 
+    componentDidMount() {
+        if (this.props.userType !== null) {
+            this.props.history.push('/');
+        }
+    }
+    
     redirect = e => {
         this.props.history.push('/experience');
     }

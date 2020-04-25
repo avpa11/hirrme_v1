@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import Form from 'react-bootstrap/Form';
-// import Button from 'react-bootstrap/Button';
-// import Row from 'react-bootstrap/Row';
-import FormControl from 'react-bootstrap/FormControl';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { withAuthorization } from './Session';
 import CreateCompanyPage from './CreateCompany';
 
@@ -12,13 +11,9 @@ import { compose } from 'recompose';
 class CreateAccount extends Component {
 
     componentDidMount() {
-        // if (this.props.userType !== null) {
-        //     this.props.history.push('/');
-        // }
-    }
-
-    handleSubmit = e => {
-        e.preventDefault();
+        if (this.props.userType !== null) {
+            this.props.history.push('/');
+        }
     }
 
     handleChange = e => {
@@ -38,16 +33,16 @@ class CreateAccount extends Component {
         return (
             <div>
                 <div id="mainPlaceholder" className="container rectangle registerect container" style={{ marginTop: "120px" }} >
-                    <h1>Tell us who you are</h1>
-                    <Form
-                        onSubmit={this.handleSubmit}
-                        style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                    <h1 className="center" style={{marginTop: '50px' }}>Tell us who you are</h1>
 
-                        <FormControl value="jobseeker" onChange={this.handleChange} type="radio" name="usertype" className="mr-sm-2 col-12 col-xs-12" id='rdbjobseeker' />
-                        <label htmlFor="rdbjobseeker">Job Seeker</label>
-                        <FormControl value="employer" onChange={this.handleChange} type="radio" name="usertype" className="mr-sm-2 col-12 col-xs-12" id='rdbemployer' />
-                        <label htmlFor="rdbemployer">Employer</label>
-                    </Form>
+                    <Row className="center" style={{marginTop: '80px' }}>
+                        <Col sm={6}>
+                            <Button style={{borderRadius: '20px', marginBottom: '20px'}} value="jobseeker" onClick={this.handleChange} type="button" variant="warning">Employee</Button>
+                        </Col>
+                        <Col sm={6}>
+                            <Button style={{borderRadius: '20px', marginBottom: '20px'}} value="employer" onClick={this.handleChange} type="button" variant="secondary">Employer</Button>
+                        </Col>
+                    </Row>
                 </div>
                 <div id="createCompanyPagePlaceholder" style={{display:"none"}}>
                     <CreateCompanyPage />

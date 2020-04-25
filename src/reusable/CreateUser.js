@@ -4,11 +4,9 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
 import { withAuthorization } from '../components/Session';
-
 import { withFirebase } from '../components/Firebase';
-// import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 
+import { compose } from 'recompose';
 import { connect } from 'react-redux';
 
 const CreateUser = () => (
@@ -29,17 +27,11 @@ class CreateUserForm extends Component {
         super(props);
         this.state = {...initState};
     }
-    
+
     handleSubmit = (e, authUser) => {
         e.preventDefault();
 
-        if (this.props.user !== null) {
-            // this.props.firebase.users().ref.child(this.props.userKey[0]).remove();
-            // // Redux
-            // this.props.onDeleteUser(
-            //     null,
-            //     null,
-            // );
+        if (this.props.user !== null && this.props.user !== undefined) {
 
             this.props.firebase.users().ref.child(this.props.userKey[0]).set({
                 userId: authUser.uid,
@@ -50,7 +42,7 @@ class CreateUserForm extends Component {
                 city: this.state.city,
                 province: this.state.province,
                 country: this.state.country,
-                profileImage: this.props.user.profileImage
+                profileImage: (this.props.user!== null && this.props.user!== undefined) ? this.props.user.profileImage : null
             })
             .then(() => {
                 this.setState({...initState})
