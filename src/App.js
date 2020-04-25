@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Navbar from './components/Navbar';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Home from './components/Home';
-import About from './components/About';
-import Contact from './components/Contact';
 import Register from './components/Register';
 import CreateAccount from './components/CreateAccount';
 import UserAccount from './components/UserAccount';
@@ -29,9 +27,7 @@ class App extends Component {
         <BrowserRouter>
           <div className="App">            
             <Navbar />
-            <Route exact path='/' component={Home} />
-            <Route path='/about' component={About} />
-            <Route path='/contact' component={Contact} />          
+            <Route exact path='/' component={Home} />       
             <Route path='/vacancies' component={Vacancies} />          
             <Route path='/savedVacancies' component={savedVacancies} />          
             <Route path='/jobseekers' component={JobSeekers} />          
