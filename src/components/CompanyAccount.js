@@ -16,8 +16,7 @@ import PasswordChangeForm from '../reusable/PasswordChange';
 import { FaBriefcase } from "react-icons/fa";
 import { connect } from 'react-redux';
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
-// import Nav from 'react-bootstrap/Nav';
-// import { Link } from 'react-router-dom';
+import CompanyForm from '../reusable/CreateCompany';
 
 
 
@@ -55,12 +54,19 @@ class CompanyAccount extends Component {
                 ? this.setState({ authUser })
                 : this.setState({ authUser: null });
 
-            if (this.state.authUser != null) {
+            if (this.props.authUser != null) {
 
-                var companyRef = this.props.firebase.database().ref.child('companies').orderByChild('companyId')
-                    .equalTo(this.state.authUser.uid)
+                var companyRef = this.props.firebase.companies().orderByChild('companyId')
+                    .equalTo(this.props.authUser.uid)
                 companyRef.on('value', snapshot => {
                     snapshot.forEach(snap1 => {
+                        // Redux
+                        this.props.onSetLoggedCompany(
+                            snap1.val(),
+                            // user object key
+                            Object.keys(snapshot.val())[0],
+                        );
+
                         currentComponent.setState({
                             company: snap1.val(),
                         });
@@ -84,7 +90,7 @@ class CompanyAccount extends Component {
                     this.props.onSetUsers(snap.val());
                 })
                 
-                var vacanciesRef = this.props.firebase.database().ref.child('vacancies').ref.child(this.state.authUser.uid);
+                var vacanciesRef = this.props.firebase.database().ref.child('vacancies').ref.child(this.props.authUser.uid);
                 vacanciesRef.on('value', snapshot => {                 
 
                     this.props.onSetCompanyVacancies(snapshot.val());
@@ -127,6 +133,15 @@ class CompanyAccount extends Component {
         this.props.firebase.database().ref.child('companyLikes').off();
     }
 
+    showAllInfo = (e) => {
+        e.preventDefault();
+        if (this.state.showProfileAdd === true) {
+            this.setState({ showProfileAdd: false });
+        } else {
+            this.setState({ showProfileAdd: true });
+        }
+    }
+
     render() {
         return (
             <div>
@@ -160,7 +175,10 @@ class CompanyAccount extends Component {
                                             <span> {this.state.company.field}</span>
                                         </p>
                                         <p>Director - {this.state.company.director}</p>
-
+                                        <Button onClick={this.showAllInfo} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
+                                                Change Profile
+                                        </Button>
+                                        {this.state.showProfileAdd ? <CompanyForm></CompanyForm> : null}
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="#link2">
                                         <VacancyForm />
@@ -620,14 +638,16 @@ const mapStateToProps = (state) => ({
         ...state.appliedVacanciesState.appliedVacancies[key],
         uid: key,
     })),
-    vacanciesKey: Object.keys(state.comapanyVacanciesState.companyVacancies || {})
-
+    vacanciesKey: Object.keys(state.comapanyVacanciesState.companyVacancies || {}),
+    loggedCompany: (state.loggedCompanyState.loggedCompany || {})[Object.keys(state.loggedCompanyState.loggedCompany  || {})],
+    loggedCompanyKey: Object.keys(state.loggedCompanyState.loggedCompany || {})
 });
 
 const mapDispatchToProps = dispatch => ({
     onSetCompanyVacancies: companyVacancies => dispatch({ type: 'COMPANY_VACANCIES_SET', companyVacancies }),
     onSetAppliedVacancies: appliedVacancies => dispatch({ type: 'APPLIED_VACANCIES_SET', appliedVacancies }),
-    onSetUsers: users => dispatch({ type: 'USERS_SET', users })
+    onSetUsers: users => dispatch({ type: 'USERS_SET', users }),
+    onSetLoggedCompany: (loggedCompany, key) => dispatch({ type: 'LOGGED_COMPANY_SET', loggedCompany, key }),
 });
 
 const VacancyForm = compose(connect(mapStateToProps), withRouter, withFirebase)(CreateVacancyForm);
