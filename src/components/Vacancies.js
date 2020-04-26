@@ -203,11 +203,11 @@ class Vacancies extends Component {
                         </span>
                         <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
                     </div>
-                    <Button variant="warning"
+                    {/* <Button variant="warning"
                         type="submit"
                         disabled={true}>
                         Search
-                    </Button>
+                    </Button> */}
                     <Nav>
                         <Nav.Link as={Link} to="/savedVacancies"><Button disabled={this.state.savedVacanciesInvisible} variant="warning">Saved Vacancies</Button></Nav.Link>
                     </Nav>

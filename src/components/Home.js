@@ -182,16 +182,16 @@ class Home extends Component {
                 <p className="text-center">Let us help you to get work/ers</p>
                     <Form inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
                 <div className="input-group-prepend" style={{backgroundColor: 'none',borderColor: "#FFC107"}}>
-                    <span className="input-group-text">
+                    {/* <span className="input-group-text">
                         <FaSearch />
-                    </span>
-                    <FormControl type="text" value={searchParameterJobSeekers} name="searchParameterJobSeekers" placeholder="Name, Keyword or Title" onChange={this.handleChange} className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                    </span> */}
+                    <FormControl type="text" value={searchParameterJobSeekers} name="searchParameterJobSeekers" placeholder=" &#xF002; Name, Keyword or Title" onChange={this.handleChange} className="mr-sm-2" style={{borderColor: "#FFC107", fontFamily: "FontAwesome" }} />
                 </div>
                 <div className="input-group-prepend">
-                    <span className="input-group-text">
+                    {/* <span className="input-group-text">
                         <FaSearchLocation />                   
-                    </span>
-                    <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107" }} />
+                    </span> */}
+                    <FormControl disabled={true} type="text" placeholder=" &#xf015; BC, Canada" className="mr-sm-2" style={{borderColor: "#FFC107", fontFamily: "FontAwesome" }} />
                 </div>
                     <Button variant="warning"
                         onClick={this.goToJobSeekers}>

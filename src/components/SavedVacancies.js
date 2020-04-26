@@ -95,7 +95,7 @@ class SavedVacancies extends Component {
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Saved Vacancies</h4>
                 <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                    <div className="input-group-prepend" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
+                    {/* <div className="input-group-prepend" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
                         <span className="input-group-text">
                             <FaSearch />
                         </span>
@@ -110,7 +110,7 @@ class SavedVacancies extends Component {
                     <Button variant="warning"
                         type="submit">
                         Search
-                    </Button>
+                    </Button> */}
                     <Nav>
                         <Nav.Link as={Link} to="/vacancies"><Button variant="warning">Vacancies</Button></Nav.Link>
                     </Nav>
