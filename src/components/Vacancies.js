@@ -11,7 +11,7 @@ import { compose } from 'recompose';
 import { Link } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Modal from 'react-bootstrap/Modal';
-import ProgressBar from 'react-bootstrap/ProgressBar'
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 class Vacancies extends Component {
     constructor(props) {
@@ -231,7 +231,22 @@ class VacancyObject extends Component {
             show: false,
             modalText: 'Have something to say/show/attach? Do it here',
             file: null,
-            progress: 0
+            progress: 0,
+            hasQuiz: [],
+            quiz: false,
+            answers: [{
+                answer: null,
+                userId: null,
+                questionId: null,
+                question: null,
+                questionType: null,
+                option1: null,
+                option2: null,
+                option3: null,
+                option4: null,
+                correctAnswer: null,
+            }],
+            showQuestion: false
         };
     }
 
@@ -253,6 +268,7 @@ class VacancyObject extends Component {
             }
             );
             this.appliedVacancies();
+            this.showQuizButton();
         }
     }
 
@@ -349,12 +365,123 @@ class VacancyObject extends Component {
         )
     }
 
+    showQuizButton = () => {
+        this.props.firebase.quizes().ref.child(this.props.vacancyKey).on('value', snap => {   
+            this.setState({hasQuiz: snap.val()} )
+        })
+    }
+
+    reviewQuiz() {
+        if (this.state.hasQuiz !== null) {
+
+            return Object.keys(this.state.hasQuiz).map((item, i) => (
+                <div className="container" key={i} style={{ marginBottom: '20px' }}>
+
+                    {/* {
+                        (this.state.answers[i] !== undefined) ? 
+                            this.setState({answers: update(this.state.answers, {i: {questionId: Object.keys(this.state.hasQuiz)[i]} }) }) 
+                            : null
+                    } */}
+                        
+                    <input id="question" type="hidden" name="questionId" value={Object.keys(this.state.hasQuiz)[i]} />
+
+                        <div>
+                        { this.state.hasQuiz[item].question }  
+                        <br />
+                        { (this.state.hasQuiz[item].questionType === 'multipleChoice') ? (
+                        <React.Fragment>
+                                <div className="radio">
+                                    <label>
+                                        <input type="radio" name="answer" 
+                                        // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option1} }) })}  
+                                        onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option1} />  
+                                        {this.state.hasQuiz[item].option1}
+                                    </label>
+                                </div>
+                                <div className="radio">
+                                    <label>
+                                        <input type="radio" name="answer" 
+                                        // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option2} }) })} 
+                                        onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option2} />
+                                        {this.state.hasQuiz[item].option2}
+                                    </label>
+                                </div>
+                                <div className="radio">
+                                    <label>
+                                        <input type="radio" name="answer" 
+                                        // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option3} }) })}
+                                        onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option3} />
+                                        {this.state.hasQuiz[item].option3}
+                                    </label>
+                                </div>
+                                <div className="radio">
+                                    <label>
+                                        <input type="radio" name="answer" 
+                                        // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option4} }) })}
+                                        onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option4} />
+                                        {this.state.hasQuiz[item].option4}
+                                    </label>
+                                </div>
+                            </React.Fragment>
+                            ) : (
+                                <textarea style={{width: '100%'}} name="answer" onChange={this.handleChange.bind(this, i)} placeholder="Your answer here" />
+                            )
+                        }
+                    </div>
+
+
+                    
+                </div>
+            )
+            )
+        }
+    }
+
+    handleChange(i, e) {
+        const { name, value } = e.target;
+        let answers = [...this.state.answers];
+        answers[i] = { ...answers[i], [name]: value };
+        this.setState({ answers });
+
+        // console.log(this.state.answers);
+    };
+    showQuestion() {
+        document.getElementsByClassName('question').style.display = "block";
+    };
+
+    handleQuizSubmit = (event, authUser) => {
+        event.preventDefault();
+
+        this.state.answers.map((item, key)=> (
+            this.props.firebase.quizAnswer(this.props.vacancyKey).push({
+                userId: this.props.authUser.uid,
+                answer: item.answer,
+                questionId: Object.keys(this.state.hasQuiz)[key],
+                companyId: this.props.companyKey,
+                vacancyId: this.props.vacancyKey,
+                question: this.state.hasQuiz[Object.keys(this.state.hasQuiz)[key]].question,
+                questionType: this.state.hasQuiz[Object.keys(this.state.hasQuiz)[key]].questionType,
+                option1: this.state.hasQuiz[Object.keys(this.state.hasQuiz)[key]].option1,
+                option2: this.state.hasQuiz[Object.keys(this.state.hasQuiz)[key]].option2,
+                option3: this.state.hasQuiz[Object.keys(this.state.hasQuiz)[key]].option3,
+                option4: this.state.hasQuiz[Object.keys(this.state.hasQuiz)[key]].option4,
+                correctAanswer: this.state.hasQuiz[Object.keys(this.state.hasQuiz)[key]].answer,
+            })
+            .then(this.setState({quiz: false} ))
+            .then(this.setState({show: true} ))
+            .catch(error => { console.log(error) })
+        ))
+    }
+
     render() {
 
         let vacancyData = this.props.vacancyData;
 
         const handleClose = () => this.setState({ show: false });
         const handleShow = () => this.setState({ show: true });
+
+        const handleQuiz = () => this.setState({ quiz: true });
+        const handleQuizClose = () => this.setState({ quiz: false });
 
         const applyForJob = () => {
             this.props.firebase.vacanciesApplications().push({
@@ -367,7 +494,8 @@ class VacancyObject extends Component {
                 // vacancyKey: this.props.vacancyKey,
                 companyKey: this.props.companyKey,
                 userId: this.props.authUser.uid,
-                status: 'pending'
+                status: 'pending',
+                vacancyId: this.props.vacancyKey,
 
             })
                 .then(this.setState({
@@ -425,9 +553,34 @@ class VacancyObject extends Component {
                         </Modal.Body>
                     </Modal>
 
+                    <Modal show={this.state.quiz} onHide={handleQuizClose} size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered>
+                        <Modal.Header>
+                            <Modal.Title>Take a quiz</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form onSubmit={e => this.handleQuizSubmit(e, this.props.authUser)}>
+                                {this.reviewQuiz()}
+                                <div style={{ textAlign: 'right' }}>
+                                    <Button variant="warning" type="submit" >
+                                        Submit a quiz
+                                    </Button>
+                                    <Button onClick={handleQuizClose} variant="secondary" style={{ margin: '0.25em' }}>
+                                            Close
+                                    </Button>
+                                </div>
+                            </Form>
+                        </Modal.Body>
+                    </Modal>
+
                     <div style={{ float: 'left', margin: '0 2em' }}>
                         <Button onClick={this.showAllInfo} variant="primary">{this.state.displayButton}</Button> <span />
-                        <Button onClick={this.state.applyStatus === 'Apply' ? handleShow : null} variant={this.state.applyVariant} disabled={this.state.isSaveDisabled}>{this.state.applyStatus}</Button> <span />
+                        {(this.state.hasQuiz !== null) ? 
+                            (<Button onClick={this.state.applyStatus === 'Apply' ? handleQuiz : null} variant={this.state.applyVariant} disabled={this.state.isSaveDisabled}>{this.state.applyStatus}</Button>) :
+                            (<Button onClick={this.state.applyStatus === 'Apply' ? handleShow : null} variant={this.state.applyVariant} disabled={this.state.isSaveDisabled}>{this.state.applyStatus}</Button>)
+                        }
+                        <span />
                         <Button onClick={e => this.handleLike(e)} variant="danger" disabled={this.state.isSaveDisabled}>{this.state.saveStatus}</Button>
                     </div>
                 </div>

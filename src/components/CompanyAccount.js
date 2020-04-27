@@ -211,13 +211,13 @@ class ListVacancies extends Component {
             numberOfApplicants: 0,
             numberOfSaves: 0,
             questions: [{
-                question: null,
-                questionType: null,
-                option1: null,
-                option2: null,
-                option3: null,
-                option4: null,
-                answer: null,
+                question: '',
+                questionType: '',
+                option1: '',
+                option2: '',
+                option3: '',
+                option4: '',
+                answer: '',
             }],
             hasQuiz: []
         }
@@ -266,13 +266,13 @@ class ListVacancies extends Component {
     addClick() {
         this.setState(prevState => ({
             questions: [...prevState.questions, {
-                question: null,
-                questionType: null,
-                option1: null,
-                option2: null,
-                option3: null,
-                option4: null,
-                answer: null,
+                question: '',
+                questionType: '',
+                option1: '',
+                option2: '',
+                option3: '',
+                option4: '',
+                answer: '',
             }]
         }))
     }

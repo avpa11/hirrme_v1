@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Modal from 'react-bootstrap/Modal';
 // import emailjs from 'emailjs-com';
 
 
@@ -17,15 +18,15 @@ class VacanciesApplicants extends Component {
             search: '',
             firebase: this.props.firebase,
             // passed the whole vacancy object here ...
-            vacancyProp: this.props.location.state.vacancy
+            vacancyProp: this.props.location.state.vacancy,
         };
     }
 
     componentDidMount() {
         this.props.authUser ? this.displayApplicants() : window.location.replace("/");
         // need to also account for undefined, when a user comes to this link not using "Show Applicants" button
-
-        // console.log(this.state.vacancyProp);
+        // console.log(this.state.hasQuiz);
+        
     }
 
     componentDidUpdate = (nextProps) => {
@@ -40,7 +41,7 @@ class VacanciesApplicants extends Component {
 
     displayApplicants() {
 
-        console.log(this.state.vacancyProp);
+        // console.log(this.state.vacancyProp);
 
         let applicantId = 0;
 
@@ -90,7 +91,9 @@ class VacancyApplicant extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            attachmentsUrl: null
+            attachmentsUrl: null,
+            hasQuiz: [],
+            showReview: false,
         };
     }
 
@@ -124,6 +127,7 @@ class VacancyApplicant extends Component {
 
     componentDidMount = () => {
         this.getAttachmentsUrls();
+        this.showQuizButton();
     }
 
     getAttachmentsUrls = () => {
@@ -136,6 +140,79 @@ class VacancyApplicant extends Component {
             }).catch(error => { })
     }
 
+    handleQuizReviewClose = () => this.setState({ showReview: false });
+    handleQuizReview = () => this.setState({ showReview: true });
+
+    showQuizButton = () => {
+        this.props.firebase.database().ref.child('quizeAnswers').ref.child(this.props.applicationData.vacancyId).on('value', snap => {   
+            this.setState({hasQuiz: snap.val()} )
+            // console.log(snap.val());
+        })
+    }
+
+    showQuiz = () => {
+        if (this.state.hasQuiz !== null) {
+            return Object.keys(this.state.hasQuiz).map((item, i) => (
+                <React.Fragment key={i}>
+                    {(this.state.hasQuiz[item].userId === this.props.applicantData.userId) ?
+                        <div style={{marginBottom: '20px'}}>
+                            { this.state.hasQuiz[item].question }  
+                            <br />
+                            { (this.state.hasQuiz[item].questionType === 'multipleChoice') ? (
+                            <React.Fragment>
+                                    <div className="radio">
+                                        <label>
+                                            {
+                                            (this.state.hasQuiz[item].option1 === this.state.hasQuiz[item].answer ? 
+                                                <input type="radio" value={this.state.hasQuiz[item].option1} defaultChecked /> :
+                                                <input type="radio" value={this.state.hasQuiz[item].option1} disabled />)
+                                            }
+                                            {this.state.hasQuiz[item].option1}
+                                        </label>
+                                    </div>
+                                    <div className="radio">
+                                        <label>
+                                            {
+                                            (this.state.hasQuiz[item].option2 === this.state.hasQuiz[item].answer ? 
+                                                <input type="radio" value={this.state.hasQuiz[item].option2} defaultChecked /> :
+                                                <input type="radio" value={this.state.hasQuiz[item].option2} disabled />)
+                                            }
+                                            {this.state.hasQuiz[item].option2}
+                                        </label>
+                                    </div>
+                                    <div className="radio">
+                                        <label>
+                                            {
+                                            (this.state.hasQuiz[item].option3 === this.state.hasQuiz[item].answer ? 
+                                                <input type="radio" value={this.state.hasQuiz[item].option3} defaultChecked /> :
+                                                <input type="radio" value={this.state.hasQuiz[item].option3} disabled />)
+                                            }
+                                            {this.state.hasQuiz[item].option3}
+                                        </label>
+                                    </div>
+                                    <div className="radio">
+                                        <label>
+                                            {
+                                            (this.state.hasQuiz[item].option4 === this.state.hasQuiz[item].answer ? 
+                                                <input type="radio" value={this.state.hasQuiz[item].option4} defaultChecked /> :
+                                                <input type="radio" value={this.state.hasQuiz[item].option4} disabled />)
+                                            }
+                                            {this.state.hasQuiz[item].option4}
+                                        </label>
+                                    </div>
+                                    Correct Answer: {this.state.hasQuiz[item].correctAanswer}
+                                </React.Fragment>
+                                ) : (
+                                    <textarea style={{width: '100%'}} disabled value={this.state.hasQuiz[item].answer} />
+                                )
+                            }
+                    </div>
+                    :null}
+                </React.Fragment>
+            )
+            )
+        }
+    }
 
     render() {
         let applicantStyle = {
@@ -160,7 +237,7 @@ class VacancyApplicant extends Component {
         let applicant = this.props.applicantData;
 
         return (
-
+            <React.Fragment>
             <div style={applicantStyle}>
                 <Row>
                     <Col sm={2}>
@@ -168,6 +245,9 @@ class VacancyApplicant extends Component {
                             <Button variant="warning" value='saved' onClick={this.changeStatus} style={buttonStyle}>Save</Button> <br />
                             <Button variant="warning" value='accepted' onClick={this.changeStatus} style={buttonStyle}>Accept</Button> <br />
                             <Button variant="warning" value='rejected' onClick={this.changeStatus} style={buttonStyle}>Reject</Button> <br />
+                            {(this.state.hasQuiz !== null) ? 
+                            <Button type='button' variant="warning" onClick={this.handleQuizReview}>Review Quiz</Button> : null
+                            } 
                         </div>
                     </Col>
                     <Col sm={10}>
@@ -181,6 +261,21 @@ class VacancyApplicant extends Component {
                     </Col>
                 </Row>
             </div>
+
+            <Modal show={this.state.showReview} onHide={this.handleQuizReviewClose} size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered>
+                    <Modal.Header>
+                        <Modal.Title>Review quiz</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {this.showQuiz()}
+                        <Button onClick={this.handleQuizReviewClose} variant="secondary" style={{ margin: '0.25em' }}>
+                                Close
+                        </Button>
+                    </Modal.Body>
+                </Modal>
+            </React.Fragment>
         )
     }
 }
