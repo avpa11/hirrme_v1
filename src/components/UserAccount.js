@@ -185,9 +185,9 @@ class UserAccount extends Component {
                                             <ListGroup.Item action href="#link1">
                                                 User Account
                                         </ListGroup.Item>
-                                            <ListGroup.Item action href="#link3">
+                                            {/* <ListGroup.Item action href="#link3">
                                                 Applications
-                                        </ListGroup.Item>
+                                        </ListGroup.Item> */}
                                             <ListGroup.Item action href="#link4">
                                                 Settings
                                         </ListGroup.Item>

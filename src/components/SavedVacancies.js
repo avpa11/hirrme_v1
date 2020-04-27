@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
-import { FaSearch, FaSearchLocation } from "react-icons/fa";
+// import { FaSearch, FaSearchLocation } from "react-icons/fa";
 import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
+// import FormControl from 'react-bootstrap/FormControl';
 import { Link } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import { connect } from 'react-redux';
@@ -90,7 +90,7 @@ class SavedVacancies extends Component {
     }
 
     render() {
-        const { search } = this.state;
+        // const { search } = this.state;
         return (
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Saved Vacancies</h4>

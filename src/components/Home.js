@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Video from '../components/Video';
-import { FaSearch, FaSearchLocation } from "react-icons/fa";
+// import { FaSearch, FaSearchLocation } from "react-icons/fa";
 import { FaRegEnvelope } from "react-icons/fa";
 import { IoMdPaperPlane } from "react-icons/io";
 import { FiMapPin, FiPhone } from "react-icons/fi";

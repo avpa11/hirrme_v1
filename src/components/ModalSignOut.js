@@ -73,11 +73,11 @@ class SignOutForm extends Component {
                                     </div>
                                     {userType === 'jobSeeker' ? (
                                         <React.Fragment>
-                                            <div>
+                                            {/* <div>
                                                 <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link3">
                                                     <IoIosDocument size={40} /><span>My applications</span>     
                                                 </NavHashLink>                                       
-                                            </div>
+                                            </div> */}
                                             <div>
                                                 <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link4">
                                                     <IoMdSettings size={40} /><span>Settings</span>   
