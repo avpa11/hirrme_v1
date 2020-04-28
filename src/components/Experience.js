@@ -18,11 +18,11 @@ const Experience = () => (
 
 class CreateExperienceForm extends Component {
 
-    componentDidMount() {
-        if (this.props.userType !== null) {
-            this.props.history.push('/');
-        }
-    }
+    // componentDidMount() {
+    //     if (this.props.userType !== null) {
+    //         this.props.history.push('/');
+    //     }
+    // }
 
     redirect = e => {
         this.props.history.push('/useraccount#link1');

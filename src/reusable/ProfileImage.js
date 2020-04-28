@@ -78,24 +78,32 @@ class CreateProfileImage extends Component {
         return(
             <React.Fragment>
                  {
-                    (this.props.user!== null && this.props.user!== undefined) ? 
+                    // (this.props.user!== null && this.props.user!== undefined) ? 
                         this.state.progress !== 100 ? (
                             <ProgressBar animated striped variant="warning" label={`${this.state.progress}%`} now={this.state.progress} />
                         ) :
                         <ProgressBar variant="success" label={`${this.state.progress}%`} now={this.state.progress} />
-                        :
-                        null
+                        // :
+                        // null
                     }
 
-                    { (this.props.user!== null && this.props.user!== undefined) ? 
+                    {/* { (this.props.user!== null && this.props.user!== undefined) ?  */}
                     
                         <Form onSubmit={e => this.handleImageUpload(e, this.props.authUser)}>
                             <FormControl type="file" onChange={this.handleImage} ></FormControl>
-                            <img
+                            { (this.props.user!== null && this.props.user!== undefined) ?
+                            (<img
                             src={this.state.url ||  this.props.user.profileImage || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
                             alt="Uploaded Profile"
                             width="100"
-                            /><br />
+                            />) : (
+                                <img
+                                src={this.state.url || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                                alt="Uploaded Profile"
+                                width="100"
+                            />
+                            )}
+                            <br />
                             {this.state.progress !== 100 ? (
                             <Button disabled={this.props.user == null} type="submit" variant="warning">
                                 Upload a photo
@@ -104,8 +112,8 @@ class CreateProfileImage extends Component {
                                 Change the photo
                                 </Button>}
                         </Form>
-                        : null
-                    }
+                        {/* : null
+                    } */}
             </React.Fragment>
         )
     }

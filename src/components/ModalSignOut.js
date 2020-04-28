@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { withFirebase } from './Firebase';
 // import { AuthUserContext } from './Session';
-import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, IoIosDocument, IoMdSettings, IoMdClipboard } from "react-icons/io";
+import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, /* IoIosDocument, */ IoMdSettings, IoMdClipboard } from "react-icons/io";
 import { NavHashLink } from 'react-router-hash-link';
 
 import { connect } from 'react-redux';
@@ -32,8 +32,8 @@ class SignOutForm extends Component {
         .then(authUser => {
             this.setState({ ...initState });
             this.props.history.push('/');
-            this.props.onSetUser(null, 'user');
-            this.props.onSetLoggedCompany(null, 'loggedCompany');
+            this.props.onDeleteUser(null, null);
+            this.props.onDeleteLoggedCompany(null, null);
             this.props.onSetUserType(null, 'userType');
             this.props.onSetLikedUsers(null);
             this.props.onSetSavedVacancies(null);
@@ -124,8 +124,8 @@ const mapStateToProps = state => ({
   });
 
   const mapDispatchToProps = dispatch => ({
-    onSetLoggedCompany: (loggedCompany, key) => dispatch({ type: 'LOGGED_COMPANY_SET', loggedCompany, key }),
-    onSetUser: (user, key) => dispatch({ type: 'USER_SET', user, key }),
+    onDeleteLoggedCompany: (loggedCompany, key) => dispatch({ type: 'LOGGED_COMPANY_DELETE', loggedCompany, key }),
+    onDeleteUser: (user, key) => dispatch({ type: 'USER_DELETE', user, key }),
     onSetSavedVacancies: savedVacancies => dispatch({ type: 'SAVED_VACANCIES_SET', savedVacancies }),
     onSetLikedUsers: likedUsers => dispatch({ type: 'LIKED_USERS_SET', likedUsers }),
     onSetUserType: userType => dispatch({ type: 'USER_TYPE_SET', userType }),

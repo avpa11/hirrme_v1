@@ -10,11 +10,11 @@ import { compose } from 'recompose';
 
 class CreateAccount extends Component {
 
-    componentDidMount() {
-        if (this.props.userType !== null) {
-            this.props.history.push('/');
-        }
-    }
+    // componentDidMount() {
+    //     if (this.props.userType !== null) {
+    //         this.props.history.push('/');
+    //     }
+    // }
 
     handleChange = e => {
 
