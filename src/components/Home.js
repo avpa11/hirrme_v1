@@ -12,6 +12,7 @@ import {Link} from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
+import Carousel from 'react-elastic-carousel';
 
 class Home extends Component {
     constructor(props) {
@@ -30,8 +31,16 @@ class Home extends Component {
           province: [],          
           country: [], 
           searchParameterVacancies: '',        
-          searchParameterJobSeekers: ''        
+          searchParameterJobSeekers: '',      
         };
+        this.breakPoints = [
+            { width: 1, itemsToShow: 1 },
+            { width: 550, itemsToShow: 2, itemsToScroll: 2 },
+            { width: 850, itemsToShow: 3 },
+            { width: 1150, itemsToShow: 4, itemsToScroll: 2 },
+            { width: 1450, itemsToShow: 5 },
+            { width: 1750, itemsToShow: 6 },
+          ]  
       }
 
     subscribeForSpam = e => {
@@ -158,7 +167,7 @@ class Home extends Component {
                 </Form>
                 <div className="container">
                     <h2>Vacancies</h2>
-                    <div className="scrolling-wrapper center">                        
+                    <Carousel breakPoints={this.breakPoints}>                        
                     {Array.apply(null, Array(6)).map(function(item, i){                                                                    
                             return (
                                 <div className="scroll_card rectangle" style={{padding: '1em 1em 2em 1em'}} key={i}>
@@ -175,7 +184,7 @@ class Home extends Component {
                                 </div>
                             );                
                         }, this)}
-                    </div>
+                    </Carousel>
 
                     <br/> <br/><br/><br/>
                     <h1 className="text-center">Seacrh for workers at Hirr.me</h1>
@@ -199,7 +208,7 @@ class Home extends Component {
                     </Button>
                 </Form>
                     <h2>Job Seekers</h2>
-                    <div className="scrolling-wrapper center">
+                    <Carousel breakPoints={this.breakPoints}>  
                     {Array.apply(null, Array(6)).map(function(item, i){                                                                    
                             return (
                                 <div className="scroll_card rectangle" style={{padding: '1em 1em 2em 1em'}} key={i}>
@@ -215,7 +224,7 @@ class Home extends Component {
                                 </div>
                             );                
                         }, this)}
-                    </div>
+                    </Carousel>
                 </div>
             </div>
             {/* Contact footer */}

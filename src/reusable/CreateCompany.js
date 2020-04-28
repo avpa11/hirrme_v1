@@ -139,7 +139,8 @@ class CreateCompanyForm extends Component {
     };
     
     render () {
-        console.log(this.props);
+        // console.log(this.props);
+        // console.log(this.props.loggedCompanyKey[0]);
         const { companyName, companyField, companyDesrciption, companyDirector, companyCity, companyProvince, companyCountry } = this.state;
         return (
             <Form
