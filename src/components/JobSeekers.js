@@ -103,42 +103,8 @@ class JobSeekers extends Component {
         }
         else {
 
-            this.displayJobSeekers()
+            this.displayJobSeekersWithSearchParameter('')
         }
-    }
-
-    displayJobSeekers = () => {
-
-        let likedUsersData = this.props.likedUsers;
-        let usersData = this.props.users;
-        let userType = this.props.userType;
-
-        if (document.getElementById('jobSeekersList') != null) {
-            document.getElementById('jobSeekersList').innerHTML = '';
-        }
-
-        var id = 0;
-
-        usersData.forEach(userData => {
-
-            id++;
-
-            var div = document.createElement('div');
-            div.setAttribute('id', id);
-            div.setAttribute('class', 'jobSeeker');
-            if (document.getElementById('jobSeekersList') != null) {
-                document.getElementById('jobSeekersList').appendChild(div);
-
-                ReactDOM.render(<JobSeekerObject
-                    userData={userData}
-                    likedUsersData={likedUsersData}
-                    userType={userType}
-                    authUser={this.props.authUser}
-                    firebase={this.props.firebase}
-                    pathHistory={this.props.history}
-                />, document.getElementById(id));
-            }
-        })
     }
 
     componentDidUpdate = (nextProps) => {
@@ -148,7 +114,7 @@ class JobSeekers extends Component {
                 this.displayJobSeekersWithSearchParameter(this.props.location.searchParameter);
             }
             else {
-                this.displayJobSeekers()
+                this.displayJobSeekersWithSearchParameter('')
             }
         }
     }

@@ -2,16 +2,14 @@ import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
-// import { FaSearch, FaSearchLocation } from "react-icons/fa";
+import { FaSearch, FaSearchLocation } from "react-icons/fa";
 import Form from 'react-bootstrap/Form';
-// import FormControl from 'react-bootstrap/FormControl';
+import FormControl from 'react-bootstrap/FormControl';
 import { Link } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { VacancyObject } from './Vacancies'
-
-// Fix applied vacancies
 
 class SavedVacancies extends Component {
     constructor(props) {
@@ -23,12 +21,12 @@ class SavedVacancies extends Component {
     }
 
     componentDidMount() {
-        this.props.authUser ? this.displaySavedVacancies() : window.location.replace("/");
+        this.props.authUser ? this.displayVacanciesWithSearchParameter('') : window.location.replace("/");
     }
 
     componentDidUpdate = (nextProps) => {
         if (this.props !== nextProps) {
-            this.displaySavedVacancies()
+            this.displayVacanciesWithSearchParameter('')
         }
     }
 
@@ -39,48 +37,65 @@ class SavedVacancies extends Component {
 
     handleChange = e => {
         this.setState({ [e.target.name]: e.target.value });
+        this.displayVacanciesWithSearchParameter(e.target.value);
     };
 
 
-    displaySavedVacancies() {
+    displayVacanciesWithSearchParameter = searchParameterArg => {
 
         let vacanciesData = this.props.vacancies;
         let savedVacanciesData = this.props.savedVacancies;
         let userType = this.props.userType;
         let appliedVacanciesData = this.props.appliedVacancies;
 
+        let searchParameter = searchParameterArg.toLowerCase();
 
         if (document.getElementById('savedVacanciesList') != null) {
             document.getElementById('savedVacanciesList').innerHTML = '';
         }
 
         var id = 0;
+        let k = 0;
 
         for (var i in vacanciesData) {
             var companyData = vacanciesData[i];
+
+            k = 0;
+
+            let key = Object.keys(companyData);
+
             for (var vacancy in companyData) {
                 if (companyData[vacancy].hasOwnProperty('positionTitle')) {
+
                     for (var j in savedVacanciesData) {
                         var savedVacancyData = savedVacanciesData[j];
                         if (savedVacancyData.email === this.props.authUser.email &&
                             savedVacancyData.positionTitle === companyData[vacancy].positionTitle &&
                             savedVacancyData.contactInfo === companyData[vacancy].contactInfo) {
-                            id++;
+                            if (companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0 ||
+                                companyData[vacancy].sector.toLowerCase().indexOf(searchParameter) >= 0 ||
+                                companyData[vacancy].type.toLowerCase().indexOf(searchParameter) >= 0 ||
+                                companyData[vacancy].city.toLowerCase().indexOf(searchParameter) >= 0 ||
+                                companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0) {
 
-                            var div = document.createElement('div');
-                            div.setAttribute('id', id);
-                            div.setAttribute('class', 'vacancy');
-                            if (document.getElementById('savedVacanciesList') != null) {
-                                document.getElementById('savedVacanciesList').appendChild(div);
+                                id++;
 
-                                ReactDOM.render(<VacancyObject
-                                    vacancyData={companyData[vacancy]}
-                                    savedVacanciesData={savedVacanciesData}
-                                    appliedVacanciesData={appliedVacanciesData}
-                                    authUser={this.props.authUser}
-                                    userType={userType}
-                                    firebase={this.props.firebase}
-                                />, document.getElementById(id));
+                                var div = document.createElement('div');
+                                div.setAttribute('id', id);
+                                div.setAttribute('class', 'vacancy');
+                                if (document.getElementById('savedVacanciesList') != null) {
+                                    document.getElementById('savedVacanciesList').appendChild(div);
+
+                                    ReactDOM.render(<VacancyObject
+                                        vacancyKey={key[k++]}
+                                        vacancyData={companyData[vacancy]}
+                                        savedVacanciesData={savedVacanciesData}
+                                        appliedVacanciesData={appliedVacanciesData}
+                                        authUser={this.props.authUser}
+                                        userType={userType}
+                                        firebase={this.props.firebase}
+                                    />, document.getElementById(id));
+                                }
                             }
                         }
                     }
@@ -90,16 +105,16 @@ class SavedVacancies extends Component {
     }
 
     render() {
-        // const { search } = this.state;
+        const { searchParameter } = this.state;
         return (
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Saved Vacancies</h4>
                 <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                    {/* <div className="input-group-prepend" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
+                    <div className="input-group-prepend" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
                         <span className="input-group-text">
                             <FaSearch />
                         </span>
-                        <FormControl value={search} onChange={this.handleChange} name="search" type="text" placeholder="Keyword or Title" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
+                        <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder="Keyword or Title" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
                     </div>
                     <div className="input-group-prepend">
                         <span className="input-group-text">
@@ -107,10 +122,7 @@ class SavedVacancies extends Component {
                         </span>
                         <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
                     </div>
-                    <Button variant="warning"
-                        type="submit">
-                        Search
-                    </Button> */}
+
                     <Nav>
                         <Nav.Link as={Link} to="/vacancies"><Button variant="warning">Vacancies</Button></Nav.Link>
                     </Nav>

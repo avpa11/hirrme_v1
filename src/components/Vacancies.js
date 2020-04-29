@@ -121,54 +121,7 @@ class Vacancies extends Component {
             this.displayVacanciesWithSearchParameter(this.props.location.searchParameter);
         }
         else {
-            this.displayVacancies()
-        }
-    }
-
-    displayVacancies = () => {
-
-        let vacanciesData = this.props.vacancies;
-        let savedVacanciesData = this.props.savedVacancies;
-        let appliedVacanciesData = this.props.appliedVacancies;
-        let userType = this.props.userType;
-
-        if (document.getElementById('vacanciesList') != null) {
-            document.getElementById('vacanciesList').innerHTML = '';
-        }
-
-        var id = 0;
-        let k = 0;
-
-        for (var i in vacanciesData) {
-            var companyData = vacanciesData[i];
-            k = 0;
-
-            let key = Object.keys(companyData);
-            for (var vacancy in companyData) {
-
-                if (companyData[vacancy].hasOwnProperty('positionTitle')) {
-                    id++;
-
-                    var div = document.createElement('div');
-                    div.setAttribute('id', id);
-                    div.setAttribute('class', 'vacancy');
-                    if (document.getElementById('vacanciesList') != null) {
-                        document.getElementById('vacanciesList').appendChild(div);
-
-                        ReactDOM.render(<VacancyObject
-                            vacancyKey={key[k++]}
-                            companyKey={companyData.uid}
-                            vacancyData={companyData[vacancy]}
-                            savedVacanciesData={savedVacanciesData}
-                            appliedVacanciesData={appliedVacanciesData}
-                            userType={userType}
-                            authUser={this.props.authUser}
-                            firebase={this.props.firebase}
-
-                        />, document.getElementById(id));
-                    }
-                }
-            }
+            this.displayVacanciesWithSearchParameter('');
         }
     }
 
@@ -180,7 +133,7 @@ class Vacancies extends Component {
                 this.displayVacanciesWithSearchParameter(this.props.location.searchParameter);
             }
             else {
-                this.displayVacancies()
+                this.displayVacanciesWithSearchParameter('');
             }
         }
     }
@@ -264,7 +217,6 @@ class VacancyObject extends Component {
 
                     this.setState({ saveStatus: 'Remove' })
                 }
-                // console.log(this.props.vacancyKey);
             }
             );
             this.appliedVacancies();
@@ -366,9 +318,12 @@ class VacancyObject extends Component {
     }
 
     showQuizButton = () => {
-        this.props.firebase.quizes().ref.child(this.props.vacancyKey).on('value', snap => {   
-            this.setState({hasQuiz: snap.val()} )
-        })
+        if (this.props.vacancyKey) {
+            this.props.firebase.quizes().ref.child(this.props.vacancyKey).on('value', snap => {
+                this.setState({ hasQuiz: snap.val() })
+            })
+        }
+
     }
 
     reviewQuiz() {
@@ -382,55 +337,55 @@ class VacancyObject extends Component {
                             this.setState({answers: update(this.state.answers, {i: {questionId: Object.keys(this.state.hasQuiz)[i]} }) }) 
                             : null
                     } */}
-                        
+
                     <input id="question" type="hidden" name="questionId" value={Object.keys(this.state.hasQuiz)[i]} />
 
-                        <div>
-                        { this.state.hasQuiz[item].question }  
+                    <div>
+                        {this.state.hasQuiz[item].question}
                         <br />
-                        { (this.state.hasQuiz[item].questionType === 'multipleChoice') ? (
-                        <React.Fragment>
+                        {(this.state.hasQuiz[item].questionType === 'multipleChoice') ? (
+                            <React.Fragment>
                                 <div className="radio">
                                     <label>
-                                        <input type="radio" name="answer" 
-                                        // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option1} }) })}  
-                                        onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option1} />  
+                                        <input type="radio" name="answer"
+                                            // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option1} }) })}  
+                                            onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option1} />
                                         {this.state.hasQuiz[item].option1}
                                     </label>
                                 </div>
                                 <div className="radio">
                                     <label>
-                                        <input type="radio" name="answer" 
-                                        // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option2} }) })} 
-                                        onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option2} />
+                                        <input type="radio" name="answer"
+                                            // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option2} }) })} 
+                                            onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option2} />
                                         {this.state.hasQuiz[item].option2}
                                     </label>
                                 </div>
                                 <div className="radio">
                                     <label>
-                                        <input type="radio" name="answer" 
-                                        // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option3} }) })}
-                                        onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option3} />
+                                        <input type="radio" name="answer"
+                                            // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option3} }) })}
+                                            onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option3} />
                                         {this.state.hasQuiz[item].option3}
                                     </label>
                                 </div>
                                 <div className="radio">
                                     <label>
-                                        <input type="radio" name="answer" 
-                                        // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option4} }) })}
-                                        onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option4} />
+                                        <input type="radio" name="answer"
+                                            // checked={this.setState({answers: update(this.state.answers, {i: {answer: this.state.hasQuiz[item].option4} }) })}
+                                            onChange={this.handleChange.bind(this, i)} value={this.state.hasQuiz[item].option4} />
                                         {this.state.hasQuiz[item].option4}
                                     </label>
                                 </div>
                             </React.Fragment>
-                            ) : (
-                                <textarea style={{width: '100%'}} name="answer" onChange={this.handleChange.bind(this, i)} placeholder="Your answer here" />
+                        ) : (
+                                <textarea style={{ width: '100%' }} name="answer" onChange={this.handleChange.bind(this, i)} placeholder="Your answer here" />
                             )
                         }
                     </div>
 
 
-                    
+
                 </div>
             )
             )
@@ -452,7 +407,7 @@ class VacancyObject extends Component {
     handleQuizSubmit = (event, authUser) => {
         event.preventDefault();
 
-        this.state.answers.map((item, key)=> (
+        this.state.answers.map((item, key) => (
             this.props.firebase.quizAnswer(this.props.vacancyKey).push({
                 userId: this.props.authUser.uid,
                 answer: item.answer,
@@ -467,9 +422,9 @@ class VacancyObject extends Component {
                 option4: this.state.hasQuiz[Object.keys(this.state.hasQuiz)[key]].option4,
                 correctAanswer: this.state.hasQuiz[Object.keys(this.state.hasQuiz)[key]].answer,
             })
-            .then(this.setState({quiz: false} ))
-            .then(this.setState({show: true} ))
-            .catch(error => { console.log(error) })
+                .then(this.setState({ quiz: false }))
+                .then(this.setState({ show: true }))
+                .catch(error => { console.log(error) })
         ))
     }
 
@@ -567,7 +522,7 @@ class VacancyObject extends Component {
                                         Submit a quiz
                                     </Button>
                                     <Button onClick={handleQuizClose} variant="secondary" style={{ margin: '0.25em' }}>
-                                            Close
+                                        Close
                                     </Button>
                                 </div>
                             </Form>
@@ -576,12 +531,12 @@ class VacancyObject extends Component {
 
                     <div style={{ float: 'left', margin: '0 2em' }}>
                         <Button onClick={this.showAllInfo} variant="primary">{this.state.displayButton}</Button> <span />
-                        {(this.state.hasQuiz !== null) ? 
+                        {(this.state.hasQuiz !== null) ?
                             (<Button onClick={this.state.applyStatus === 'Apply' ? handleQuiz : null} variant={this.state.applyVariant} disabled={this.state.isSaveDisabled}>{this.state.applyStatus}</Button>) :
                             (<Button onClick={this.state.applyStatus === 'Apply' ? handleShow : null} variant={this.state.applyVariant} disabled={this.state.isSaveDisabled}>{this.state.applyStatus}</Button>)
                         }
                         <span />
-                        <Button onClick={e => this.handleLike(e)} variant="danger" disabled={this.state.isSaveDisabled}>{this.state.saveStatus}</Button>
+                        <Button onClick={e => this.handleLike(e)} variant="danger" style={{marginLeft: '0.25em'}} disabled={this.state.isSaveDisabled}>{this.state.saveStatus}</Button>
                     </div>
                 </div>
                 <div style={{ display: this.state.display, textAlign: 'left' }}>

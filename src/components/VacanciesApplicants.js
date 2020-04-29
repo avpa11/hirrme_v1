@@ -27,6 +27,7 @@ class VacanciesApplicants extends Component {
         // need to also account for undefined, when a user comes to this link not using "Show Applicants" button
         // console.log(this.state.hasQuiz);
         
+        
     }
 
     componentDidUpdate = (nextProps) => {
@@ -94,15 +95,17 @@ class VacancyApplicant extends Component {
             attachmentsUrl: null,
             hasQuiz: [],
             showReview: false,
+            statusValue: this.props.applicationData.status,
         };
     }
 
     changeStatus = e => {
+        this.setState({statusValue: e.target.value})
         this.props.firebase.vacanciesApplications().orderByChild('positionTitle').equalTo(this.props.applicationData.positionTitle).once('value', snap => {
             snap.forEach(snap1 => {
                 if (snap1.child('userEmail').val() === this.props.userEmail) {
                     this.props.firebase.vacanciesApplications().child(snap1.key).update({
-                        status: e.target.value
+                        status: this.state.statusValue
                     })
 
                     // 190 emails left ¯\_(ツ)_/¯
@@ -127,7 +130,7 @@ class VacancyApplicant extends Component {
 
     componentDidMount = () => {
         this.getAttachmentsUrls();
-        this.showQuizButton();
+        this.showQuizButton();        
     }
 
     getAttachmentsUrls = () => {
@@ -252,7 +255,7 @@ class VacancyApplicant extends Component {
                     </Col>
                     <Col sm={10}>
                         <div style={divStyle}>
-                            <p>{application.userEmail} applied for {application.positionTitle} position on {application.date}. Status: {application.status}</p>
+                            <p>{application.userEmail} applied for {application.positionTitle} position on {application.date}. Status: {this.state.statusValue}</p>
                             <h4>{applicant.firstName} {applicant.lastName}, {applicant.title}</h4>
                             <p>{applicant.city}, {applicant.province}, {applicant.country}</p>
                             <p>User default text</p>
@@ -305,6 +308,11 @@ const mapStateToProps = state => ({
     authUser: state.sessionState.authUser,
 });
 
+const mapDispatchToProps = dispatch => ({
+    onSetAppliedVacancies: appliedVacancies => dispatch({ type: 'APPLIED_VACANCIES_SET', appliedVacancies })
+});
+
 export default compose(withFirebase, connect(
     mapStateToProps,
+    mapDispatchToProps
 ))(VacanciesApplicants);
