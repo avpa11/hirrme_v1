@@ -77,7 +77,7 @@ class SignInForm extends Component {
                                     <Button disabled={invalid} type="submit" variant="warning" className='authInputs'>
                                         Login
                                     </Button>
-                                    <p onClick={this.changeVisibility}>Don't have an account? <Link as={Link} to="/register">Register</Link> for free:)</p>
+                                    <p onClick={this.changeVisibility} style={{ fontSize: '10px' }}>Don't have an account? <Link as={Link} to="/register">Register</Link> for free:)</p>
                                 </Form>
 
                             </div>

@@ -5,6 +5,8 @@
 
 body, html {
   font-family: "Nunito", 'Varela' !important;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .list-group-item.active {
@@ -79,13 +81,43 @@ input[type="email"]:focus,
 /* Contact footer styles */
 
 #contactFooter{
-  height: 30em;
-  background-color: transparent;
+  min-height: 70em;
+  width: 100%;
+  margin-top: 150px;
+  margin-bottom: 0em;
   text-align: center;
+  background-image: url('../src/img/background_footer.jpg');
+  background-size: cover;
+  padding: 0%;
+
 }
 
-#paperPlaneIcon{
-  margin-top: 10em;
+#footer_top img {
+  width: 48px;
+  height: 48px;
+  margin: 3em;
+}
+
+#footer_top h2 {
+  font-family: Varela Round;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 32px;
+  line-height: 39px;
+  color: #FFFFFF;
+}
+
+#subscriptionForm {
+  margin-top: 3em;
+}
+
+#emailInput{
+  width: 643px; 
+  height: 3em; 
+  background: #FFFFFF; 
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 
+  border-radius: 7px;
+  margin-right: 1em;
 }
 
 .input-group-prepend img{
@@ -104,19 +136,15 @@ input[type="email"]:focus,
 }
 
 #rectangleRow{
-  margin: auto;
-  padding: 4em 0;
+  margin: 6em auto;
+  padding: 3em;
+  max-width: 80em;
 }
 
-.rectangle{
-  background-color: white;
-  border-radius: 1em;
-  border-right: 0.2em solid grey;
-  border-bottom: 0.2em solid  grey;
-  margin: 3em auto;
-  padding: 2em;
-  width: 15em;
-  height: 13em;
+#rectangleRow img{
+  width: 3.5em;
+  height: 3em;
+  margin-bottom: 1.5em;
 }
 
 .rectangleIcon{
@@ -126,18 +154,12 @@ input[type="email"]:focus,
 }
 
 .rectangle hr{
-  border : 2px solid black;
+  border : 1px solid #FFAC11;
   width : 70%
 }
-
 .rectangle h5{
     margin: 0em;
 }
-
-#emailInput{
-  border-color: #FFC107
-}
-
 
 /* End contact footer styles */
 
@@ -362,6 +384,51 @@ p>a:hover {
   min-height: 200px;
 }
 
+.loginButton {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
+}
 
+#homePageHeader {
+  margin-top: 6em;
+}
+
+.searchBoxes {
+  width: 350.49px;
+  height: 34.12px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-color: #FFC107;
+  font-family: "FontAwesome"
+}
+
+.searchButton {
+  width: 121.74px;
+  height: 34.12px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
+}
+
+.card_inside {
+  width: 202px; 
+  height:157px; 
+  box-shadow :0px 4px 4px rgba(0, 0, 0, 0.25); 
+  border-radius:0px
+}
+
+.rectangle{
+  background-color: white;  
+  box-shadow :0px 4px 4px rgba(0, 0, 0, 0.25); 
+  border-radius: 15px;
+  margin: 2em auto;
+  padding: 2em;
+  width: 16em;
+  height: 13em;
+  font-family: "Nunito","Varela"!important
+}
+
+.searchForm {
+  display: flex;
+  justify-content: center;
+  margin-top: 58px;
+  margin-bottom: 80px;
+}
 
 
