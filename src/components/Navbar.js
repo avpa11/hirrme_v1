@@ -23,7 +23,7 @@ class Navibar extends Component {
 
   componentDidMount() {
     document.addEventListener('scroll', () => {
-      const isTop = window.scrollY < 100;
+      const isTop = window.scrollY === 0;
       if (isTop !== this.state.isTop) {
           this.setState({ isTop })
       }

@@ -35,7 +35,7 @@ class Home extends Component {
         };
         this.breakPoints = [
             { width: 1, itemsToShow: 1 },
-            { width: 550, itemsToShow: 2, itemsToScroll: 2 },
+            { width: 550, itemsToShow: 3, itemsToScroll: 3 },
             { width: 850, itemsToShow: 3 },
             { width: 1150, itemsToShow: 4, itemsToScroll: 2 },
             { width: 1450, itemsToShow: 5 },
