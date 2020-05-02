@@ -524,7 +524,7 @@ class ListVacancies extends Component {
 class CreateVacancyForm extends Component {
     constructor(props) {
         super(props);
-        this.state = { ...initState }
+        this.state = { ...initState, show: false }
     }
 
 
@@ -545,6 +545,40 @@ class CreateVacancyForm extends Component {
             salaryType: this.state.salaryType,
             contactInfo: this.state.contactInfo
         })
+        .then(() =>  {
+            var vacanciesRef = this.props.firebase.database().ref.child('vacancies').ref.child(this.props.authUser.uid);
+                vacanciesRef.on('value', snapshot => {                 
+                    this.props.onSetCompanyVacancies(snapshot.val());
+
+                    if (document.getElementById('vacancies') != null) {
+                        document.getElementById('vacancies').innerHTML = '';
+                    }
+
+                    let id = 0;
+                    for (var i in this.props.vacancies) {
+                        id++;
+      
+                        var div = document.createElement('div');
+                        div.setAttribute('id', id);
+                        if (document.getElementById('vacancies') != null) {
+                            document.getElementById('vacancies').appendChild(div);
+
+                            ReactDOM.render(<VacancyObject
+                                vacancies={this.props.vacancies}
+                                vacancy={this.props.vacancies[i]}
+                                fireb={this.props.firebase}
+                                companyID={this.props.authUser.uid}
+                                authUser={this.props.authUser}
+                                id={id}
+                                pathHistory={this.props.history}
+                            />, document.getElementById(id));
+                        }
+                    }
+                })
+            })
+            .then(() => {
+                this.setState({ show: true });
+            })
             .then(() => {
                 this.setState({ ...initState })
             })
@@ -555,72 +589,108 @@ class CreateVacancyForm extends Component {
         this.setState({ [e.target.name]: e.target.value });
     };
 
+    handleClose = () => this.setState({ show: false });
+    handleShow = () => this.setState({ show: true });
+
     render() {
         const { positionTitle, description, city, province, country, requirements, sector,
             keyResponsibilities, type, salary, salaryType, contactInfo } = this.state;
         return (
-            <Form
-                onSubmit={e => this.handleSubmit(e, this.props.authUser)}
-                style={{ justifyContent: 'center', marginTop: "30px", marginBottom: "30px" }}>
+            <React.Fragment>
+                <Form
+                    onSubmit={e => this.handleSubmit(e, this.props.authUser)}
+                    style={{ justifyContent: 'center', marginTop: "30px", marginBottom: "30px" }}>
 
-                <FormControl type="text" value={positionTitle} onChange={this.handleChange} name="positionTitle" placeholder="Title"></FormControl>
-                <Form.Control as="textarea" value={description} onChange={this.handleChange} name="description" placeholder="Job Description" rows="3"></Form.Control>
-                <Form.Group>
-                    <Form.Label>Location</Form.Label>
-                    <Row>
-                        <Col m={4}>
-                            <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>
-                        </Col>
-                        <Col m={4}>
-                            <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province"></FormControl>
-                        </Col>
-                        <Col m={4}>
-                            <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country"></FormControl>
-                        </Col>
-                    </Row>
-                </Form.Group>
-                <Form.Control as="textarea" value={requirements} onChange={this.handleChange} name="requirements" placeholder="Job Requirements" rows="3"></Form.Control>
-                <Form.Group>
-                    <Form.Label>Job Sector</Form.Label>
-                    <Form.Control onChange={this.handleChange} value={sector} name="sector" as="select">
-                        <option value=""></option>
-                        <option value="computer">Computer and Technology</option>
-                        <option value="marketing">Marketing</option>
-                        <option value="finance">Accounting and Finance</option>
-                    </Form.Control>
-                </Form.Group>
-                <Form.Control as="textarea" value={keyResponsibilities} onChange={this.handleChange} name="keyResponsibilities" placeholder="Key Responsibilities" rows="3"></Form.Control>
-                <Form.Group>
-                    <Form.Label>Type</Form.Label>
-                    <Form.Control onChange={this.handleChange} value={type} name="type" as="select">
-                        <option value="" ></option>
-                        <option value="full-time" >Full-time</option>
-                        <option value="part-time" >Part-time</option>
-                        <option value="contract" >Contract</option>
-                        <option value="internship" >Internship</option>
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Salary</Form.Label>
-                    <Row>
-                        <Col m={6}>
-                            <FormControl type="text" value={salary} onChange={this.handleChange} name="salary" placeholder="Salary"></FormControl>
-                        </Col>
-                        <Col m={6}>
-                            <Form.Control onChange={this.handleChange} value={salaryType} name="salaryType" as="select">
-                                <option value=""> </option>
-                                <option value="yearly">yearly</option>
-                                <option value="hourly">hourly</option>
-                            </Form.Control>
-                        </Col>
-                    </Row>
-                </Form.Group>
-                <FormControl type="email" value={contactInfo} onChange={this.handleChange} name="contactInfo" placeholder="Contact Email"></FormControl>
+                    <FormControl type="text" value={positionTitle} onChange={this.handleChange} name="positionTitle" placeholder="Title"></FormControl>
+                    <Form.Control as="textarea" value={description} onChange={this.handleChange} name="description" placeholder="Job Description" rows="3"></Form.Control>
+                    <Form.Group>
+                        <Form.Label>Location</Form.Label>
+                        <Row>
+                            <Col m={4}>
+                                <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>
+                            </Col>
+                            <Col m={4}>
+                                <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province" disabled></FormControl>
+                            </Col>
+                            <Col m={4}>
+                                <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country" disabled></FormControl>
+                            </Col>
+                        </Row>
+                    </Form.Group>
+                    <Form.Control as="textarea" value={requirements} onChange={this.handleChange} name="requirements" placeholder="Job Requirements" rows="3"></Form.Control>
+                    <Form.Group>
+                        <Form.Label>Job Sector</Form.Label>
+                        <Form.Control onChange={this.handleChange} value={sector} name="sector" as="select">
+                            <option value=""></option>
+                            <option value="Commercial Services">Commercial Services</option>
+                            <option value="Communication">Communication</option>
+                            <option value="Consumer Durables">Consumer Durables</option>
+                            <option value="Consumer Services">Consumer Services</option>
+                            <option value="Distribution Services">Distribution Services</option>
+                            <option value="Electronic Technology">Electronic Technology</option>
+                            <option value="Energy Minerals">Energy Minerals</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Health Services">Health Services</option>
+                            <option value="Health Technology">Health Technology</option>
+                            <option value="Industrial Services">Industrial Services</option>
+                            <option value="Miscellaneous">Miscellaneous</option>
+                            <option value="Non-Energy Minerals">Non-Energy Minerals</option>
+                            <option value="Process Industries">Process Industries</option>
+                            <option value="Retail Trade">Retail Trade</option>
+                            <option value="Technology Services">Technology Services</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Utilities">Utilities</option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Control as="textarea" value={keyResponsibilities} onChange={this.handleChange} name="keyResponsibilities" placeholder="Key Responsibilities" rows="3"></Form.Control>
+                    <Form.Group>
+                        <Form.Label>Type</Form.Label>
+                        <Form.Control onChange={this.handleChange} value={type} name="type" as="select">
+                            <option value="" ></option>
+                            <option value="full-time" >Full-time</option>
+                            <option value="part-time" >Part-time</option>
+                            <option value="contract" >Contract</option>
+                            <option value="internship" >Internship</option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Salary</Form.Label>
+                        <Row>
+                            <Col m={6}>
+                                <FormControl type="text" value={salary} onChange={this.handleChange} name="salary" placeholder="Salary"></FormControl>
+                            </Col>
+                            <Col m={6}>
+                                <Form.Control onChange={this.handleChange} value={salaryType} name="salaryType" as="select">
+                                    <option value=""> </option>
+                                    <option value="yearly">yearly</option>
+                                    <option value="hourly">hourly</option>
+                                </Form.Control>
+                            </Col>
+                        </Row>
+                    </Form.Group>
+                    <FormControl type="email" value={contactInfo} onChange={this.handleChange} name="contactInfo" placeholder="Contact Email"></FormControl>
 
-                <Button type="submit" variant="warning">
-                    Create
-                </Button>
-            </Form>
+                    <Button type="submit" variant="warning">
+                        Create
+                    </Button>
+                </Form>
+                
+                <Modal show={this.state.show} onHide={this.handleClose} size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered>
+                    <Modal.Header>
+                        <Modal.Title>Vacancy Created! </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        Your vacancy was successfully created!
+                        <div style={{ textAlign: 'right' }}>
+                            <Button onClick={this.handleClose} variant="secondary" style={{ margin: '0.25em' }}>
+                                Close
+                        </Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+            </React.Fragment>
         )
     }
 
@@ -650,7 +720,7 @@ const mapDispatchToProps = dispatch => ({
     onSetLoggedCompany: (loggedCompany, key) => dispatch({ type: 'LOGGED_COMPANY_SET', loggedCompany, key }),
 });
 
-const VacancyForm = compose(connect(mapStateToProps), withRouter, withFirebase)(CreateVacancyForm);
+const VacancyForm = compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withFirebase)(CreateVacancyForm);
 
 const VacancyObject = withFirebase(ListVacancies);
 
