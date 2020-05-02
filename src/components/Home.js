@@ -147,16 +147,15 @@ class Home extends Component {
                 <div className="container" style={{ zIndex: 1 }}>
                     <div id='homePageHeader'>
                         <h1 className="text-center">Seacrh for a job at Hirr.me</h1>
-                        <p className="text-center">Let us help you to get work/ers</p>
                     </div>
 
                     <div>
                         <Form inline className='searchForm'>
                             <div className="input-group-prepend" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
-                                <FormControl className='searchBoxes mr-sm-2' type="text" value={searchParameterVacancies} name="searchParameterVacancies" placeholder=" &#xF002; Keyword or Title" onChange={this.handleChange} />
+                                <FormControl className='searchBoxes mr-sm-2 keywordInput' type="text" value={searchParameterVacancies} name="searchParameterVacancies" placeholder=" &#xF002; Keyword or Title" onChange={this.handleChange} />
                             </div>
                             <div className="input-group-prepend">
-                                <FormControl className='searchBoxes mr-sm-2' disabled={true} type="text" placeholder=" &#xf015; BC, Canada" />
+                                <FormControl className='searchBoxes mr-sm-2 placeInput' disabled={true} type="text" placeholder=" &#xf015; BC, Canada" />
                             </div>
                             <Button variant="warning" className='searchButton'
                                 onClick={this.goToVacancies}>
@@ -166,10 +165,10 @@ class Home extends Component {
                     </div>
 
                     <div className="container" style={{ maxWidth: '60em' }}>
-                        <Carousel breakPoints={this.breakPoints} >
+                        <Carousel breakPoints={this.breakPoints}>
                             {Array.apply(null, Array(6)).map(function (item, i) {
                                 return (
-                                    <div className="scroll_card rectangle" style={{ padding: '1em 1em 2em 1em' }} key={i}>
+                                    <div className="rectangle" style={{ padding: '1em 1em 2em 1em' }} key={i}>
                                         <div className="card_inside" style={{ margin: 'auto', display: 'table', textAlign: 'left', verticalAlign: 'center' }}>
                                             <p style={{ fontWeight: "bold" }}>{this.state.vacanciesTitle[i] ? this.state.vacanciesTitle[i] : "Coming soon"}</p>
                                             <p className="cardText">Sector: {this.state.sector[i] ? this.state.sector[i] : "Coming soon"}</p>
@@ -187,13 +186,12 @@ class Home extends Component {
 
                         <br /> <br /><br /><br />
                         <h1 className="text-center">Seacrh for workers at Hirr.me</h1>
-                        <p className="text-center">Let us help you to get work/ers</p>
                         <Form inline className='searchForm'>
                             <div className="input-group-prepend" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
-                                <FormControl className='searchBoxes mr-sm-2' type="text" value={searchParameterJobSeekers} name="searchParameterJobSeekers" placeholder=" &#xF002; Name, Keyword or Title" onChange={this.handleChange} />
+                                <FormControl className='searchBoxes mr-sm-2 keywordInput' type="text" value={searchParameterJobSeekers} name="searchParameterJobSeekers" placeholder=" &#xF002; Name, Keyword or Title" onChange={this.handleChange} />
                             </div>
                             <div className="input-group-prepend">
-                                <FormControl className='searchBoxes mr-sm-2' disabled={true} type="text" placeholder=" &#xf015; BC, Canada" />
+                                <FormControl className='searchBoxes mr-sm-2 placeInput' disabled={true} type="text" placeholder=" &#xf015; BC, Canada" />
                             </div>
                             <Button variant="warning" className='searchButton'
                                 onClick={this.goToJobSeekers}>
@@ -203,7 +201,7 @@ class Home extends Component {
                         <Carousel breakPoints={this.breakPoints}>
                             {Array.apply(null, Array(6)).map(function (item, i) {
                                 return (
-                                    <div className="scroll_card rectangle" style={{ padding: '1em 1em 2em 1em' }} key={i}>
+                                    <div className="rectangle" style={{ padding: '1em 1em 2em 1em' }} key={i}>
                                         <div className="card_inside" style={{ margin: 'auto', display: 'table', textAlign: 'left', verticalAlign: 'center' }}>
                                             <p style={{ fontWeight: "bold" }}>{this.state.firstName[i]} {this.state.lastName[i]}</p>
                                             <p className="cardText">Title: {this.state.title[i]}</p>
