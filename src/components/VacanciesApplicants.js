@@ -7,6 +7,7 @@ import { compose } from 'recompose';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
+import Video from '../components/Video2';
 // import emailjs from 'emailjs-com';
 
 
@@ -80,10 +81,13 @@ class VacanciesApplicants extends Component {
         // const { data } = this.props.location;
 
         return (
+            <React.Fragment>
+                <Video />
             <div className="container" style={{ marginTop: "120px" }}>
                 <h2 className="text-center">{this.state.vacancyProp.positionTitle}</h2>
                 <p id='applicantsList'></p>
             </div>
+            </React.Fragment>
         )
     }
 }

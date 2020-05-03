@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Modal from 'react-bootstrap/Modal';
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import Video from '../components/Video2';
 
 class Vacancies extends Component {
     constructor(props) {
@@ -141,6 +142,8 @@ class Vacancies extends Component {
     render() {
         const { searchParameter } = this.state;
         return (
+            <React.Fragment>
+                <Video />
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Vacancies</h4>
                 <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
@@ -167,6 +170,7 @@ class Vacancies extends Component {
                 </Form>
                 <p id='vacanciesList'></p>
             </div>
+            </React.Fragment>
         )
     }
 }

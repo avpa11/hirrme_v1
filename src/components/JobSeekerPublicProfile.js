@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
 import { compose } from 'recompose';
 import app from 'firebase/app';
+import Video from '../components/Video2';
 
 class JobSeekerPublicProfile extends Component {
     constructor(props) {
@@ -117,6 +118,8 @@ class JobSeekerPublicProfile extends Component {
         let userData = this.props.location.userData ? this.props.location.userData : this.state.userProfile;
 
         return (
+            <React.Fragment>
+                <Video />
             <div style={mainDivStyle}>
                 <div style={generalInfoDivStyle}>
                     <div className='text-center'>
@@ -147,6 +150,7 @@ class JobSeekerPublicProfile extends Component {
                     </div>
                 </div>
             </div>
+                            </React.Fragment>
         )
     }
 }

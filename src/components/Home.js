@@ -229,7 +229,7 @@ class Home extends Component {
                         <Form onSubmit={this.subscribeForSpam}>
                             <div className="input-group-prepend" id='subscriptionForm'>
                                 <FormControl type="email" id="emailInput" placeholder="&#xf0e0;  Enter your email address..." style={{ fontFamily: "FontAwesome" }} className="form-control" />
-                                <Button type="submit" id='buttonSubscribeForEmails' className="btn btn-warning" style={{ backgroundColor: '#FFAC11' }} >
+                                <Button type="submit" id='buttonSubscribeForEmails' className="btn btn-warning" style={{ backgroundColor: '#FFAC11', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }} >
                                     Subscribe
                             </Button>
                             </div>

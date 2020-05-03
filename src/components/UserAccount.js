@@ -16,6 +16,7 @@ import UserForm from '../reusable/CreateUser';
 import FormEducation from '../reusable/FormEducation';
 import FormExperience from '../reusable/FormExperience';
 import ProfileImage from '../reusable/ProfileImage';
+import Video from '../components/Video2';
 
 import { connect } from 'react-redux';
 
@@ -172,9 +173,9 @@ class UserAccount extends Component {
 
     render() {
         return (
+            <React.Fragment>
+                <Video />
             <div style={{ marginTop: "120px" }}>
-                <h1 style={{ marginLeft: "20px" }}>Welcome to your account, {this.props.authUser.email}</h1>
-
                 {this.props.user != null ? (
                     <div>
                         <div className="container">
@@ -187,7 +188,7 @@ class UserAccount extends Component {
                                         </ListGroup.Item>
                                             {/* <ListGroup.Item action href="#link3">
                                                 Applications
-                                        </ListGroup.Item> */}
+                                            </ListGroup.Item> */}
                                             <ListGroup.Item action href="#link4">
                                                 Settings
                                         </ListGroup.Item>
@@ -221,7 +222,7 @@ class UserAccount extends Component {
                                                     <Col sm={12}>
                                                         {this.props.user.incognito === 1 ? (
                                                             <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserSecret /> Incognito</p></React.Fragment>
-                                                        ) : <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserTie /> Visible</p></React.Fragment>}
+                                                            ) : <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserTie /> Visible</p></React.Fragment>}
                                                         <Form style={{display: 'inline'}} onSubmit={e => this.handleSubmit(e)}>
                                                             <Button style={{ marginLeft: '7px', borderRadius: '20px' }} type="submit" variant="warning">
                                                                 Change
@@ -278,6 +279,7 @@ class UserAccount extends Component {
                     </div>
                 ) : <CompanyAccount />}
             </div>
+</React.Fragment>
         )
     }
 }

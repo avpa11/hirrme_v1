@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import FormExperience from '../reusable/FormExperience';
-
+import Video from '../components/Video2';
 import Button from 'react-bootstrap/Button';
 
 import { withAuthorization } from './Session';
@@ -30,6 +30,8 @@ class CreateExperienceForm extends Component {
 
     render () {
         return (
+            <React.Fragment>
+                <Video />
             <div className="container registerCard" style={{ marginTop: "120px", marginBottom: "500px" }}>
                 <div className="container">
                     <h1>Last step</h1>
@@ -41,6 +43,7 @@ class CreateExperienceForm extends Component {
                     </div>
                 </div>
             </div>
+                        </React.Fragment>
         )
     }
 

@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import Button from 'react-bootstrap/Button';
-
+import Video from '../components/Video2';
 import FormEducation from '../reusable/FormEducation';
 
 const Education = () => (
@@ -29,6 +29,8 @@ class CreateEducationForm extends Component {
 
     render () {
         return (
+            <React.Fragment>
+                <Video />
             <div className="container registerCard" style={{ marginTop: "120px", marginBottom: "500px" }}>
                 <div className="container">
                     <h1>Almost done</h1>
@@ -41,6 +43,7 @@ class CreateEducationForm extends Component {
 
                 </div>
             </div>
+                            </React.Fragment>
         )
     }
 
