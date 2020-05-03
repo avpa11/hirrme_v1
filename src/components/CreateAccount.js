@@ -32,7 +32,7 @@ class CreateAccount extends Component {
 
         return (
             <div>
-                <div id="mainPlaceholder" className="container rectangle registerect container" style={{ marginTop: "120px" }} >
+                <div id="mainPlaceholder" className="container rectangle registerect container" style={{ marginTop: "120px", height: 'fit-content' }} >
                     <h1 className="center" style={{marginTop: '50px' }}>Tell us who you are</h1>
 
                     <Row className="center" style={{marginTop: '80px' }}>

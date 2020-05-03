@@ -13,7 +13,7 @@ import { compose } from 'recompose';
 import { connect } from 'react-redux';
 
 const ChangeProfileImage = () => (
-    <ProfileImage />
+    <CompanyImage />
 )
 
 const initState = {
@@ -64,7 +64,7 @@ class CreateProfileImage extends Component {
                 .then(url => {
                     this.setState({ url });
                     
-                    this.props.firebase.user(this.props.userKey).update({
+                    this.props.firebase.company(this.props.companyKey).update({
                       profileImage: this.state.url
                   })
                 })
@@ -81,9 +81,10 @@ class CreateProfileImage extends Component {
                     {/* { (this.props.user!== null && this.props.user!== undefined) ?  */}
                     
                         <Form onSubmit={e => this.handleImageUpload(e, this.props.authUser)}>
-                            { (this.props.user!== null && this.props.user!== undefined) ?
+                            <div className="center">
+                            { (this.props.company!== null && this.props.company!== undefined) ?
                             (<img
-                                src={this.state.url ||  this.props.user.profileImage || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                                src={this.state.url ||  this.props.company.profileImage || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
                                 alt="Uploaded Profile"
                                 width="100"
                                 />) : (
@@ -104,13 +105,15 @@ class CreateProfileImage extends Component {
                                     }
                                     <FormControl type="file" onChange={this.handleImage} ></FormControl>
                             <br />
-                            {this.state.progress !== 100 ? (
-                            <Button disabled={this.props.user == null} type="submit" variant="warning">
-                                Upload a photo
-                            </Button>
-                            ) : <Button disabled={this.props.user == null} type="submit" variant="warning">
-                                Change the photo
-                                </Button>}
+                            
+                                {this.state.progress !== 100 ? (
+                                <Button disabled={this.props.company == null} type="submit" variant="warning">
+                                    Upload a photo
+                                </Button>
+                                ) : <Button disabled={this.props.company == null} type="submit" variant="warning">
+                                    Change the photo
+                                    </Button>}
+                            </div>
                         </Form>
                         {/* : null
                     } */}
@@ -121,13 +124,13 @@ class CreateProfileImage extends Component {
 
 const mapStateToProps = (state, props) => ({
     authUser: state.sessionState.authUser,
-    user: (state.userState.user || {})[Object.keys(state.userState.user  || {})],
-    userKey: Object.keys(state.userState.user || {})
+    company: (state.loggedCompanyState.loggedCompany || {})[Object.keys(state.loggedCompanyState.loggedCompany  || {})],
+    companyKey: Object.keys(state.loggedCompanyState.loggedCompany || {})
 });
 
-const ProfileImage = compose(connect(mapStateToProps), withFirebase)(CreateProfileImage);
+const CompanyImage = compose(connect(mapStateToProps), withFirebase)(CreateProfileImage);
 const condition = authUser => !!authUser;
 
 export default  withAuthorization(condition)(ChangeProfileImage);
 
-export { ProfileImage };
+export { CompanyImage };

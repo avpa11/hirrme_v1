@@ -2,8 +2,6 @@ import React, { Component }  from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 import { withRouter } from 'react-router-dom';
 import { withAuthorization } from '../components/Session';
@@ -49,6 +47,8 @@ class CreateCompanyForm extends Component {
                 city: this.state.companyCity,
                 province: this.state.companyProvince,
                 country: this.state.companyCountry,
+                profileImage: (this.props.loggedCompany!== null && this.props.loggedCompany!== undefined) ? this.props.loggedCompany.profileImage : null
+
             })
                 .then(() => {
                     this.setState({...initState})
@@ -74,9 +74,9 @@ class CreateCompanyForm extends Component {
                             });
                     })
                 })
-                .then(() => {
-                    this.props.history.push('/useraccount#link1');
-                })
+                // .then(() => {
+                //     this.props.history.push('/useraccount#link1');
+                // })
                 .catch(error => console.log(error));
         } else {
             // this adds a user object with a key and stores uid as userId field inside
@@ -109,9 +109,9 @@ class CreateCompanyForm extends Component {
                             });
                     })
                 })
-                .then(() => {
-                    this.props.history.push('/useraccount#link1');
-                })
+                // .then(() => {
+                //     this.props.history.push('/useraccount#link1');
+                // })
                 .catch(error => console.log(error));
         }
 
@@ -146,24 +146,25 @@ class CreateCompanyForm extends Component {
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
                 style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                    <Row>
-                        <Col sm={6}>
-                            <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder="Name"></FormControl>
-                            <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder="Field"></FormControl>
-                            <FormControl type="text" value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder="Description"></FormControl>
-                            <FormControl type="text" value={companyDirector} onChange={this.handleChange} name="companyDirector" placeholder="Director"></FormControl>
-                        </Col>
-                        <Col sm={6}>
-                            <FormControl type="text" value={companyCity} onChange={this.handleChange} name="companyCity" placeholder="City"></FormControl>
-                            <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="Province"></FormControl>
-                            <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="Country"></FormControl>
-                        </Col>
-                    </Row>
-                    <div className="center" style={{marginTop: "50px", paddingBottom: '50px'}}>
+                    <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder="Name"></FormControl>
+                    <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder="Field"></FormControl>
+                    <FormControl type="text" value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder="Description"></FormControl>
+                    <FormControl type="text" value={companyDirector} onChange={this.handleChange} name="companyDirector" placeholder="Director"></FormControl>
+                    <FormControl type="text" value={companyCity} onChange={this.handleChange} name="companyCity" placeholder="City"></FormControl>
+                    <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="Province"></FormControl>
+                    <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="Country"></FormControl>
+                    {/* <div className="center" style={{marginTop: "50px", paddingBottom: '50px'}}>
                         <Button type="submit" className="loginButton" variant="warning">
                             Register
                         </Button>
-                    </div> 
+                    </div>  */}
+                    <Button type="submit" variant="warning">
+                    {(this.props.loggedCompany!== null && this.props.loggedCompany!== undefined) ? 
+                        'Change'
+                        :
+                        'Next'
+                    } 
+                </Button>
             </Form>
         )
     }
