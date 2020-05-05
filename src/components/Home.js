@@ -14,22 +14,25 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import Carousel from 'react-elastic-carousel';
 
+import cardStyle from '../styles/HomePageCardsStyle.module.css';
+import JobSeekerStyle from '../styles/JobSeekerStyle.module.css';
+
+
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            vacanciesTitle: [],
-            sector: [],
-            type: [],
-            salaryType: [],
-            salary: [],
-            firstName: [],
-            lastName: [],
-            title: [],
-            email: [],
-            city: [],
-            province: [],
-            country: [],
+            v_Title: [],
+            v_Type: [],
+            v_City: [],
+            v_Province: [],
+            v_Country: [],
+            js_FirstName: [],
+            js_LastName: [],
+            js_Province: [],
+            js_City: [],
+            js_Title: [],
+            js_ProfileImage: [],
             searchParameterVacancies: '',
             searchParameterJobSeekers: '',
         };
@@ -62,14 +65,13 @@ class Home extends Component {
         vacanciesRef.on('value', snap => {
             snap.forEach(snap1 => {
                 snap1.forEach(snap2 => {
-
                     this.setState(state => {
-                        const vacanciesTitle = state.vacanciesTitle.concat(snap2.child('positionTitle').val());
-                        const sector = state.sector.concat(snap2.child('sector').val());
-                        const type = state.type.concat(snap2.child('type').val());
-                        const salaryType = state.salaryType.concat(snap2.child('salaryType').val());
-                        const salary = state.salary.concat(snap2.child('salary').val());
-                        return { vacanciesTitle, sector, type, salaryType, salary }
+                        const v_Title = state.v_Title.concat(snap2.child('positionTitle').val());
+                        const v_Type = state.v_Type.concat(snap2.child('type').val());
+                        const v_City = state.v_City.concat(snap2.child('city').val());
+                        const v_Province = state.v_Province.concat(snap2.child('province').val());
+                        const v_Country = state.v_Country.concat(snap2.child('counrty').val());
+                        return { v_Title, v_Type, v_City, v_Province, v_Country }
                     });
                 })
             })
@@ -82,15 +84,23 @@ class Home extends Component {
         jobSeekersRef.on('value', snap => {
             snap.forEach(snap1 => {
 
+                let profilePicture;
+
+                if (snap1.child('profileImage').val() !== null) {
+                    profilePicture = snap1.child('profileImage').val();
+                }
+                else {
+                    profilePicture = 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png';
+                }
+
                 this.setState(state => {
-                    const firstName = state.firstName.concat(snap1.child('firstName').val());
-                    const lastName = state.lastName.concat(snap1.child('lastName').val());
-                    const title = state.title.concat(snap1.child('title').val());
-                    const email = state.email.concat(snap1.child('email').val());
-                    const city = state.city.concat(snap1.child('city').val());
-                    const province = state.province.concat(snap1.child('province').val());
-                    const country = state.country.concat(snap1.child('country').val());
-                    return { firstName, lastName, title, email, city, province, country }
+                    const js_FirstName = state.js_FirstName.concat(snap1.child('firstName').val());
+                    const js_LastName = state.js_LastName.concat(snap1.child('lastName').val());
+                    const js_Title = state.js_Title.concat(snap1.child('title').val());
+                    const js_City = state.js_City.concat(snap1.child('city').val());
+                    const js_Province = state.js_Province.concat(snap1.child('province').val());
+                    const js_ProfileImage = state.js_ProfileImage.concat(profilePicture);
+                    return { js_FirstName, js_LastName, js_City, js_Province, js_Title, js_ProfileImage }
                 });
             })
         })
@@ -168,17 +178,13 @@ class Home extends Component {
                         <Carousel breakPoints={this.breakPoints}>
                             {Array.apply(null, Array(6)).map(function (item, i) {
                                 return (
-                                    <div className="rectangle" style={{ padding: '1em 1em 2em 1em' }} key={i}>
-                                        <div className="card_inside" style={{ margin: 'auto', display: 'table', textAlign: 'left', verticalAlign: 'center' }}>
-                                            <p style={{ fontWeight: "bold" }}>{this.state.vacanciesTitle[i] ? this.state.vacanciesTitle[i] : "Coming soon"}</p>
-                                            <p className="cardText">Sector: {this.state.sector[i] ? this.state.sector[i] : "Coming soon"}</p>
-                                            <p className="cardText">Type: {this.state.type[i] ? this.state.type[i] : "Coming soon"}</p>
-                                            <p className="cardText">Salary Type: {this.state.salaryType[i] ? this.state.salaryType[i] : "Coming soon"}</p>
-                                            <p className="cardText">Salary: ${this.state.salary[i] ? this.state.salary[i] : "Coming soon"}</p>
-                                            <Nav>
-                                                <Nav.Link as={Link} to="/vacancies"><Button variant="primary" size="sm">View vacancy</Button> </Nav.Link>
-                                            </Nav>
-                                        </div>
+                                    <div className={cardStyle.card} key={i}>
+                                        <VacancyFromHomePage
+                                            type={this.state.v_Type[i]}
+                                            title={this.state.v_Title[i]}
+                                            city={this.state.v_City[i]}
+                                            province={this.state.v_Province[i]}
+                                            country={this.state.v_Country[i]} />
                                     </div>
                                 );
                             }, this)}
@@ -201,16 +207,14 @@ class Home extends Component {
                         <Carousel breakPoints={this.breakPoints}>
                             {Array.apply(null, Array(6)).map(function (item, i) {
                                 return (
-                                    <div className="rectangle" style={{ padding: '1em 1em 2em 1em' }} key={i}>
-                                        <div className="card_inside" style={{ margin: 'auto', display: 'table', textAlign: 'left', verticalAlign: 'center' }}>
-                                            <p style={{ fontWeight: "bold" }}>{this.state.firstName[i]} {this.state.lastName[i]}</p>
-                                            <p className="cardText">Title: {this.state.title[i]}</p>
-                                            <p className="cardText">Email: {this.state.email[i]}</p>
-                                            <p className="cardText">From: {this.state.city[i]}</p>
-                                            <Nav>
-                                                <Nav.Link as={Link} to="/jobseekers"><Button variant="primary" size="sm">View profile</Button> </Nav.Link>
-                                            </Nav>
-                                        </div>
+                                    <div className={cardStyle.card} key={i}>
+                                        <JobSeekerFromHomePage
+                                            firstName={this.state.js_FirstName[i]}
+                                            lastName={this.state.js_LastName[i]}
+                                            city={this.state.js_City[i]}
+                                            title={this.state.js_Title[i]}
+                                            province={this.state.js_Province[i]}
+                                            profileImage={this.state.js_ProfileImage[i]} />
                                     </div>
                                 );
                             }, this)}
@@ -257,6 +261,51 @@ class Home extends Component {
         )
     }
 }
+
+const VacancyFromHomePage = (props) => {
+
+    // Will be replaced by proper company names and images in future
+
+    let randomCompanies = {
+        img: [require('../img/google.png'), require('../img/twitter.png'), require('../img/instagram.png')],
+        name: ['Google Inc.', 'Twitter', 'Instagram']
+    }
+
+    let randomNum = Math.floor(Math.random() * 3);
+
+    return (
+        <div>
+            <Nav.Link as={Link} to="/vacancies" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}>
+                <p id={cardStyle.orangeText}>#{props.type}</p>
+                <h4>{props.title}</h4>
+                <p>{props.city}, {props.province}</p>
+                <p><img id={cardStyle.icon} src={randomCompanies.img[randomNum]} alt={randomCompanies.img[randomNum]}></img> {randomCompanies.name[randomNum]}</p>
+            </Nav.Link>
+        </div>
+    );
+};
+
+const JobSeekerFromHomePage = (props) => {
+
+    // No such a thing in user profile ¯\_(ツ)_/¯
+
+    let randomWorkTypes = {
+        types: ['full-time', 'part-time', 'contract']
+    }
+
+    let randomNum = Math.floor(Math.random() * 3);
+
+    return (
+        <div>
+            <Nav.Link as={Link} to="/jobSeekers/" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}>
+                <p id={cardStyle.orangeText}>#{randomWorkTypes.types[randomNum]}</p>
+                <h4>{props.firstName} {props.lastName}</h4>
+                <p>{props.title}</p>
+                <p><img id={cardStyle.icon} src={props.profileImage}></img>{props.city}, {props.province}</p>
+            </Nav.Link>
+        </div>
+    );
+};
 
 const mapStateToProps = state => ({
     users: Object.keys(state.usersState.users || {}).map(key => ({

@@ -128,25 +128,19 @@ class JobSeekers extends Component {
         return (
             <React.Fragment>
                 <Video />
-            <div className="container" style={{ marginTop: "120px" }}>
-                <h4 className="text-center">Job Seekers</h4>
-                {loading && <div>Loading ...</div>}
-                <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                    <div className="input-group-prepend col-6 col-sm-7" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
-                        <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder=" &#xF002; Keyword or Title" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
-                    </div>
-                    <div className="input-group-prepend col-6 col-sm-5">
-                        <FormControl disabled={true} type="text" placeholder=" &#xf015; BC, Canada" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
-                    </div>
-                    {/* <Button variant="warning"
-                        type="submit"
-                        disabled={true}>
-                        Search
-                    </Button> */}
-                </Form>
-                <p id='jobSeekersList'></p>
-            </div>
-                        </React.Fragment>
+                <div className="container" style={{ marginTop: "120px", minWidth: '20%' }}>
+                    {loading && <div>Loading ...</div>}
+                    <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                        <div className="input-group-prepend col-6 col-sm-7" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
+                            <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder=" &#xF002; Keyword or Title" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
+                        </div>
+                        <div className="input-group-prepend col-6 col-sm-5">
+                            <FormControl disabled={true} type="text" placeholder=" &#xf015; BC, Canada" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
+                        </div>
+                    </Form>
+                    <p id='jobSeekersList'></p>
+                </div>
+            </React.Fragment>
         )
     }
 }
@@ -158,6 +152,19 @@ class JobSeekerObject extends Component {
         this.state = {
             isLikeDisabled: true,
             likeStatus: 'Like',
+            displayStatus: "Expand",
+            display: "none"
+        }
+    }
+
+    showAllInfo = () => {
+        if (this.state.display === 'none') {
+            this.setState({ display: "contents" });
+            this.setState({ displayStatus: "Hide" })
+
+        } else {
+            this.setState({ display: "none" });
+            this.setState({ displayStatus: "Expand" })
         }
     }
 
@@ -236,28 +243,60 @@ class JobSeekerObject extends Component {
             borderRadius: '10em'
         }
 
+        let iconStyle = {
+            width: '1em',
+            height: '1em',
+            marginRight: '0.5em'
+        }
+
         return (
-            <div style={{ display: 'table' }}>
-                <div style={{ float: 'left', margin: '0 2em 0 1em' }}>
-                    <img style={imageStyle} src={
-                        userData.profileImage ?
-                            userData.profileImage :
-                            'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
-                        alt=''>
-                    </img>
+            <div onClick={this.showAllInfo} style={{ marginBottom: '1em'}} >
+                {/* <div style={{ display: 'table' }}> */}
+                <div>
+                    <div style={{ float: 'left', width: '15%', height: '80%', padding: '1em', borderRight: '1px solid grey' }}>
+                        <img style={imageStyle} src={
+                            userData.profileImage ?
+                                userData.profileImage :
+                                'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                            alt=''>
+                        </img>
+                    </div>
+                    <div style={{ width: '75%', marginLeft: '15%', paddingLeft: '2em', textAlign: 'left' }}>
+                        <h4>{userData.firstName} {userData.lastName} - {userData.title}</h4>
+                        <h5>{userData.city}, {userData.province}</h5>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse</p>
+                        <h6></h6>
+                    </div>
+
                 </div>
-                <div style={{ float: 'left', maxWidth: '25em', minWidth: '25em', margin: '0 2em', textAlign: 'left' }}>
-                    <h4>{userData.firstName} {userData.lastName}</h4>
-                    <h5>{userData.title}</h5>
-                    <h5>{userData.email}</h5>
-                    <h6>{userData.city}, {userData.province}, {userData.country}</h6>
+                <br />
+                <div style={{ display: this.state.display}}>
+
+                    <div style={{ float: 'left', width: '50%', paddingLeft: '1em'}}>
+                        <div style={{ paddingLeft: '3%', textAlign: 'left' }}>
+                            <h5>
+                                <img src={require('../img/work.png')} style={iconStyle}></img>
+                            School of business
+                    </h5>
+                            <h5>
+                                <img src={require('../img/school.png')} style={iconStyle}></img>
+                                {userData.title} at Google Inc.
+                    </h5>
+                        </div>
+                    </div>
+                    <div style={{ width: '75%', marginLeft: '15%', paddingLeft: '2em', textAlign: 'right' }}>
+                        <Button variant="primary" onClick={this.goToProfile}>View Profile</Button>
+                    </div>
+
+
+                    {/* <Button variant="primary" onClick={this.goToProfile}>View Profile</Button> <span />
+                        <Button variant="primary">Send Email</Button> <span />
+                        <Button variant="primary">Invite</Button> <span />
+                        <Button onClick={e => this.handleLike(e)} variant="danger" disabled={this.state.isLikeDisabled}>{this.state.likeStatus}</Button> */}
                 </div>
-                <div style={{ float: 'left', margin: '0 2em' }}>
-                    <Button variant="primary" onClick={this.goToProfile}>View Profile</Button> <span />
-                    <Button variant="primary">Send Email</Button> <span />
-                    <Button variant="primary">Invite</Button> <span />
-                    <Button onClick={e => this.handleLike(e)} variant="danger" disabled={this.state.isLikeDisabled}>{this.state.likeStatus}</Button>
-                </div>
+
+
+
             </div>
         )
     }

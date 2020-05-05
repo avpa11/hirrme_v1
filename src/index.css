@@ -196,11 +196,20 @@ input[type="email"]:focus,
 }
 
 /* nav bar */
-.nav-link, .loginButton {
+.loginButton {
   color: black !important;
   font-family: 'Varela Round' !important;
   font-size: 18px !important;
   margin: 0 20px;
+}
+
+.nav-link {
+  color: black;
+  text-decoration: none;
+}
+
+a.nav-link {
+  color: black
 }
 
 .logoutButton {
@@ -374,6 +383,7 @@ p>a:hover {
   padding: 1em;
   border-radius: 10px;
   background-color: rgba(161, 156, 156, 0.5);
+  height: auto;
 
 }
 
@@ -436,13 +446,6 @@ p>a:hover {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
 }
 
-.card_inside {
-  width: 202px; 
-  height:157px; 
-  box-shadow :0px 4px 4px rgba(0, 0, 0, 0.25); 
-  border-radius:0px
-}
-
 .rectangle{
   background-color: white;  
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -452,6 +455,16 @@ p>a:hover {
   width: 16em;
   height: 13em;
   font-family: "Nunito","Varela"!important
+}
+
+.card_inside {
+  margin: 0 auto; 
+  display: inline; 
+  margin: 20px;
+  margin: auto;
+  display: table;
+  text-align: left;
+  vertical-align: center;
 }
 
 .searchForm {
