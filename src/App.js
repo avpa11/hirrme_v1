@@ -14,6 +14,7 @@ import Vacancies from './components/Vacancies';
 import savedVacancies from './components/SavedVacancies';
 import VacanciesApplicants from './components/VacanciesApplicants';
 import JobSeekerPublicProfile from './components/JobSeekerPublicProfile';
+import PasswordForget from './components/PasswordForget';
 // import CompanyAccount from "./components/CompanyAccount";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -40,6 +41,7 @@ class App extends Component {
             <Route path='/experience' component={Experience} />
             <Route path='/applicants' component={VacanciesApplicants} />
             <Route path='/profile/:id' component={JobSeekerPublicProfile} />
+            <Route path='/pw-reset' component={PasswordForget} />
           </div>  
         </BrowserRouter>    
     )

@@ -174,7 +174,6 @@ class CompanyAccount extends Component {
                                         <p style={{ color: 'rgb(155,155,155)' }}>
                                             <span> {this.state.company.field}</span>
                                         </p>
-                                        <p>Director - {this.state.company.director}</p>
                                         <Button onClick={this.showAllInfo} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
                                                 Change Profile
                                         </Button>

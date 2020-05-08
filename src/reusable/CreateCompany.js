@@ -19,7 +19,6 @@ const initState = {
     companyName: '',
     companyField: '',
     companyDesrciption: '',
-    companyDirector: '',
     companyCity: '',
     companyProvince: 'BC',
     companyCountry: 'Canada'
@@ -43,7 +42,6 @@ class CreateCompanyForm extends Component {
                 field: this.state.companyField,
                 email: authUser.email,
                 desrciption: this.state.companyDesrciption,
-                director: this.state.companyDirector,
                 city: this.state.companyCity,
                 province: this.state.companyProvince,
                 country: this.state.companyCountry,
@@ -86,7 +84,6 @@ class CreateCompanyForm extends Component {
                 field: this.state.companyField,
                 email: authUser.email,
                 desrciption: this.state.companyDesrciption,
-                director: this.state.companyDirector,
                 city: this.state.companyCity,
                 province: this.state.companyProvince,
                 country: this.state.companyCountry,
@@ -141,7 +138,7 @@ class CreateCompanyForm extends Component {
     render () {
         // console.log(this.props);
         // console.log(this.props.loggedCompanyKey[0]);
-        const { companyName, companyField, companyDesrciption, companyDirector, companyCity, companyProvince, companyCountry } = this.state;
+        const { companyName, companyField, companyDesrciption, companyCity, companyProvince, companyCountry } = this.state;
         return (
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
@@ -149,7 +146,6 @@ class CreateCompanyForm extends Component {
                     <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder="Name"></FormControl>
                     <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder="Field"></FormControl>
                     <FormControl type="text" value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder="Description"></FormControl>
-                    <FormControl type="text" value={companyDirector} onChange={this.handleChange} name="companyDirector" placeholder="Director"></FormControl>
                     <FormControl type="text" value={companyCity} onChange={this.handleChange} name="companyCity" placeholder="City"></FormControl>
                     <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="Province"></FormControl>
                     <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="Country"></FormControl>
