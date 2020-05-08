@@ -285,7 +285,7 @@ const VacancyFromHomePage = (props) => {
                 <p id={cardStyle.orangeText}>#{props.type}</p>
                 <h5>{props.title}</h5>
                 <p>{props.city}{props.province ? ', ' + props.province : ''}</p>
-                <p><img id={cardStyle.icon} src={props.companyImage ? props.companyImage : require('../img/companyIcon.png')}></img> {props.companyName}</p>
+                <p><img id={cardStyle.icon} src={props.companyImage ? props.companyImage : require('../img/companyIcon.png')} alt='img.png'></img> {props.companyName}</p>
             </Nav.Link>
         </div>
     );
@@ -307,7 +307,7 @@ const JobSeekerFromHomePage = (props) => {
                 <p id={cardStyle.orangeText}>#{randomWorkTypes.types[randomNum]}</p>
                 <h5>{props.firstName} {props.lastName}</h5>
                 <p>{props.title}</p>
-                <p><img id={cardStyle.icon} src={props.profileImage}></img>{props.city}{props.province ? ', ' + props.province : ''}</p>
+                <p><img id={cardStyle.icon} src={props.profileImage} alt='img.png'></img>{props.city}{props.province ? ', ' + props.province : ''}</p>
             </Nav.Link>
         </div>
     );
