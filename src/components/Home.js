@@ -27,6 +27,8 @@ class Home extends Component {
             v_City: [],
             v_Province: [],
             v_Country: [],
+            v_CompanyName: [],
+            v_CompanyImage: [],
             js_FirstName: [],
             js_LastName: [],
             js_Province: [],
@@ -61,19 +63,30 @@ class Home extends Component {
     }
 
     displayVacancies = () => {
+        var companyName, companyImage;
         var vacanciesRef = this.props.firebase.database().child('vacancies').ref;
         vacanciesRef.on('value', snap => {
             snap.forEach(snap1 => {
-                snap1.forEach(snap2 => {
-                    this.setState(state => {
-                        const v_Title = state.v_Title.concat(snap2.child('positionTitle').val());
-                        const v_Type = state.v_Type.concat(snap2.child('type').val());
-                        const v_City = state.v_City.concat(snap2.child('city').val());
-                        const v_Province = state.v_Province.concat(snap2.child('province').val());
-                        const v_Country = state.v_Country.concat(snap2.child('counrty').val());
-                        return { v_Title, v_Type, v_City, v_Province, v_Country }
-                    });
-                })
+                console.log(snap1.key);
+                let ref = this.props.firebase.database().child('companies').orderByChild('companyId').equalTo(snap1.key);
+                ref.once('value', snap2 => {
+                    snap2.forEach(snap3 => {
+                        companyName = snap3.child('name').val();
+                        companyImage = snap3.child('profileImage').val();
+                        snap1.forEach(snap2 => {
+                            this.setState(state => {
+                                const v_Title = state.v_Title.concat(snap2.child('positionTitle').val());
+                                const v_Type = state.v_Type.concat(snap2.child('type').val());
+                                const v_City = state.v_City.concat(snap2.child('city').val());
+                                const v_Province = state.v_Province.concat(snap2.child('province').val());
+                                const v_Country = state.v_Country.concat(snap2.child('counrty').val());
+                                const v_CompanyName = state.v_CompanyName.concat(companyName);
+                                const v_CompanyImage = state.v_CompanyImage.concat(companyImage);
+                                return { v_Title, v_Type, v_City, v_Province, v_Country, v_CompanyName, v_CompanyImage }
+                            });
+                        })
+                    })
+                })                
             })
         })
     }
@@ -184,7 +197,9 @@ class Home extends Component {
                                             title={this.state.v_Title[i]}
                                             city={this.state.v_City[i]}
                                             province={this.state.v_Province[i]}
-                                            country={this.state.v_Country[i]} />
+                                            country={this.state.v_Country[i]}
+                                            companyName={this.state.v_CompanyName[i]}
+                                            companyImage={this.state.v_CompanyImage[i]} />
                                     </div>
                                 );
                             }, this)}
@@ -264,22 +279,13 @@ class Home extends Component {
 
 const VacancyFromHomePage = (props) => {
 
-    // Will be replaced by proper company names and images in future
-
-    let randomCompanies = {
-        img: [require('../img/google.png'), require('../img/twitter.png'), require('../img/instagram.png')],
-        name: ['Google Inc.', 'Twitter', 'Instagram']
-    }
-
-    let randomNum = Math.floor(Math.random() * 3);
-
     return (
         <div>
             <Nav.Link as={Link} to="/vacancies" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}>
                 <p id={cardStyle.orangeText}>#{props.type}</p>
-                <h4>{props.title}</h4>
-                <p>{props.city}, {props.province}</p>
-                <p><img id={cardStyle.icon} src={randomCompanies.img[randomNum]} alt={randomCompanies.img[randomNum]}></img> {randomCompanies.name[randomNum]}</p>
+                <h5>{props.title}</h5>
+                <p>{props.city}{props.province ? ', ' + props.province : ''}</p>
+                <p><img id={cardStyle.icon} src={props.companyImage ? props.companyImage : require('../img/companyIcon.png')}></img> {props.companyName}</p>
             </Nav.Link>
         </div>
     );
@@ -299,9 +305,9 @@ const JobSeekerFromHomePage = (props) => {
         <div>
             <Nav.Link as={Link} to="/jobSeekers/" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}>
                 <p id={cardStyle.orangeText}>#{randomWorkTypes.types[randomNum]}</p>
-                <h4>{props.firstName} {props.lastName}</h4>
+                <h5>{props.firstName} {props.lastName}</h5>
                 <p>{props.title}</p>
-                <p><img id={cardStyle.icon} src={props.profileImage}></img>{props.city}, {props.province}</p>
+                <p><img id={cardStyle.icon} src={props.profileImage}></img>{props.city}{props.province ? ', ' + props.province : ''}</p>
             </Nav.Link>
         </div>
     );
