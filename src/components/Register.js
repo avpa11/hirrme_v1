@@ -56,7 +56,7 @@ class SignUpForm extends Component {
         const invalid = 
             password !== passwordrepeat || password === '' || email === '';
         return (
-            <div className="rectangle registerect container" style={{ marginTop: "120px" }}>
+            <div className="rectangle registerect container" style={{ marginTop: "120px", width: '100%', height: '100%' }}>
                 <div className="container">
                     <h1>Help us get you work/ers</h1>
                     <Form

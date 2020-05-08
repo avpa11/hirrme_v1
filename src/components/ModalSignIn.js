@@ -73,6 +73,7 @@ class SignInForm extends Component {
                                     ) : null}
                                     <FormControl value={email} onChange={this.handleChange} type="text" placeholder="Email" name="email" className="mr-sm-2 col-12 authInputs" id='userSignInEmail' />
                                     <FormControl value={password} onChange={this.handleChange} type="password" placeholder="Password" name="password" className="mr-sm-2 col-12 authInputs" id='userSignInPassword' />
+                                    <p onClick={this.changeVisibility} style={{ fontSize: '14px' }}><Link as={Link} to="/pw-reset">Rest password</Link> </p>
 
                                     <Button disabled={invalid} type="submit" variant="warning" className='authInputs'>
                                         Login
