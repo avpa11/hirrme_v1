@@ -35,6 +35,7 @@ class Home extends Component {
             js_City: [],
             js_Title: [],
             js_ProfileImage: [],
+            js_UserId: [],
             searchParameterVacancies: '',
             searchParameterJobSeekers: '',
         };
@@ -67,7 +68,6 @@ class Home extends Component {
         var vacanciesRef = this.props.firebase.database().child('vacancies').ref;
         vacanciesRef.on('value', snap => {
             snap.forEach(snap1 => {
-                console.log(snap1.key);
                 let ref = this.props.firebase.database().child('companies').orderByChild('companyId').equalTo(snap1.key);
                 ref.once('value', snap2 => {
                     snap2.forEach(snap3 => {
@@ -113,7 +113,8 @@ class Home extends Component {
                     const js_City = state.js_City.concat(snap1.child('city').val());
                     const js_Province = state.js_Province.concat(snap1.child('province').val());
                     const js_ProfileImage = state.js_ProfileImage.concat(profilePicture);
-                    return { js_FirstName, js_LastName, js_City, js_Province, js_Title, js_ProfileImage }
+                    const js_UserId = state.js_UserId.concat(snap1.child('userId').val());
+                    return { js_FirstName, js_LastName, js_City, js_Province, js_Title, js_ProfileImage, js_UserId }
                 });
             })
         })
@@ -229,7 +230,9 @@ class Home extends Component {
                                             city={this.state.js_City[i]}
                                             title={this.state.js_Title[i]}
                                             province={this.state.js_Province[i]}
-                                            profileImage={this.state.js_ProfileImage[i]} />
+                                            profileImage={this.state.js_ProfileImage[i]}
+                                            userId={this.state.js_UserId[i]}
+                                            history={this.props.history} />
                                     </div>
                                 );
                             }, this)}
@@ -277,9 +280,10 @@ class Home extends Component {
     }
 }
 
-const VacancyFromHomePage = (props) => {
+const VacancyFromHomePage = (props) => {    
 
     return (
+        
         <div>
             <Nav.Link as={Link} to="/vacancies" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}>
                 <p id={cardStyle.orangeText}>#{props.type}</p>
@@ -301,14 +305,20 @@ const JobSeekerFromHomePage = (props) => {
 
     let randomNum = Math.floor(Math.random() * 3);
 
+    const goToProfile = () => {
+        props.history.push({
+            pathname: `profile/${props.userId}`            
+        })
+    }
+
     return (
-        <div>
-            <Nav.Link as={Link} to="/jobSeekers/" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}>
+        <div onClick={goToProfile}>
+            {/* <Nav.Link as={Link} to="/jobSeekers/" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}> */}
                 <p id={cardStyle.orangeText}>#{randomWorkTypes.types[randomNum]}</p>
                 <h5>{props.firstName} {props.lastName}</h5>
                 <p>{props.title}</p>
                 <p><img id={cardStyle.icon} src={props.profileImage} alt='img.png'></img>{props.city}{props.province ? ', ' + props.province : ''}</p>
-            </Nav.Link>
+            {/* </Nav.Link> */}
         </div>
     );
 };
