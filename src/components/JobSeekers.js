@@ -51,15 +51,7 @@ class JobSeekers extends Component {
                 userData.firstName.toLowerCase().indexOf(searchParameter) >= 0 ||
                 userData.lastName.toLowerCase().indexOf(searchParameter) >= 0 ||
                 userData.title.toLowerCase().indexOf(searchParameter) >= 0 ||
-                userData.city.toLowerCase().indexOf(searchParameter) >= 0) {
-
-
-
-                // this.props.firebase.educations().child(this.state.profileUid).once('value', snap => {
-                //     snap.forEach(snap1 => {
-                //         this.setState({ education: snap1.child('programName').val() + ', ' + snap1.child('schoolName').val() + ', ' + snap1.child('programType').val() })
-                //     })
-                // })                
+                userData.city.toLowerCase().indexOf(searchParameter) >= 0) {            
 
                 this.props.firebase.database().child('educations/' + userData.userId).limitToFirst(1).on('value', snap => {
                     snap.forEach(snap1 => {
