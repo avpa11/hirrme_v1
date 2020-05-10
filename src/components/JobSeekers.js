@@ -254,7 +254,6 @@ class JobSeekerObject extends Component {
 
         let iconStyle = {
             width: '1em',
-            height: '1em',
             marginRight: '0.5em'
         }
 
@@ -280,7 +279,7 @@ class JobSeekerObject extends Component {
                     <div style={{ fontSize: '130%', textAlign: 'left', display: 'flex', marginTop: '4%', marginLeft: '3%' }}>
                         <div style={{ flex: '1' }}>
                             <img src={require('../img/work.png')} style={iconStyle}></img>{this.props.education}<br />
-                            <img src={require('../img/school.png')} style={iconStyle}></img>{userData.title} at Google Inc.
+                            <img src={require('../img/school.png')} style={iconStyle}></img>{userData.title}
                     </div>
                         <div style={{ width: '18%' }}><Button style={{ background: 'linear-gradient(90deg, #F3565E 0%, #F97F3A 55.85%, #FFAC11 100.21%)', borderColor: 'transparent' }} onClick={this.goToProfile}>View Profile</Button></div>
                         {/* <div></div> */}
