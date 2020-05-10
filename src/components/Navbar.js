@@ -29,9 +29,13 @@ class Navibar extends Component {
       }
     });
   }
+
     render() {
 
-      // const {authUser} = this.props;
+      const linksStyle = {
+        color: 'black',
+        fontSize: '130%'
+      }
 
       return ( 
         <Container>
@@ -45,10 +49,10 @@ class Navibar extends Component {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="justify-content-end">
               <Nav>
-                  <Nav.Link as={Link} to="/">About</Nav.Link>
-                  <Nav.Link as={Link} to="/vacancies">Vacancies</Nav.Link>
-                  <Nav.Link as={Link} to="/jobseekers">Job Seekers</Nav.Link>
-                  <NavHashLink smooth className="nav-link" as={Link} to="/#contactFooter">Contact</NavHashLink>                  
+                  <Nav.Link style={linksStyle} as={Link} to="/">About</Nav.Link>
+                  <Nav.Link style={linksStyle} as={Link} to="/vacancies">Vacancies</Nav.Link>
+                  <Nav.Link style={linksStyle} as={Link} to="/jobseekers">Job Seekers</Nav.Link>
+                  <NavHashLink style={linksStyle} className="nav-link" smooth as={Link} to="/#contactFooter">Contact</NavHashLink>                  
               </Nav>
           {
               this.props.authUser != null ? 

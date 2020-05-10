@@ -53,23 +53,37 @@ class JobSeekers extends Component {
                 userData.title.toLowerCase().indexOf(searchParameter) >= 0 ||
                 userData.city.toLowerCase().indexOf(searchParameter) >= 0) {
 
-                id++;
 
-                var div = document.createElement('div');
-                div.setAttribute('id', id);
-                div.setAttribute('class', 'jobSeeker');
-                if (document.getElementById('jobSeekersList') != null) {
-                    document.getElementById('jobSeekersList').appendChild(div);
 
-                    ReactDOM.render(<JobSeekerObject
-                        userData={userData}
-                        likedUsersData={likedUsersData}
-                        userType={userType}
-                        authUser={this.props.authUser}
-                        firebase={this.props.firebase}
-                        pathHistory={this.props.history}
-                    />, document.getElementById(id));
-                }
+                // this.props.firebase.educations().child(this.state.profileUid).once('value', snap => {
+                //     snap.forEach(snap1 => {
+                //         this.setState({ education: snap1.child('programName').val() + ', ' + snap1.child('schoolName').val() + ', ' + snap1.child('programType').val() })
+                //     })
+                // })                
+
+                this.props.firebase.database().child('educations/' + userData.userId).limitToFirst(1).on('value', snap => {
+                    snap.forEach(snap1 => {
+                        let educationData = snap1.child('programName').val() + ', ' + snap1.child('schoolName').val() + ', ' + snap1.child('programType').val();
+                        id++;
+
+                        var div = document.createElement('div');
+                        div.setAttribute('id', id);
+                        div.setAttribute('class', 'jobSeeker');
+                        if (document.getElementById('jobSeekersList') != null) {
+                            document.getElementById('jobSeekersList').appendChild(div);
+
+                            ReactDOM.render(<JobSeekerObject
+                                userData={userData}
+                                likedUsersData={likedUsersData}
+                                userType={userType}
+                                authUser={this.props.authUser}
+                                firebase={this.props.firebase}
+                                pathHistory={this.props.history}
+                                education={educationData}
+                            />, document.getElementById(id));
+                        }
+                    })
+                })
             }
         })
     }
@@ -102,7 +116,6 @@ class JobSeekers extends Component {
             this.displayJobSeekersWithSearchParameter(this.props.location.searchParameter);
         }
         else {
-
             this.displayJobSeekersWithSearchParameter('')
         }
     }
@@ -128,7 +141,7 @@ class JobSeekers extends Component {
         return (
             <React.Fragment>
                 <Video />
-                <div className="container" style={{ marginTop: "120px", minWidth: '20%' }}>
+                <div className="container" style={{ marginTop: "120px", width: '55%' }}>
                     {loading && <div>Loading ...</div>}
                     <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
                         <div className="input-group-prepend col-6 col-sm-7" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
@@ -153,7 +166,8 @@ class JobSeekerObject extends Component {
             isLikeDisabled: true,
             likeStatus: 'Like',
             displayStatus: "Expand",
-            display: "none"
+            display: "none",
+            education: ''
         }
     }
 
@@ -188,6 +202,8 @@ class JobSeekerObject extends Component {
             });
         }
     }
+
+
 
     handleLike = (e) => {
 
@@ -240,7 +256,8 @@ class JobSeekerObject extends Component {
         let imageStyle = {
             width: '8em',
             height: '8em',
-            borderRadius: '10em'
+            borderRadius: '10em',
+
         }
 
         let iconStyle = {
@@ -250,10 +267,9 @@ class JobSeekerObject extends Component {
         }
 
         return (
-            <div onClick={this.showAllInfo} style={{ marginBottom: '1em'}} >
-                {/* <div style={{ display: 'table' }}> */}
+            <div onClick={this.showAllInfo}>
                 <div>
-                    <div style={{ float: 'left', width: '15%', height: '80%', padding: '1em', borderRight: '1px solid grey' }}>
+                    <div style={{ float: 'left', width: '17%', minWidth: '10em', height: '80%', padding: '1em', borderRight: '1px solid grey', height: "auto" }}>
                         <img style={imageStyle} src={
                             userData.profileImage ?
                                 userData.profileImage :
@@ -261,43 +277,32 @@ class JobSeekerObject extends Component {
                             alt=''>
                         </img>
                     </div>
-                    <div style={{ width: '75%', marginLeft: '15%', paddingLeft: '2em', textAlign: 'left' }}>
+                    <div style={{ width: '80%', marginLeft: '9.5em', marginRight: '1em', paddingLeft: '2em', textAlign: 'left', color: '#686868' }}>
                         <h4>{userData.firstName} {userData.lastName} - {userData.title}</h4>
                         <h5>{userData.city}, {userData.province}</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                         <h6></h6>
                     </div>
-
                 </div>
-                <br />
-                <div style={{ display: this.state.display}}>
-
-                    <div style={{ float: 'left', width: '50%', paddingLeft: '1em'}}>
-                        <div style={{ paddingLeft: '3%', textAlign: 'left' }}>
-                            <h5>
-                                <img src={require('../img/work.png')} style={iconStyle}></img>
-                            School of business
-                    </h5>
-                            <h5>
-                                <img src={require('../img/school.png')} style={iconStyle}></img>
-                                {userData.title} at Google Inc.
-                    </h5>
-                        </div>
+                <div style={{ display: this.state.display }}>
+                    <div style={{ fontSize: '130%', textAlign: 'left', display: 'flex', marginTop: '4%', marginLeft: '3%' }}>
+                        <div style={{ flex: '1' }}>
+                            <img src={require('../img/work.png')} style={iconStyle}></img>{this.props.education}<br />
+                            <img src={require('../img/school.png')} style={iconStyle}></img>{userData.title} at Google Inc.
                     </div>
-                    <div style={{ width: '75%', marginLeft: '15%', paddingLeft: '2em', textAlign: 'right' }}>
-                        <Button variant="primary" onClick={this.goToProfile}>View Profile</Button>
+                        <div style={{ width: '18%' }}><Button style={{ background: 'linear-gradient(90deg, #F3565E 0%, #F97F3A 55.85%, #FFAC11 100.21%)', borderColor: 'transparent' }} onClick={this.goToProfile}>View Profile</Button></div>
+                        {/* <div></div> */}
                     </div>
 
-
-                    {/* <Button variant="primary" onClick={this.goToProfile}>View Profile</Button> <span />
-                        <Button variant="primary">Send Email</Button> <span />
-                        <Button variant="primary">Invite</Button> <span />
-                        <Button onClick={e => this.handleLike(e)} variant="danger" disabled={this.state.isLikeDisabled}>{this.state.likeStatus}</Button> */}
                 </div>
-
-
-
             </div>
+
+            //         {/* <Button variant="primary" onClick={this.goToProfile}>View Profile</Button> <span />
+            //             <Button variant="primary">Send Email</Button> <span />
+            //             <Button variant="primary">Invite</Button> <span />
+            //             <Button onClick={e => this.handleLike(e)} variant="danger" disabled={this.state.isLikeDisabled}>{this.state.likeStatus}</Button> */}
+            //     </div>
+            // </div>
         )
     }
 }

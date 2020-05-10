@@ -200,7 +200,8 @@ class Home extends Component {
                                             province={this.state.v_Province[i]}
                                             country={this.state.v_Country[i]}
                                             companyName={this.state.v_CompanyName[i]}
-                                            companyImage={this.state.v_CompanyImage[i]} />
+                                            companyImage={this.state.v_CompanyImage[i]}
+                                            history={this.props.history} />
                                     </div>
                                 );
                             }, this)}
@@ -282,15 +283,20 @@ class Home extends Component {
 
 const VacancyFromHomePage = (props) => {    
 
-    return (
-        
-        <div>
-            <Nav.Link as={Link} to="/vacancies" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}>
+    const goToVacancy = () => {
+        props.history.push({
+            pathname: `vacancies`            
+        })
+    }
+
+    return (                
+        <div onClick={goToVacancy}>
+            {/* <Nav.Link as={Link} to="/vacancies" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}> */}
                 <p id={cardStyle.orangeText}>#{props.type}</p>
                 <h5>{props.title}</h5>
                 <p>{props.city}{props.province ? ', ' + props.province : ''}</p>
                 <p><img id={cardStyle.icon} src={props.companyImage ? props.companyImage : require('../img/companyIcon.png')} alt='img.png'></img> {props.companyName}</p>
-            </Nav.Link>
+            {/* </Nav.Link> */}
         </div>
     );
 };
