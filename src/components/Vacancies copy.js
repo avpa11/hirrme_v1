@@ -55,49 +55,39 @@ class Vacancies extends Component {
             var companyData = vacanciesData[i];
             k = 0;
 
-            let ref = this.props.firebase.database().child('companies').orderByChild('companyId').equalTo(vacanciesData[i].uid);
-            ref.on('value', snap1 => {
-                snap1.forEach(snap2 => {
-                    let profileImage = snap2.child('profileImage').val();
-                    let companyName = snap2.child('name').val();
+            let key = Object.keys(companyData);
+            for (var vacancy in companyData) {
 
-                    let key = Object.keys(companyData);
-                    for (var vacancy in companyData) {
+                if (companyData[vacancy].hasOwnProperty('positionTitle')) {
+                    if (companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0 ||
+                        companyData[vacancy].sector.toLowerCase().indexOf(searchParameter) >= 0 ||
+                        companyData[vacancy].type.toLowerCase().indexOf(searchParameter) >= 0 ||
+                        companyData[vacancy].city.toLowerCase().indexOf(searchParameter) >= 0 ||
+                        companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0) {
 
-                        if (companyData[vacancy].hasOwnProperty('positionTitle')) {
-                            if (companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0 ||
-                                companyData[vacancy].sector.toLowerCase().indexOf(searchParameter) >= 0 ||
-                                companyData[vacancy].type.toLowerCase().indexOf(searchParameter) >= 0 ||
-                                companyData[vacancy].city.toLowerCase().indexOf(searchParameter) >= 0 ||
-                                companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0) {
+                        id++;
 
-                                id++;
+                        var div = document.createElement('div');
+                        div.setAttribute('id', id);
+                        div.setAttribute('class', 'vacancy');
+                        if (document.getElementById('vacanciesList') != null) {
+                            document.getElementById('vacanciesList').appendChild(div);
 
-                                var div = document.createElement('div');
-                                div.setAttribute('id', id);
-                                div.setAttribute('class', 'vacancy');
-                                if (document.getElementById('vacanciesList') != null) {
-                                    document.getElementById('vacanciesList').appendChild(div);
+                            ReactDOM.render(<VacancyObject
+                                vacancyKey={key[k++]}
+                                companyKey={companyData.uid}
+                                vacancyData={companyData[vacancy]}
+                                savedVacanciesData={savedVacanciesData}
+                                appliedVacanciesData={appliedVacanciesData}
+                                userType={userType}
+                                authUser={this.props.authUser}
+                                firebase={this.props.firebase}
 
-                                    ReactDOM.render(<VacancyObject
-                                        vacancyKey={key[k++]}
-                                        companyKey={companyData.uid}
-                                        vacancyData={companyData[vacancy]}
-                                        savedVacanciesData={savedVacanciesData}
-                                        appliedVacanciesData={appliedVacanciesData}
-                                        userType={userType}
-                                        profileImage={profileImage}
-                                        companyName={companyName}
-                                        authUser={this.props.authUser}
-                                        firebase={this.props.firebase}
-
-                                    />, document.getElementById(id));
-                                }
-                            }
+                            />, document.getElementById(id));
                         }
                     }
-                })
-            })
+                }
+            }
         }
     }
 
@@ -154,25 +144,26 @@ class Vacancies extends Component {
         return (
             <React.Fragment>
                 <Video />
-                <div className="container" style={{ marginTop: "120px", width: '55%' }}>
-                    <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                        <div className="input-group-prepend col-6 col-sm-5" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
-                            <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder=" &#xF002; Keyword or Title" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
-                        </div>
-                        <div className="input-group-prepend col-6 col-sm-4">
-                            <FormControl disabled={true} type="text" placeholder=" &#xf015; BC, Canada" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
-                        </div>
-                        {/* <Button variant="warning"
+            <div className="container" style={{ marginTop: "120px" }}>
+                <h4 className="text-center">Vacancies</h4>
+                <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                    <div className="input-group-prepend col-6 col-sm-5" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
+                        <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder=" &#xF002; Keyword or Title" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
+                    </div>
+                    <div className="input-group-prepend col-6 col-sm-4">
+                        <FormControl disabled={true} type="text" placeholder=" &#xf015; BC, Canada" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
+                    </div>
+                    {/* <Button variant="warning"
                         type="submit"
                         disabled={true}>
                         Search
                     </Button> */}
-                        <Nav className="input-group-prepend col-6 col-sm-3">
-                            <Nav.Link as={Link} to="/savedVacancies"><Button disabled={this.state.savedVacanciesInvisible} className='searchButton' variant="warning" style={{ width: '100%' }}>My Vacancies</Button></Nav.Link>
-                        </Nav>
-                    </Form>
-                    <p id='vacanciesList'></p>
-                </div>
+                    <Nav className="input-group-prepend col-6 col-sm-3">
+                        <Nav.Link as={Link} to="/savedVacancies"><Button disabled={this.state.savedVacanciesInvisible} className='searchButton' variant="warning" style={{width: '100%'}}>Saved Vacancies</Button></Nav.Link>
+                    </Nav>
+                </Form>
+                <p id='vacanciesList'></p>
+            </div>
             </React.Fragment>
         )
     }
@@ -279,6 +270,7 @@ class VacancyObject extends Component {
                     applyStatus: 'Applied',
                     applyVariant: 'success'
                 })
+
             }
         })
     }
@@ -286,9 +278,11 @@ class VacancyObject extends Component {
     showAllInfo = () => {
         if (this.state.display === 'none') {
             this.setState({ display: "contents" });
+            this.setState({ displayButton: "Hide" })
 
         } else {
             this.setState({ display: "none" });
+            this.setState({ displayButton: "Expand" })
         }
     }
 
@@ -327,6 +321,7 @@ class VacancyObject extends Component {
                 this.setState({ hasQuiz: snap.val() })
             })
         }
+
     }
 
     reviewQuiz() {
@@ -386,6 +381,9 @@ class VacancyObject extends Component {
                             )
                         }
                     </div>
+
+
+
                 </div>
             )
             )
@@ -462,137 +460,94 @@ class VacancyObject extends Component {
                 .catch(error => { console.log(error) });
         }
 
-        let imageStyle = {
-            width: '6em',
-            height: '6em',
-            // borderRadius: '10em',
-            marginBottom: '1em'
-
-        }
-
-        let buttonStyle = {
-            width: '7em'
-        }
-
         return (
-            <div onClick={this.showAllInfo}>
-                <div>
-                    <div style={{ float: 'left', width: '17%', minWidth: '10em', height: '80%', padding: '0.5em', marginBottom: '0.5em', borderRight: '1px solid grey' }}>
-                        <img style={imageStyle} src=
-                            {
-                                this.props.profileImage === null ?
-                                    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/McDonald%27s_Golden_Arches.svg/1200px-McDonald%27s_Golden_Arches.svg.png'
-                                    :
-                                    this.props.profileImage
-                            }
-                            alt=''></img>
-                        <div style={{ color: '#686868', fontSize: '120%' }}>{this.props.companyName}</div>
+            <div onclick={() => {alert('hey')}}>
+                <div style={{ display: 'table' }}>
+                    <div style={{ float: 'left', margin: '0 2em 0 1em' }}>
+                        <IoMdPaper size={180} />
                     </div>
-                    {/* <div style={{ width: '80%', marginLeft: '9.5em', marginRight: '1em', paddingLeft: '2em', textAlign: 'left', color: '#686868' }}>
-                        <h4>{vacancyData.positionTitle} </h4>
-                        <h5>{vacancyData.city}, {vacancyData.province}</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    </div> */}
-
-                    <div style={{ textAlign: 'left', display: 'flex', marginLeft: '3%' }}>
-                        <div style={{ flex: '1' }}>
-                            <div style={{ width: '100%', paddingLeft: '2em', textAlign: 'left', color: '#686868' }}>
-                                <h4>{vacancyData.positionTitle} </h4>
-                                <h5>{vacancyData.city}, {vacancyData.province}</h5>
-                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
-                            </div>
-                        </div>
-                        <div style={{ width: '15%', color: '#FFAC11' }}>
-                            #{vacancyData.type}                      
-                            </div>
+                    <div style={{ float: 'left', maxWidth: '25em', minWidth: '25em', margin: '0 2em', textAlign: 'left' }}>
+                        <h4>{vacancyData.positionTitle}</h4>
+                        <h5>{vacancyData.sector}</h5>
+                        <h5>{vacancyData.type}</h5>
+                        <h6>{vacancyData.city}, {vacancyData.province}, {vacancyData.country}</h6>
                     </div>
 
-                </div>
+                    <Modal show={this.state.show} onHide={handleClose} size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered>
+                        <Modal.Header>
+                            <Modal.Title>Want to attach anything?</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            {/* Add styling in the future */}
+                            <div style={{ margin: '0 auto' }}>
+                                <h4>{this.state.modalText}</h4>
+                                <br />
 
-                <Modal show={this.state.show} onHide={handleClose} size="lg"
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered>
-                    <Modal.Header>
-                        <Modal.Title>Want to attach anything?</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        {/* Add styling in the future */}
-                        <div style={{ margin: '0 auto' }}>
-                            <h4>{this.state.modalText}</h4>
-                            <br />
-
-                            <Form onSubmit={e => this.handleFileUpload(e, this.props.authUser)}>
-                                <input type="file" onChange={this.handleFile}></input>
-                                {
-                                    this.state.progress !== 100 ? <ProgressBar animated now={this.state.progress} /> : <ProgressBar now={this.state.progress} />
-                                }
-                                <Button type="submit" variant="warning">
-                                    Upload a file
+                                <Form onSubmit={e => this.handleFileUpload(e, this.props.authUser)}>
+                                    <input type="file" onChange={this.handleFile}></input>
+                                    {
+                                        this.state.progress !== 100 ? <ProgressBar animated now={this.state.progress} /> : <ProgressBar now={this.state.progress} />
+                                    }
+                                    <Button type="submit" variant="warning">
+                                        Upload a file
                                     </Button>
-                            </Form>
-                        </div>
-                        <div style={{ textAlign: 'right' }}>
-                            <Button variant="secondary" onClick={handleClose} style={{ margin: '0.25em' }}>
-                                Close
-                            </Button>
-                            <Button variant="primary" onClick={applyForJob} >
-                                Apply
-                            </Button>
-                        </div>
-                    </Modal.Body>
-                </Modal>
-
-                <Modal show={this.state.quiz} onHide={handleQuizClose} size="lg"
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered>
-                    <Modal.Header>
-                        <Modal.Title>Take a quiz</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Form onSubmit={e => this.handleQuizSubmit(e, this.props.authUser)}>
-                            {this.reviewQuiz()}
+                                </Form>
+                            </div>
                             <div style={{ textAlign: 'right' }}>
-                                <Button variant="warning" type="submit" >
-                                    Submit a quiz
-                                    </Button>
-                                <Button onClick={handleQuizClose} variant="secondary" style={{ margin: '0.25em' }}>
+                                <Button variant="secondary" onClick={handleClose} style={{ margin: '0.25em' }}>
                                     Close
+                            </Button>
+                                <Button variant="primary" onClick={applyForJob} >
+                                    Apply
+                            </Button>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+
+                    <Modal show={this.state.quiz} onHide={handleQuizClose} size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered>
+                        <Modal.Header>
+                            <Modal.Title>Take a quiz</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form onSubmit={e => this.handleQuizSubmit(e, this.props.authUser)}>
+                                {this.reviewQuiz()}
+                                <div style={{ textAlign: 'right' }}>
+                                    <Button variant="warning" type="submit" >
+                                        Submit a quiz
                                     </Button>
-                            </div>
-                        </Form>
-                    </Modal.Body>
-                </Modal>
+                                    <Button onClick={handleQuizClose} variant="secondary" style={{ margin: '0.25em' }}>
+                                        Close
+                                    </Button>
+                                </div>
+                            </Form>
+                        </Modal.Body>
+                    </Modal>
 
-                <div style={{ display: this.state.display, color: '#686868' }}>
-                    <div style={{ textAlign: 'left', display: 'flex', marginTop: '4%', marginLeft: '3%' }}>
-                        <div style={{ flex: '1' }}>
-                            <div>
-                                <div style={{ fontSize: '120%' }}>Responsibilities</div>
-                                <div>{vacancyData.keyResponsibilities}</div>
-                            </div>
-                        </div>
-                        <div style={{ width: '18%' }}>
-                            <Button style={buttonStyle} onClick={e => this.handleLike(e)} variant="danger" disabled={this.state.isSaveDisabled}>{this.state.saveStatus}</Button>
-                        </div>
+                    <div style={{ float: 'left', margin: '0 2em' }}>
+                        <Button onClick={this.showAllInfo} variant="primary">{this.state.displayButton}</Button> <span />
+                        {(this.state.hasQuiz !== null) ?
+                            (<Button onClick={this.state.applyStatus === 'Apply' ? handleQuiz : null} variant={this.state.applyVariant} disabled={this.state.isSaveDisabled}>{this.state.applyStatus}</Button>) :
+                            (<Button onClick={this.state.applyStatus === 'Apply' ? handleShow : null} variant={this.state.applyVariant} disabled={this.state.isSaveDisabled}>{this.state.applyStatus}</Button>)
+                        }
+                        <span />
+                        <Button onClick={e => this.handleLike(e)} variant="danger" style={{marginLeft: '0.25em'}} disabled={this.state.isSaveDisabled}>{this.state.saveStatus}</Button>
                     </div>
-
-                    <div style={{ textAlign: 'left', display: 'flex', marginTop: '2%', marginLeft: '3%' }}>
-                        <div style={{ flex: '1' }}>
-
-                            <div>
-                                <div style={{ fontSize: '120%' }}>Requirements</div>
-                                <div>{vacancyData.requirements}</div>
-                            </div>
-                        </div>
-                        <div style={{ width: '18%' }}>
-                            {(this.state.hasQuiz !== null) ?
-                                (<Button style={buttonStyle} onClick={this.state.applyStatus === 'Apply' ? handleQuiz : null} variant={this.state.applyVariant} disabled={this.state.isSaveDisabled}>{this.state.applyStatus}</Button>) :
-                                (<Button style={buttonStyle} onClick={this.state.applyStatus === 'Apply' ? handleShow : null} variant={this.state.applyVariant} disabled={this.state.isSaveDisabled}>{this.state.applyStatus}</Button>)
-                            }
-                            <span />
-                        </div>
+                </div>
+                <div style={{ display: this.state.display, textAlign: 'left' }}>
+                    <div style={{ margin: '2em' }}>
+                        <h4>Description</h4>
+                        <h6>{vacancyData.description}</h6>
+                        <h4>Responsibilities</h4>
+                        <h6>{vacancyData.keyResponsibilities}</h6>
+                        <h4>Requirements</h4>
+                        <h6>{vacancyData.requirements}</h6>
+                        <h4>Salary</h4>
+                        <h6>{vacancyData.salary}</h6>
                     </div>
-
                 </div>
             </div>
         )

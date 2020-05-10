@@ -272,7 +272,6 @@ class JobSeekerObject extends Component {
                         <h4>{userData.firstName} {userData.lastName} - {userData.title}</h4>
                         <h5>{userData.city}, {userData.province}</h5>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                        <h6></h6>
                     </div>
                 </div>
                 <div style={{ display: this.state.display }}>
@@ -282,7 +281,6 @@ class JobSeekerObject extends Component {
                             <img src={require('../img/school.png')} style={iconStyle}></img>{userData.title}
                     </div>
                         <div style={{ width: '18%' }}><Button style={{ background: 'linear-gradient(90deg, #F3565E 0%, #F97F3A 55.85%, #FFAC11 100.21%)', borderColor: 'transparent' }} onClick={this.goToProfile}>View Profile</Button></div>
-                        {/* <div></div> */}
                     </div>
 
                 </div>
