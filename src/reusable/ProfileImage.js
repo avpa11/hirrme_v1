@@ -81,6 +81,7 @@ class CreateProfileImage extends Component {
                     {/* { (this.props.user!== null && this.props.user!== undefined) ?  */}
                     
                         <Form onSubmit={e => this.handleImageUpload(e, this.props.authUser)}>
+                    <div className="center">
                             { (this.props.user!== null && this.props.user!== undefined) ?
                             (<img
                                 src={this.state.url ||  this.props.user.profileImage || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
@@ -103,14 +104,15 @@ class CreateProfileImage extends Component {
                                         // null
                                     }
                                     <FormControl type="file" onChange={this.handleImage} ></FormControl>
-                            <br />
+                            {/* <br /> */}
                             {this.state.progress !== 100 ? (
-                            <Button disabled={this.props.user == null} type="submit" variant="warning">
+                            <Button className="center" disabled={this.props.user == null} type="submit" variant="warning">
                                 Upload a photo
                             </Button>
                             ) : <Button disabled={this.props.user == null} type="submit" variant="warning">
                                 Change the photo
                                 </Button>}
+                            </div>
                         </Form>
                         {/* : null
                     } */}

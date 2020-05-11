@@ -104,7 +104,7 @@ class CreateProfileImage extends Component {
                                         // null
                                     }
                                     <FormControl type="file" onChange={this.handleImage} ></FormControl>
-                            <br />
+                            {/* <br /> */}
                             
                                 {this.state.progress !== 100 ? (
                                 <Button disabled={this.props.company == null} type="submit" variant="warning">

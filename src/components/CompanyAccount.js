@@ -17,6 +17,7 @@ import { FaBriefcase } from "react-icons/fa";
 import { connect } from 'react-redux';
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import CompanyForm from '../reusable/CreateCompany';
+import CompanyImage from '../reusable/CompanyImage';
 
 
 
@@ -164,19 +165,28 @@ class CompanyAccount extends Component {
                             <Col sm={9} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '5px' }}>
                                 <Tab.Content>
                                     <Tab.Pane eventKey="#link1">
-                                        <h2 className="centerText" style={{ marginBottom: 0 }}>{this.state.company.name}</h2>
-                                        <p style={{ color: 'rgb(155,155,155)' }}>
-                                            <span>{this.state.company.city}</span>,
-                                    <span> {this.state.company.province}</span>,
-                                    <span> {this.state.company.country}</span>
-                                        </p> <br />
-                                        <h4><FaBriefcase /> {this.state.company.desrciption}</h4>
-                                        <p style={{ color: 'rgb(155,155,155)' }}>
-                                            <span> {this.state.company.field}</span>
-                                        </p>
-                                        <Button onClick={this.showAllInfo} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
-                                                Change Profile
-                                        </Button>
+                                        <Row>
+                                            <Col sm={4} style={{borderRight: '1px solid grey', marginTop: '1em'}}>
+                                                <CompanyImage></CompanyImage>
+                                                <p className="center" style={{ marginBottom: 0, marginTop: '20px' }}>{this.state.company.name}</p>
+                                                <p className="center" style={{ color: 'rgb(155,155,155)' }}>
+                                                    <span>{this.state.company.city}</span>,
+                                                    <span> {this.state.company.province}</span>,
+                                                    <span> {this.state.company.country}</span>
+                                                </p> <br />
+                                            </Col>
+                                            <Col sm={8} style={{marginTop: '2em'}}>
+                                                <h4 class="jobTypeSpan">#{this.state.company.field}</h4>
+                                                <p>
+                                                    <span>{this.state.company.desrciption}</span>
+                                                </p>
+                                            </Col>
+                                        </Row>
+                                        <div className="center">
+                                            <Button onClick={this.showAllInfo} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
+                                                    Change Profile
+                                            </Button>
+                                        </div>
                                         {this.state.showProfileAdd ? <CompanyForm></CompanyForm> : null}
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="#link2">

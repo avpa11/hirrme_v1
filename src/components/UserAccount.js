@@ -179,10 +179,10 @@ class UserAccount extends Component {
                 {this.props.user != null ? (
                     <div>
                         <div className="container">
-                            <Tab.Container id="list-group-tabs-example" activeKey={this.props.location.hash} defaultActiveKey="#link1" >
+                            <Tab.Container id="list-group-tabs-example" activeKey={this.props.location.hash} defaultActiveKey="#link1">
                                 <Row>
                                     <Col sm={3}>
-                                        <ListGroup>
+                                        <ListGroup style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25) !important' }}>
                                             <ListGroup.Item action href="#link1">
                                                 User Account
                                         </ListGroup.Item>
@@ -197,22 +197,22 @@ class UserAccount extends Component {
                                         </ListGroup.Item>
                                         </ListGroup>
                                     </Col>
-                                    <Col sm={9} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '5px' }}>
+                                    <Col sm={9} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '5px', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
                                         <Tab.Content>
                                             <Tab.Pane eventKey="#link1">
-                                                <h2 className="centerText" style={{ marginBottom: 0 }}>{this.props.user.firstName}
-                                                    <span> {this.props.user.lastName}</span></h2>
                                                 <Row>
-                                                    <Col sm={6}>
-                                                        <p style={{ color: 'rgb(155,155,155)' }}>
-                                                            <span>{this.props.user.city}</span>,
-                                                    <span> {this.props.user.province}</span>,
-                                                    <span> {this.props.user.country}</span>
-                                                        </p> <br />
-                                                        <h4><FaBriefcase /> {this.props.user.title}</h4>
-                                                    </Col>
-                                                    <Col sm={6}>
+                                                    <Col sm={4} style={{borderRight: '1px solid grey', marginTop: '1em'}}>
                                                         <ProfileImage></ProfileImage>
+                                                        <p className="center" style={{ marginBottom: 0, marginTop: '20px' }}>{this.props.user.firstName}
+                                                        <span> {this.props.user.lastName}</span></p>
+                                                        <p className="center" style={{ color: 'rgb(155,155,155)' }}>
+                                                            <span>{this.props.user.city}</span>,
+                                                            <span> {this.props.user.province}</span>,
+                                                            <span> {this.props.user.country}</span>
+                                                        </p> <br />
+                                                    </Col>
+                                                    <Col sm={8} style={{marginTop: '1em'}}>
+                                                        <h4>{this.props.user.title}</h4>
                                                     </Col>
                                                 </Row>
                                                 {/* Account Visibility Section */}
@@ -249,7 +249,7 @@ class UserAccount extends Component {
                                                 <PasswordChangeForm />
                                             </Tab.Pane>
                                             <Tab.Pane id="settingsTab" eventKey="#link5">
-                                                <h2>Saved Vacancies</h2>
+                                                {/* <h2>Saved Vacancies</h2> */}
                                                 <SavedVacancies></SavedVacancies>
                                             </Tab.Pane>
                                         </Tab.Content>
@@ -258,17 +258,18 @@ class UserAccount extends Component {
                             </Tab.Container>
                         </div>
                         <Row className="container divcenter" style={{ marginTop: "50px", marginBottom: "50px" }}>
-                            <Col className="container" sm={5} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
-                                <h3 className="centerText">Education</h3>
+                            <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
+                                <h3 className="center">Education</h3>
                                 <div className="container" id="education"></div>
                                 <Button onClick={this.addEducation} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
                                     Add Education
                                     </Button>
                                 {this.state.addEducation ? <FormEducation></FormEducation> : null}
                             </Col>
-                            <Col sm={2}></Col>
-                            <Col className="container" sm={5} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
-                                <h3 className="centerText">Experience</h3>
+                        </Row>
+                        <Row className="container divcenter" style={{ marginTop: "50px", marginBottom: "50px" }}>
+                            <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
+                                <h3 className="center">Experience</h3>
                                 <div className="container" id="experience"></div>
                                 <Button onClick={this.addExperience} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
                                     Add Experience

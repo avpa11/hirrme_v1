@@ -110,21 +110,15 @@ class SavedVacancies extends Component {
             <div className="container" style={{ marginTop: "120px" }}>
                 <h4 className="text-center">Saved Vacancies</h4>
                 <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                    <div className="input-group-prepend" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
-                        <span className="input-group-text">
-                            <FaSearch />
-                        </span>
-                        <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder="Keyword or Title" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
+                    <div className="input-group-prepend col-6 col-sm-5" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
+                        <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder="Keyword or Title" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
                     </div>
-                    <div className="input-group-prepend">
-                        <span className="input-group-text">
-                            <FaSearchLocation />
-                        </span>
-                        <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2" style={{ borderColor: "#FFC107" }} />
+                    <div className="input-group-prepend col-6 col-sm-4">        
+                        <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
                     </div>
 
-                    <Nav>
-                        <Nav.Link as={Link} to="/vacancies"><Button variant="warning">Vacancies</Button></Nav.Link>
+                    <Nav className="col-6 col-sm-3">
+                        <Nav.Link as={Link} to="/vacancies"><Button className='searchButton' variant="warning">Vacancies</Button></Nav.Link>
                     </Nav>
                 </Form>
                 <p id='savedVacanciesList'></p>
