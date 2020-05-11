@@ -488,18 +488,13 @@ class VacancyObject extends Component {
                             alt=''></img>
                         <div style={{ color: '#686868', fontSize: '120%' }}>{this.props.companyName}</div>
                     </div>
-                    {/* <div style={{ width: '80%', marginLeft: '9.5em', marginRight: '1em', paddingLeft: '2em', textAlign: 'left', color: '#686868' }}>
-                        <h4>{vacancyData.positionTitle} </h4>
-                        <h5>{vacancyData.city}, {vacancyData.province}</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    </div> */}
 
                     <div style={{ textAlign: 'left', display: 'flex', marginLeft: '3%' }}>
                         <div style={{ flex: '1' }}>
                             <div style={{ width: '100%', paddingLeft: '2em', textAlign: 'left', color: '#686868' }}>
                                 <h4>{vacancyData.positionTitle} </h4>
                                 <h5>{vacancyData.city}, {vacancyData.province}</h5>
-                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+                                <div style={{minHeight: '5em'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
                             </div>
                         </div>
                         <div style={{ width: '15%', color: '#FFAC11' }}>
