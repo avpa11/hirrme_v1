@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { withFirebase } from './Firebase';
 // import { AuthUserContext } from './Session';
-import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, /* IoIosDocument, */ IoMdSettings, IoMdClipboard } from "react-icons/io";
+import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, IoIosDocument, IoMdSettings, IoMdClipboard } from "react-icons/io";
 import { NavHashLink } from 'react-router-hash-link';
 
 import { connect } from 'react-redux';
@@ -73,11 +73,11 @@ class SignOutForm extends Component {
                                     </div>
                                     {userType === 'jobSeeker' ? (
                                         <React.Fragment>
-                                            {/* <div>
+                                            <div>
                                                 <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link3">
-                                                    <IoIosDocument size={40} /><span>My applications</span>     
+                                                    <IoIosDocument size={40} /><span>Edit Profile</span>     
                                                 </NavHashLink>                                       
-                                            </div> */}
+                                            </div>
                                             <div>
                                                 <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link4">
                                                     <IoMdSettings size={40} /><span>Settings</span>   

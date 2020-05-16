@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import { withAuthorization } from './Session';
+import { withRouter } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
@@ -171,6 +172,14 @@ class UserAccount extends Component {
         }
     }
 
+    goToProfile = () => {
+        this.props.history.push({
+            pathname: `profile/${this.props.authUser.uid}`,
+            // userData: this.props.userData
+        })
+        // console.log(this.props);
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -186,9 +195,9 @@ class UserAccount extends Component {
                                             <ListGroup.Item action href="#link1">
                                                 User Account
                                         </ListGroup.Item>
-                                            {/* <ListGroup.Item action href="#link3">
-                                                Applications
-                                            </ListGroup.Item> */}
+                                            <ListGroup.Item action href="#link3">
+                                                Edit Profile
+                                            </ListGroup.Item>
                                             <ListGroup.Item action href="#link4">
                                                 Settings
                                         </ListGroup.Item>
@@ -201,25 +210,54 @@ class UserAccount extends Component {
                                         <Tab.Content>
                                             <Tab.Pane eventKey="#link1">
                                                 <Row>
-                                                    <Col sm={4} style={{borderRight: '1px solid grey', marginTop: '1em'}}>
-                                                        <ProfileImage></ProfileImage>
-                                                        <p className="center" style={{ marginBottom: 0, marginTop: '20px' }}>{this.props.user.firstName}
-                                                        <span> {this.props.user.lastName}</span></p>
-                                                        <p className="center" style={{ color: 'rgb(155,155,155)' }}>
+                                                    <Col sm={4} style={{borderRight: '1px solid #686868', marginTop: '1em', marginBottom: '1em'}}>
+                                                    <div className="center">
+                                                        { (this.props.user!== null && this.props.user!== undefined) ?
+                                                            (<img
+                                                            src={this.state.url ||  this.props.user.profileImage || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                                                            alt="Uploaded Profile"
+                                                            width="100"
+                                                            />) : (
+                                                                <img
+                                                                src={this.state.url || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                                                                alt="Uploaded Profile"
+                                                                width="100"
+                                                                />
+                                                                )}
+                                                        </div>
+                                                        <h4 className="center" style={{ marginBottom: 0, marginTop: '20px', color: '#686868' }}>{this.props.user.firstName}
+                                                        <span> {this.props.user.lastName}</span></h4>
+                                                        <p className="center" style={{ color: '#686868' }}>
                                                             <span>{this.props.user.city}</span>,
                                                             <span> {this.props.user.province}</span>,
                                                             <span> {this.props.user.country}</span>
                                                         </p> <br />
                                                     </Col>
                                                     <Col sm={8} style={{marginTop: '1em'}}>
-                                                        <h4>{this.props.user.title}</h4>
+                                                        <h4>{this.props.user.title} <span class="jobTypeSpan" style={{float: 'right'}}>#full-time</span></h4>
+                                                        
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                                        <Button style={{marginBottom: '20px', float: 'right', background: '#FFAC11'}} onClick={this.goToProfile} variant="warning">View public profile</Button>
+
                                                     </Col>
                                                 </Row>
-                                                {/* Account Visibility Section */}
-                                                <Row className="container">
-                                                    <Col sm={12}><h5>Account Visibility </h5></Col> 
 
-                                                    <Col sm={12}>
+
+                                            </Tab.Pane>
+                                            <Tab.Pane eventKey="#link3">
+                                                <Row  style={{marginTop: '20px'}}>
+                                                    <Col sm={6}>
+                                                        <UserForm></UserForm>
+                                                    </Col>
+                                                    <Col sm={6}>
+                                                        <ProfileImage></ProfileImage>
+                                                    </Col>
+                                                </Row>
+                                                <Row className="container"  style={{marginBottom: '20px'}}>
+                                                    <Col sm={6}></Col> 
+
+                                                    <Col sm={6} className = "center">
+                                                        <h5>Account Visibility </h5>
                                                         {this.props.user.incognito === 1 ? (
                                                             <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserSecret /> Incognito</p></React.Fragment>
                                                             ) : <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserTie /> Visible</p></React.Fragment>}
@@ -230,20 +268,7 @@ class UserAccount extends Component {
                                                         </Form>
                                                     </Col>             
                                                 </Row>
-
-                                                {/* Change Profile Section */}
-                                                <div className="center">
-                                                    <Button onClick={this.showAllInfo}  style={{ marginLeft: '7px', marginBottom: '20px', marginTop: '20px' }} type="button" variant="danger">
-                                                        Change Profile
-                                                    </Button>
-                                                </div>
-                                                {this.state.showProfileAdd ? <UserForm></UserForm> : null}
-
-
                                             </Tab.Pane>
-                                            <Tab.Pane eventKey="#link3">
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium nemo assumenda cumque, explicabo ex soluta eveniet accusantium corrupti labore! Ea inventore ab ut ullam cupiditate aut voluptates illum vel culpa.
-                                        </Tab.Pane>
                                             <Tab.Pane id="settingsTab" eventKey="#link4">
                                                 <h2>Password Change</h2>
                                                 <PasswordChangeForm />
@@ -259,7 +284,7 @@ class UserAccount extends Component {
                         </div>
                         <Row className="container divcenter" style={{ marginTop: "50px", marginBottom: "50px" }}>
                             <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
-                                <h3 className="center">Education</h3>
+                                <h3 className="center">Previous Education</h3>
                                 <div className="container" id="education"></div>
                                 <Button onClick={this.addEducation} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
                                     Add Education
@@ -269,7 +294,7 @@ class UserAccount extends Component {
                         </Row>
                         <Row className="container divcenter" style={{ marginTop: "50px", marginBottom: "50px" }}>
                             <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
-                                <h3 className="center">Experience</h3>
+                                <h3 className="center">Previous Experience</h3>
                                 <div className="container" id="experience"></div>
                                 <Button onClick={this.addExperience} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
                                     Add Experience
@@ -301,4 +326,4 @@ const mapDispatchToProps = dispatch => ({
 
 const condition = authUser => !!authUser;
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withFirebase, withAuthorization(condition))(UserAccount);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withFirebase, withRouter, withAuthorization(condition))(UserAccount);

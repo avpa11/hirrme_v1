@@ -153,23 +153,39 @@ class CompanyAccount extends Component {
                                 <ListGroup>
                                     <ListGroup.Item action href="#link1">
                                         Company Account
-                            </ListGroup.Item>
+                                    </ListGroup.Item>
+                                    <ListGroup.Item action href="#link3">
+                                        Edit Account
+                                    </ListGroup.Item>
                                     <ListGroup.Item action href="#link2">
                                         Vacancies
-                            </ListGroup.Item>
+                                    </ListGroup.Item>
                                     <ListGroup.Item action href="#link4">
                                         Settings
-                            </ListGroup.Item>
+                                    </ListGroup.Item>
                                 </ListGroup>
                             </Col>
                             <Col sm={9} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '5px' }}>
                                 <Tab.Content>
                                     <Tab.Pane eventKey="#link1">
                                         <Row>
-                                            <Col sm={4} style={{borderRight: '1px solid grey', marginTop: '1em'}}>
-                                                <CompanyImage></CompanyImage>
-                                                <p className="center" style={{ marginBottom: 0, marginTop: '20px' }}>{this.state.company.name}</p>
-                                                <p className="center" style={{ color: 'rgb(155,155,155)' }}>
+                                            <Col sm={4} style={{borderRight: '1px solid #686868', marginTop: '1em',  marginBottom: '1em'}}>
+                                            <div className="center">
+                                                { (this.props.company!== null && this.props.company!== undefined) ?
+                                                (<img
+                                                    src={this.state.url ||  this.props.company.profileImage || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                                                    alt="Uploaded Profile"
+                                                    width="100"
+                                                    />) : (
+                                                        <img
+                                                        src={this.state.url || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                                                        alt="Uploaded Profile"
+                                                        width="100"
+                                                        />
+                                                        )}
+                                            </div>
+                                                <h4 className="center" style={{ marginBottom: 0, marginTop: '20px', color: '#686868' }}>{this.state.company.name}</h4>
+                                                <p className="center" style={{ color: '#686868' }}>
                                                     <span>{this.state.company.city}</span>,
                                                     <span> {this.state.company.province}</span>,
                                                     <span> {this.state.company.country}</span>
@@ -182,15 +198,20 @@ class CompanyAccount extends Component {
                                                 </p>
                                             </Col>
                                         </Row>
-                                        <div className="center">
-                                            <Button onClick={this.showAllInfo} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
-                                                    Change Profile
-                                            </Button>
-                                        </div>
-                                        {this.state.showProfileAdd ? <CompanyForm></CompanyForm> : null}
+
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="#link2">
                                         <VacancyForm />
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="#link3">
+                                        <Row  style={{marginTop: '20px'}}>
+                                            <Col sm={6}>
+                                                <CompanyForm></CompanyForm>
+                                            </Col>
+                                            <Col sm={6}>
+                                                <CompanyImage></CompanyImage>
+                                            </Col>
+                                        </Row>
                                     </Tab.Pane>
                                     <Tab.Pane id="settingsTab" eventKey="#link4">
                                         <h2>Password Change</h2>
