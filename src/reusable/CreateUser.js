@@ -2,10 +2,12 @@ import React, { Component }  from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 import { withAuthorization } from '../components/Session';
 import { withFirebase } from '../components/Firebase';
-
+import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 
@@ -25,7 +27,14 @@ const initState = {
 class CreateUserForm extends Component {
     constructor(props) {
         super(props);
-        this.state = {...initState};
+        this.state = {
+            firstName: this.props.location.pathname === '/useraccount' ? this.props.user.firstName : '',
+            lastName: this.props.location.pathname === '/useraccount' ? this.props.user.lastName : '',
+            title: this.props.location.pathname === '/useraccount' ? this.props.user.title : '',
+            city: this.props.location.pathname === '/useraccount' ? this.props.user.city : '',
+            province: 'BC',
+            country: 'Canada',
+        };
     }
 
     handleSubmit = (e, authUser) => {
@@ -111,24 +120,52 @@ class CreateUserForm extends Component {
     render () {
         const { firstName, lastName, title, city, province, country } = this.state;
         // console.log(this.props.user);
+        // {console.log(this.props.location.pathname)}
         return (
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
-                style={{ justifyContent: 'center', marginTop: "40px", marginBottom: "20px" }}>
-            
-                <FormControl type="text" value={firstName} onChange={this.handleChange} name="firstName" placeholder="First Name"></FormControl>                        
-                <FormControl type="text" value={lastName} onChange={this.handleChange} name="lastName" placeholder="Last Name"></FormControl>                        
-                <FormControl type="text" value={title} onChange={this.handleChange} name="title" placeholder="Title"></FormControl>                        
-                <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>                        
-                <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province"></FormControl>                        
-                <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country"></FormControl>                        
-                <Button type="submit" variant="warning">
-                    {(this.props.user!== null && this.props.user!== undefined) ? 
-                        'Change'
-                        :
-                        'Next'
-                    } 
-                </Button>
+                style={{ justifyContent: 'center', marginTop: "40px", marginBottom: "20px",  width: '100%' }}>
+
+            {this.props.location.pathname === '/useraccount' ?
+                <Row>
+                    <Col sm={5}>
+                        <FormControl type="text" value={firstName} onChange={this.handleChange} name="firstName" placeholder="First Name"></FormControl>                        
+                        <FormControl type="text" value={lastName} onChange={this.handleChange} name="lastName" placeholder="Last Name"></FormControl>                        
+                        <FormControl type="text" value={title} onChange={this.handleChange} name="title" placeholder="Title"></FormControl>    
+                    </Col>
+                    <Col sm={5}>
+                        <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>                        
+                        <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province" disabled></FormControl>                        
+                        <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country" disabled></FormControl>
+                    </Col>
+                    <Col sm={2}>
+                        <div className="center" style={{paddingTop: "30%"}}>
+                            <Button type="submit" variant="warning">
+                                    {(this.props.user!== null && this.props.user!== undefined) ? 
+                                        'Change'
+                                        :
+                                        'Next'
+                                    } 
+                            </Button>
+                        </div>
+                    </Col>
+                </Row> :
+                <React.Fragment>
+                    <FormControl type="text" value={firstName} onChange={this.handleChange} name="firstName" placeholder="First Name"></FormControl>                        
+                    <FormControl type="text" value={lastName} onChange={this.handleChange} name="lastName" placeholder="Last Name"></FormControl>                        
+                    <FormControl type="text" value={title} onChange={this.handleChange} name="title" placeholder="Title"></FormControl>                        
+                    <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>                        
+                    <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province" disabled></FormControl>                        
+                    <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country" disabled></FormControl>                        
+                    <Button type="submit" variant="warning">
+                        {(this.props.user!== null && this.props.user!== undefined) ? 
+                            'Change'
+                            :
+                            'Next'
+                        } 
+                    </Button>
+                </React.Fragment>
+            }
             </Form>
         )
     }
@@ -146,7 +183,7 @@ const mapDispatchToProps = dispatch => ({
     onDeleteUser: (user, key) => dispatch({ type: 'USER_DELETE', user, key }),
   });
 
-const UserForm = compose(connect(mapStateToProps, mapDispatchToProps), withFirebase)(CreateUserForm);
+const UserForm = compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withFirebase)(CreateUserForm);
 const condition = authUser => !!authUser;
 
 export default  withAuthorization(condition)(CreateUser);

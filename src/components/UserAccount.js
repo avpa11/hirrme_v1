@@ -190,8 +190,9 @@ class UserAccount extends Component {
                         <div className="container">
                             <Tab.Container id="list-group-tabs-example" activeKey={this.props.location.hash} defaultActiveKey="#link1">
                                 <Row>
-                                    <Col sm={3}>
-                                        <ListGroup style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25) !important' }}>
+                                    <Col sm={3} style={{paddingLeft: '0', paddingRight: '30px'}}>
+                                        {/* <ListGroup style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25) !important' }}> */}
+                                        <ListGroup>
                                             <ListGroup.Item action href="#link1">
                                                 User Account
                                         </ListGroup.Item>
@@ -206,102 +207,147 @@ class UserAccount extends Component {
                                         </ListGroup.Item>
                                         </ListGroup>
                                     </Col>
-                                    <Col sm={9} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '5px', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
-                                        <Tab.Content>
-                                            <Tab.Pane eventKey="#link1">
-                                                <Row>
-                                                    <Col sm={4} style={{borderRight: '1px solid #686868', marginTop: '1em', marginBottom: '1em'}}>
-                                                    <div className="center">
-                                                        { (this.props.user!== null && this.props.user!== undefined) ?
-                                                            (<img
-                                                            src={this.state.url ||  this.props.user.profileImage || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
-                                                            alt="Uploaded Profile"
-                                                            width="100"
-                                                            />) : (
-                                                                <img
-                                                                src={this.state.url || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
-                                                                alt="Uploaded Profile"
-                                                                width="100"
-                                                                />
-                                                                )}
-                                                        </div>
-                                                        <h4 className="center" style={{ marginBottom: 0, marginTop: '20px', color: '#686868' }}>{this.props.user.firstName}
-                                                        <span> {this.props.user.lastName}</span></h4>
-                                                        <p className="center" style={{ color: '#686868' }}>
-                                                            <span>{this.props.user.city}</span>,
-                                                            <span> {this.props.user.province}</span>,
-                                                            <span> {this.props.user.country}</span>
-                                                        </p> <br />
-                                                    </Col>
-                                                    <Col sm={8} style={{marginTop: '1em'}}>
-                                                        <h4>{this.props.user.title} <span class="jobTypeSpan" style={{float: 'right'}}>#full-time</span></h4>
-                                                        
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                                        <Button style={{marginBottom: '20px', float: 'right', background: '#FFAC11'}} onClick={this.goToProfile} variant="warning">View public profile</Button>
+                                    <Col sm={9} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '5px' }}>
+                                        
+                                        <Row>
+                                            <Col sm={4} style={{borderRight: '1px solid #686868', marginTop: '1em', marginBottom: '1em'}}>
+                                            <div className="center">
+                                                { (this.props.user!== null && this.props.user!== undefined) ?
+                                                    (<img
+                                                    src={this.state.url ||  this.props.user.profileImage || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                                                    alt="Uploaded Profile"
+                                                    width="100"
+                                                    />) : (
+                                                        <img
+                                                        src={this.state.url || 'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                                                        alt="Uploaded Profile"
+                                                        width="100"
+                                                        />
+                                                        )}
+                                                </div>
+                                                <h4 className="center" style={{ marginBottom: 0, marginTop: '20px', color: '#686868' }}>{this.props.user.firstName}
+                                                <span> {this.props.user.lastName}</span></h4>
+                                                <p className="center" style={{ color: '#686868' }}>
+                                                    <span>{this.props.user.city}</span>,
+                                                    <span> {this.props.user.province}</span>,
+                                                    <span> {this.props.user.country}</span>
+                                                </p> <br />
+                                            </Col>
+                                            <Col sm={8} style={{marginTop: '1em'}}>
+                                                <h4>{this.props.user.title} <span class="jobTypeSpan" style={{float: 'right'}}>#full-time</span></h4>
+                                                
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                                <Button style={{marginBottom: '20px', float: 'right', background: '#FFAC11'}} onClick={this.goToProfile} variant="warning">View public profile</Button>
 
-                                                    </Col>
-                                                </Row>
-
-
-                                            </Tab.Pane>
-                                            <Tab.Pane eventKey="#link3">
-                                                <Row  style={{marginTop: '20px'}}>
-                                                    <Col sm={6}>
-                                                        <UserForm></UserForm>
-                                                    </Col>
-                                                    <Col sm={6}>
-                                                        <ProfileImage></ProfileImage>
-                                                    </Col>
-                                                </Row>
-                                                <Row className="container"  style={{marginBottom: '20px'}}>
-                                                    <Col sm={6}></Col> 
-
-                                                    <Col sm={6} className = "center">
-                                                        <h5>Account Visibility </h5>
-                                                        {this.props.user.incognito === 1 ? (
-                                                            <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserSecret /> Incognito</p></React.Fragment>
-                                                            ) : <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserTie /> Visible</p></React.Fragment>}
-                                                        <Form style={{display: 'inline'}} onSubmit={e => this.handleSubmit(e)}>
-                                                            <Button style={{ marginLeft: '7px', borderRadius: '20px' }} type="submit" variant="warning">
-                                                                Change
-                                                            </Button>
-                                                        </Form>
-                                                    </Col>             
-                                                </Row>
-                                            </Tab.Pane>
-                                            <Tab.Pane id="settingsTab" eventKey="#link4">
-                                                <h2>Password Change</h2>
-                                                <PasswordChangeForm />
-                                            </Tab.Pane>
-                                            <Tab.Pane id="settingsTab" eventKey="#link5">
-                                                {/* <h2>Saved Vacancies</h2> */}
-                                                <SavedVacancies></SavedVacancies>
-                                            </Tab.Pane>
-                                        </Tab.Content>
+                                            </Col>
+                                        </Row>  
                                     </Col>
                                 </Row>
+                           
+                        <div>
+                            {/* Education & Experience User Account tab, link1 */}
+                            <Tab.Content>
+                                <Tab.Pane eventKey="#link1">
+                                   Display of education and experience
+                                </Tab.Pane>
+                            </Tab.Content>
+                            {/* Edit Profile Tab, link3 */}
+                            <Tab.Content>
+                                <Tab.Pane eventKey="#link3">
+                                    <Row>
+                                        <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', marginTop: '50px', paddingBottom: '20px', borderRadius: '10px', minHeight: '200px' }}>
+                                                <div className="center" style={{marginTop: '20px', paddingTop: '20px'}}>
+                                                    <h3>Edit Profile</h3>
+                                                </div>
+                                            <Row className="container" style={{marginTop: '10px'}}>
+                                                <UserForm></UserForm>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+
+                                    <Row className="" style={{ marginTop: "50px", marginBottom: "50px" }}>
+                                        <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
+                                            <h3 className="center" style={{marginTop: '10px', paddingTop: '20px'}}>Previous Education</h3>
+                                            <div className="container" id="education"></div>
+                                            <Button onClick={this.addEducation} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
+                                                Add Education
+                                                </Button>
+                                            {this.state.addEducation ? <FormEducation></FormEducation> : null}
+                                        </Col>
+                                    </Row>
+                                    <Row className="" style={{ marginTop: "50px", marginBottom: "50px" }}>
+                                        <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
+                                            <h3 className="center" style={{marginTop: '10px', paddingTop: '20px'}}>Previous Experience</h3>
+                                            <div className="container" id="experience"></div>
+                                            <Button onClick={this.addExperience} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
+                                                Add Experience
+                                                </Button>
+                                            {this.state.addExperience ? <FormExperience></FormExperience> : null}
+                                        </Col>
+                                    </Row>
+                                </Tab.Pane>
+                            </Tab.Content>
+                            {/* Setting tab, link4 */}
+                            <Tab.Content>
+                                <Tab.Pane eventKey="#link4">
+                                    <Row style={{ marginTop: "50px", marginBottom: "50px" }}>
+                                        <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
+                                        {/* <Col style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '5px', margin: "20px", paddingBottom: "20px", boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}> */}
+                                            <div className="container">
+                                                <div className="center" style={{marginTop: '20px', paddingTop: '20px'}}>
+                                                    <h2>Settings</h2>
+                                                </div>
+                                                <Row style={{paddingBottom: '50px'}}>
+                                                    <Col sm={6}>
+                                                        <div className="center">
+                                                            <h4>Password Change</h4>
+                                                        </div>
+                                                            <PasswordChangeForm />
+                                                            <div className="center">
+                                                                <h4>Account Visibility </h4>
+                                                                <Form style={{display: 'inline'}} onSubmit={e => this.handleSubmit(e)}>
+                                                                    <Button style={{ marginLeft: '7px', padding: '0.15rem .75rem' }} type="submit" variant="warning">
+                                                                        Change
+                                                                    </Button>
+                                                                </Form>
+                                                                {this.props.user.incognito === 1 ? (
+                                                                    <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserSecret /> Incognito</p></React.Fragment>
+                                                                    ) : <React.Fragment><p style={{display: 'inline'}} className="container"><FaUserTie /> Visible</p></React.Fragment>}
+                                                            </div>
+                                                    </Col>
+                                                    <Col sm={6}>
+                                                        <div className="center">
+                                                            <h4>Profile Photo</h4>
+                                                        </div>
+                                                        <ProfileImage></ProfileImage>
+                                                        <br />
+                                                        <br />
+                                                        <br />
+                                                        <br />
+                                                        <br />
+                                                        <div className="center">
+                                                            <Button variant="danger" style={{ margin: '0.25em' }}>
+                                                                    Delete account
+                                                            </Button>
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </Tab.Pane>
+                            </Tab.Content>
+                            {/* Saved vacancies tab, link5 */}                            
+                            <Tab.Content>
+                                <Tab.Pane eventKey="#link5">
+                                    <div className="center">
+                                <SavedVacancies></SavedVacancies>
+                                </div>
+                                </Tab.Pane>
+                            </Tab.Content>
+                        </div>
                             </Tab.Container>
                         </div>
-                        <Row className="container divcenter" style={{ marginTop: "50px", marginBottom: "50px" }}>
-                            <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
-                                <h3 className="center">Previous Education</h3>
-                                <div className="container" id="education"></div>
-                                <Button onClick={this.addEducation} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
-                                    Add Education
-                                    </Button>
-                                {this.state.addEducation ? <FormEducation></FormEducation> : null}
-                            </Col>
-                        </Row>
-                        <Row className="container divcenter" style={{ marginTop: "50px", marginBottom: "50px" }}>
-                            <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
-                                <h3 className="center">Previous Experience</h3>
-                                <div className="container" id="experience"></div>
-                                <Button onClick={this.addExperience} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
-                                    Add Experience
-                                    </Button>
-                                {this.state.addExperience ? <FormExperience></FormExperience> : null}
-                            </Col>
-                        </Row>
                     </div>
                 ) : <CompanyAccount />}
             </div>

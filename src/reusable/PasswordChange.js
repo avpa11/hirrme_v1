@@ -9,6 +9,7 @@ import Alert from 'react-bootstrap/Alert';
 const INIT_STATE = {
     passOne: '',
     passTwo: '',
+    passwordrepeat: '',
     error: null,
     success: null
 }
@@ -41,15 +42,16 @@ class PasswordChangeForm extends Component {
     };
 
     render() {
-        const { passOne, passTwo, error, success } = this.state;
+        const { passOne, passTwo, error, passwordrepeat, success } = this.state;
 
-        const invalid = passOne !== passTwo || passOne === '';
+        // const invalid = passOne !== passTwo || passOne === '' || passOne !== passwordrepeat;
+        const invalid = passTwo === '' || passOne === '' || passTwo !== passwordrepeat;
 
 
         return (
             <Form
             onSubmit={this.handleSubmit}
-            style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+            style={{ justifyContent: 'center', marginTop: "20px", marginBottom: "20px" }}>
             { error !== null ? (	                        
                 <Alert variant="danger">	                            
                     {error.message}	                                
@@ -60,12 +62,19 @@ class PasswordChangeForm extends Component {
                     {success}                                
                 </Alert>	                           
             ) : null }
-            <FormControl value={passOne} onChange={this.handleChange} type="password" placeholder="New Password" name="passOne" className="col-12" id='userRegistrationPassword' />
-            <FormControl value={passTwo} onChange={this.handleChange} type="password" placeholder="Repeat Password" name="passTwo" className="col-12" id='userRegistrationPasswordRepeat' />
-
+            <div className="container col-sm-9 col-xs-12">
+                <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Old password</Form.Label>
+                <FormControl value={passTwo} onChange={this.handleChange} type="password" style={{paddingTop: '0'}} placeholder="" name="passTwo" id='userRegistrationPasswordTwo' />
+                <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0'}}>Repeat password</Form.Label>
+                <FormControl value={passwordrepeat} onChange={this.handleChange} type="password" style={{paddingTop: '0'}} placeholder="" name="passwordrepeat" id='userRegistrationPasswordRepeat' />
+                <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0'}}>New password</Form.Label>
+                <FormControl value={passOne} onChange={this.handleChange} type="password" style={{paddingTop: '0'}} placeholder="" name="passOne" id='userRegistrationPassword' />
+            </div>
+            <div className="center container" style={{marginTop: '20px', marginBottom: '40px'}}>
             <Button disabled={invalid} type="submit" variant="warning">
                 Update
-                </Button>
+            </Button>
+            </div>
         </Form>
         )
     }

@@ -70,7 +70,6 @@ class SignUpForm extends Component {
                         <FormControl value={email} onChange={this.handleChange} type="text" placeholder="Email" name="email" className="mr-sm-2 col-sm-6 col-xs-12" id='userRegistrationEmail' />
                         <FormControl value={password} onChange={this.handleChange} type="password" placeholder="Password" name="password" className="mr-sm-2 col-sm-6 col-xs-12" id='userRegistrationPassword' />
                         <FormControl value={passwordrepeat} onChange={this.handleChange} type="password" placeholder="Repeat Password" name="passwordrepeat" className="mr-sm-2 col-sm-6 col-xs-12" id='userRegistrationPasswordRepeat' />
-
                         <Button disabled={invalid} type="submit" variant="warning">
                             Register
                             </Button>
