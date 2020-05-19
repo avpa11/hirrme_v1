@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
-import { FaSearch, FaSearchLocation } from "react-icons/fa";
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Video from '../components/Video2';
@@ -260,7 +259,7 @@ class JobSeekerObject extends Component {
         return (
             <div onClick={this.showAllInfo}>
                 <div>
-                    <div style={{ float: 'left', width: '17%', minWidth: '10em', height: '80%', padding: '1em', borderRight: '1px solid grey', height: "auto" }}>
+                    <div style={{ float: 'left', width: '17%', minWidth: '10em', padding: '1em', borderRight: '1px solid grey', height: "auto" }}>
                         <img style={imageStyle} src={
                             userData.profileImage ?
                                 userData.profileImage :
@@ -277,8 +276,8 @@ class JobSeekerObject extends Component {
                 <div style={{ display: this.state.display }}>
                     <div style={{ fontSize: '130%', textAlign: 'left', display: 'flex', marginTop: '4%', marginLeft: '3%' }}>
                         <div style={{ flex: '1' }}>
-                            <img src={require('../img/work.png')} style={iconStyle}></img>{this.props.education}<br />
-                            <img src={require('../img/school.png')} style={iconStyle}></img>{userData.title}
+                            <img src={require('../img/work.png')} style={iconStyle} alt='work.png' />{this.props.education}<br />
+                            <img src={require('../img/school.png')} style={iconStyle} alt='school.png' />{userData.title}
                     </div>
                         <div style={{ width: '18%' }}><Button style={{ background: 'linear-gradient(90deg, #F3565E 0%, #F97F3A 55.85%, #FFAC11 100.21%)', borderColor: 'transparent' }} onClick={this.goToProfile}>View Profile</Button></div>
                     </div>

@@ -6,6 +6,102 @@ import { compose } from 'recompose';
 import app from 'firebase/app';
 import Video from '../components/Video2';
 
+let greyText = {
+    color: '#7B7B7B'
+}
+
+let mainDivStyle = {
+    margin: 'auto',
+    marginTop: '10em',
+    width: '80%',
+    padding: '2em'
+}
+
+let generalInfoDivStyle = {
+    margin: 'auto',
+    width: '60%',
+    minHeight: '35em',
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    marginBottom: '2em',
+    position: 'relative'
+}
+
+let generalInfoTextDivStyle = {
+    padding: '5%',
+    paddingTop: '13em'
+}
+
+let generalInfoWithIcons = {
+    paddingBottom: '1%',
+    fontSize: '120%'
+}
+
+let generalInfoWithIconsContainer = {
+    paddingTop: '2%',
+}
+
+let experienceDivStyle = {
+    margin: 'auto',
+    width: '60%',
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    padding: '2em',
+    marginBottom: '2em'
+}
+
+let educationDivStyle = {
+    margin: 'auto',
+    width: '60%',
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    padding: '2em',
+}
+
+let profilePictureStyle = {
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '10em'
+}
+
+let imageStyle = {
+    width: '10em',
+    height: '10em',
+    borderRadius: '10em',
+    zIndex: '1',
+    position: 'absolute',
+    top: '10%',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'
+}
+
+let wantToHireDivStyle = {
+    width: '100%',
+    position: 'absolute',
+    bottom: '8%',
+    textAlign: 'center',
+    color: 'white'
+}
+
+let bannerStyle = {
+    width: '100%',
+    height: '30%',
+    position: 'absolute'
+}
+
+let iconStyle = {
+    width: '1em',
+    marginRight: '1em'
+}
+
+let wantToHireButtonStyle = {
+    background: 'linear-gradient(90deg, #F3565E 0%, #F97F3A 55.85%, #FFAC11 100.21%)',
+    border: '0px',
+    color: 'white',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    width: '10em'
+}
+
 class JobSeekerPublicProfile extends Component {
     constructor(props) {
         super(props);
@@ -55,121 +151,176 @@ class JobSeekerPublicProfile extends Component {
     }
 
     getExperience = () => {
+        document.getElementById('experienceDiv').innerHTML = '';
         let id = 0;
-        app.database().ref('experience').child(this.state.profileUid).once('value', snap => {
+        app.database().ref('experience').child(this.state.profileUid).on('value', snap => {
+
             snap.forEach(snap1 => {
                 let div = document.createElement('div');
-                div.setAttribute('id', ++id);
+                div.setAttribute('id', 'experience' + ++id);
                 if (document.getElementById('experienceDiv') != null) {
-                    document.getElementById('experienceDiv').innerHTML = '';
+
                     document.getElementById('experienceDiv').appendChild(div);
                 }
-                ReactDOM.render(<ExperienceComponent experienceData={snap1.val()} />, document.getElementById(id));
+                ReactDOM.render(<ExperienceComponent experienceData={snap1.val()} />, document.getElementById('experience' + id));
             })
         })
     }
 
     getEducation = () => {
-        app.database().ref('educations').child(this.state.profileUid).once('value', snap => {
+        document.getElementById('educationDiv').innerHTML = '';
+        let id = 0;
+        app.database().ref('educations').child(this.state.profileUid).on('value', snap => {
+
             snap.forEach(snap1 => {
-                this.setState({ education: snap1.child('programName').val() + ', ' + snap1.child('schoolName').val() + ', ' + snap1.child('programType').val() })
+                this.setState({ education: snap1.child('programName').val() + ', ' + snap1.child('schoolName').val() + ', ' + snap1.child('programType').val() });
+                let div = document.createElement('div');
+                div.setAttribute('id', 'education' + ++id);
+                if (document.getElementById('educationDiv') != null) {
+                    document.getElementById('educationDiv').appendChild(div);
+                }
+                ReactDOM.render(<EducationComponent educationData={snap1.val()} />, document.getElementById('education' + id));
             })
         })
     }
 
     render() {
-
-        let mainDivStyle = {
-            marginTop: '5em',
-            padding: '2em'
-        }
-
-        let generalInfoDivStyle = {
-            margin: 'auto',
-            width: '60%',
-            minHeight: '25em',
-            backgroundColor: 'white',
-            borderRadius: '10px',
-            padding: '2em',
-            marginBottom: '2em',
-            position: 'relative'
-        }
-
-        let experienceDivStyle = {
-            margin: 'auto',
-            width: '60%',
-            backgroundColor: 'white',
-            borderRadius: '10px',
-            padding: '2em',
-        }
-
-        let imageStyle = {
-            width: '8em',
-            height: '8em',
-            borderRadius: '10em'
-        }
-
-        let buttonStyle = {
-            position: 'absolute',
-            bottom: '2em',
-            margin: 'auto'
-        }
 
         let userData = this.props.location.userData ? this.props.location.userData : this.state.userProfile;
 
         return (
             <React.Fragment>
                 <Video />
-            <div style={mainDivStyle}>
-                <div style={generalInfoDivStyle}>
-                    <div className='text-center'>
-                        <img style={imageStyle} src={
-                            userData.profileImage ?
-                                userData.profileImage :
-                                'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
-                            alt=''></img>
-                    </div>
-                    <div>
-                        <h3>{userData.firstName} {userData.lastName}</h3>
-                        <h6>{userData.email}</h6>
-                        <h6>{userData.title}</h6>
-                        <h6>{this.state.education}</h6>
-                        <h6>{userData.city} {userData.province} {userData.country}</h6>
-                        <div style={buttonStyle}>
-                            <Button className="loginButton" variant="warning" onClick={() => alert('Cool')}>Want to hire</Button>
+                <div style={mainDivStyle}>
+                    <div style={generalInfoDivStyle}>
+                        <img src={require('../img/publicProfileBanner.png')} alt='publicProfileBanner.png' style={bannerStyle}></img>
+                        <div style={profilePictureStyle}>
+                            <img style={imageStyle} src={
+                                userData.profileImage ?
+                                    userData.profileImage :
+                                    'https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-512.png'}
+                                alt=''></img>
+                        </div>
+                        <div style={generalInfoTextDivStyle}>
+                            <h3>{userData.firstName} {userData.lastName}</h3>
+                            <h6 style={greyText}>{userData.city ? userData.city + ', ' : ''}{userData.province}{userData.country ? ', ' + userData.country : ''}</h6>
+                            <div style={generalInfoWithIconsContainer}>
+                                <div style={generalInfoWithIcons}>
+                                    <img src={require('../img/work.png')} style={iconStyle} alt='work.png' />{userData.title}
+                                </div>
+                                <div style={generalInfoWithIcons}>
+                                    <img src={require('../img/school.png')} style={iconStyle} alt='school.png' />{this.state.education}
+                                </div>
+                                <div style={generalInfoWithIcons}>
+                                    <img src={require('../img/clock.png')} style={iconStyle} alt='clock.png' />Full Time
+                            </div>
+                            </div>
+
+                        </div>
+                        <div style={wantToHireDivStyle}>
+                            <Button style={wantToHireButtonStyle} onClick={() => alert('Cool')}>Want to hire</Button>
                         </div>
                     </div>
 
-                </div>
-                <div style={experienceDivStyle}>
-                    <div className='text-center'>
-                        <h2>Previous Experience</h2>
+                    <div style={experienceDivStyle}>
+                        <div style={{ marginBottom: '2em' }} className='text-center'>
+                            <h2>Previous Experience</h2>
+                        </div>
+                        <div id='experienceDiv'>
+                            <div className='text-center'>No experience ... yet</div>
+                        </div>
                     </div>
-                    <div id='experienceDiv'>
-                        <div className='text-center'>No experience ... yet</div>
+
+                    <div style={educationDivStyle}>
+                        <div style={{ marginBottom: '2em' }} className='text-center'>
+                            <h2>Previous Education</h2>
+                        </div>
+                        <div id='educationDiv'>
+                            <div className='text-center'>No education ... yet</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-                            </React.Fragment>
+            </React.Fragment>
         )
     }
 }
 
-class ExperienceComponent extends Component {
-    render() {
-        let experience = this.props.experienceData;
+let imageContainerStyle = {
+    float: 'left',
+    width: '8em'
+}
 
-        return (
+let textContainerStyle = {
+    textAlign: 'left',
+    display: 'flex'
+}
 
-            <div>
-                <p>{experience.position}</p>
-                <p>{experience.company}</p>
-                <p>{experience.location}</p>
-                <p>{experience.startDate} - {experience.endDate}</p>
-                <hr />
+let itemImageStyle = {
+    width: '6em',
+    height: '6em'
+}
+
+let itemsMarginsStyle = {
+    marginTop: '2em',
+    marginBottom: '2em'
+}
+
+function ExperienceComponent(props) {
+
+    let experience = props.experienceData;
+
+    return (
+
+        <div style={itemsMarginsStyle}>
+            <div style={imageContainerStyle}>
+                <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
             </div>
-        )
-    }
+            <div style={textContainerStyle}>
+
+                <div style={{ width: '100%' }}>
+                    <div style={{ marginBottom: '1em' }}>
+                        <h4>{experience.position}</h4>
+                        <h6>{experience.company}</h6>
+                        <h6 style={greyText}>{experience.startDate}{experience.endDate ? ' - ' + experience.endDate : ''}</h6>
+                        <h6 style={greyText}>{experience.location}</h6>
+                    </div>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+                </div>
+            </div>
+            <hr />
+        </div>
+    )
+}
+
+function EducationComponent(props) {
+
+    let education = props.educationData;
+
+    return (
+
+        <div style={itemsMarginsStyle}>
+            <div style={imageContainerStyle}>
+                <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+            </div>
+            <div style={textContainerStyle}>
+
+                <div style={{ width: '100%' }}>
+                    <div style={{ marginBottom: '1em' }}>
+                        <h4>{education.programName}{education.programType ? ', ' + education.programType : ''}</h4>
+                        <h6>{education.schoolName}</h6>
+                        <h6 style={greyText}>{education.startDate}{education.endDate ? ' - ' + education.endDate : ''}</h6>
+                        <h6 style={greyText}>{education.location}</h6>
+                    </div>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+                </div>
+            </div>
+            <hr />
+        </div>
+    )
 }
 
 export default compose(withFirebase)(JobSeekerPublicProfile);

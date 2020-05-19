@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
-import { IoMdPaper } from "react-icons/io";
 import Button from 'react-bootstrap/Button';
-import { FaSearch, FaSearchLocation } from "react-icons/fa";
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import { connect } from 'react-redux';
@@ -156,10 +154,10 @@ class Vacancies extends Component {
                 <Video />
                 <div className="container" style={{ marginTop: "120px", width: '55%' }}>
                     <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                        <div className="input-group-prepend col-6 col-sm-5" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
+                        <div className="input-group-prepend col-lg-5 col-6 col-sm-5" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
                             <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder=" &#xF002; Keyword or Title" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
                         </div>
-                        <div className="input-group-prepend col-6 col-sm-4">
+                        <div className="input-group-prepend col-lg-4 col-6 col-sm-4">
                             <FormControl disabled={true} type="text" placeholder=" &#xf015; BC, Canada" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
                         </div>
                         {/* <Button variant="warning"
@@ -167,8 +165,8 @@ class Vacancies extends Component {
                         disabled={true}>
                         Search
                     </Button> */}
-                        <Nav className="input-group-prepend col-6 col-sm-3">
-                            <Nav.Link as={Link} to="/savedVacancies"><Button disabled={this.state.savedVacanciesInvisible} className='searchButton' variant="warning" style={{ width: '100%' }}>My Vacancies</Button></Nav.Link>
+                        <Nav className="input-group-prepend col-lg-3 col-6 col-sm-3">
+                            <Nav.Link as={Link} to="/savedVacancies"><Button disabled={this.state.savedVacanciesInvisible} className='searchButton' variant="warning" style={{ width: '120%' }}>My Vacancies</Button></Nav.Link>
                         </Nav>
                     </Form>
                     <p id='vacanciesList'></p>

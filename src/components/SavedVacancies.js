@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
-import { FaSearch, FaSearchLocation } from "react-icons/fa";
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import { Link } from 'react-router-dom';
@@ -57,67 +56,77 @@ class SavedVacancies extends Component {
         var id = 0;
         let k = 0;
 
+
         for (var i in vacanciesData) {
             var companyData = vacanciesData[i];
 
-            k = 0;
+            let ref = this.props.firebase.database().child('companies').orderByChild('companyId').equalTo(companyData.uid);
+            ref.once('value', snap2 => {
+                snap2.forEach(snap3 => {
+                    let companyName = snap3.child('name').val();
+                    let companyImage = snap3.child('profileImage').val();
 
-            let key = Object.keys(companyData);
+                    k = 0;
 
-            for (var vacancy in companyData) {
-                if (companyData[vacancy].hasOwnProperty('positionTitle')) {
+                    let key = Object.keys(companyData);
 
-                    for (var j in savedVacanciesData) {
-                        var savedVacancyData = savedVacanciesData[j];
-                        if (savedVacancyData.email === this.props.authUser.email &&
-                            savedVacancyData.positionTitle === companyData[vacancy].positionTitle &&
-                            savedVacancyData.contactInfo === companyData[vacancy].contactInfo) {
-                            if (companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0 ||
-                                companyData[vacancy].sector.toLowerCase().indexOf(searchParameter) >= 0 ||
-                                companyData[vacancy].type.toLowerCase().indexOf(searchParameter) >= 0 ||
-                                companyData[vacancy].city.toLowerCase().indexOf(searchParameter) >= 0 ||
-                                companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0) {
+                    for (var vacancy in companyData) {
+                        if (companyData[vacancy].hasOwnProperty('positionTitle')) {
 
-                                id++;
+                            for (var j in savedVacanciesData) {
+                                var savedVacancyData = savedVacanciesData[j];
+                                if (savedVacancyData.email === this.props.authUser.email &&
+                                    savedVacancyData.positionTitle === companyData[vacancy].positionTitle &&
+                                    savedVacancyData.contactInfo === companyData[vacancy].contactInfo) {
+                                    if (companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0 ||
+                                        companyData[vacancy].sector.toLowerCase().indexOf(searchParameter) >= 0 ||
+                                        companyData[vacancy].type.toLowerCase().indexOf(searchParameter) >= 0 ||
+                                        companyData[vacancy].city.toLowerCase().indexOf(searchParameter) >= 0 ||
+                                        companyData[vacancy].positionTitle.toLowerCase().indexOf(searchParameter) >= 0) {
 
-                                var div = document.createElement('div');
-                                div.setAttribute('id', id);
-                                div.setAttribute('class', 'vacancy');
-                                if (document.getElementById('savedVacanciesList') != null) {
-                                    document.getElementById('savedVacanciesList').appendChild(div);
+                                        id++;
 
-                                    ReactDOM.render(<VacancyObject
-                                        vacancyKey={key[k++]}
-                                        vacancyData={companyData[vacancy]}
-                                        savedVacanciesData={savedVacanciesData}
-                                        appliedVacanciesData={appliedVacanciesData}
-                                        authUser={this.props.authUser}
-                                        userType={userType}
-                                        firebase={this.props.firebase}
-                                    />, document.getElementById(id));
+                                        var div = document.createElement('div');
+                                        div.setAttribute('id', id);
+                                        div.setAttribute('class', 'vacancy');
+                                        if (document.getElementById('savedVacanciesList') != null) {
+                                            document.getElementById('savedVacanciesList').appendChild(div);
+
+                                            ReactDOM.render(<VacancyObject
+                                                vacancyKey={key[k++]}
+                                                vacancyData={companyData[vacancy]}
+                                                savedVacanciesData={savedVacanciesData}
+                                                appliedVacanciesData={appliedVacanciesData}
+                                                authUser={this.props.authUser}
+                                                userType={userType}
+                                                profileImage={companyImage}
+                                                companyName={companyName}
+                                                firebase={this.props.firebase}
+                                            />, document.getElementById(id));
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            }
+                })
+            })
         }
     }
 
     render() {
         const { searchParameter } = this.state;
         return (
-            <div className="container" style={{ marginTop: "120px" }}>
-                <h4 className="text-center">Saved Vacancies</h4>
+            <div className="container" style={{ marginTop: "120px", width: '55%' }}>
                 <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
-                    <div className="input-group-prepend col-6 col-sm-5" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
-                        <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder="Keyword or Title" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
+                    <div className="input-group-prepend col-lg-5 col-6 col-sm-5" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
+                        <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder=" &#xF002; Keyword or Title" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
                     </div>
-                    <div className="input-group-prepend col-6 col-sm-4">        
-                        <FormControl disabled={true} type="text" placeholder="BC, Canada" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
+                    <div className="input-group-prepend col-lg-4 col-6 col-sm-4">
+                        <FormControl disabled={true} type="text" placeholder=" &#xf015; BC, Canada" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />
                     </div>
 
-                    <Nav className="col-6 col-sm-3">
+                    <Nav className="col-lg-3 col-6 col-sm-3">
                         <Nav.Link as={Link} to="/vacancies"><Button className='searchButton' variant="warning">Vacancies</Button></Nav.Link>
                     </Nav>
                 </Form>
