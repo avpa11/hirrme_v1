@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+
 import { withFirebase } from './Firebase';
 import { withAuthorization } from './Session';
 import { withRouter } from 'react-router-dom';
@@ -20,6 +22,115 @@ import ProfileImage from '../reusable/ProfileImage';
 import Video from '../components/Video2';
 
 import { connect } from 'react-redux';
+
+
+let imageContainerStyle = {
+    float: 'left',
+    width: '8em'
+}
+
+let textContainerStyle = {
+    textAlign: 'left',
+    display: 'flex'
+}
+
+let itemImageStyle = {
+    width: '6em',
+    height: '6em'
+}
+
+let itemsMarginsStyle = {
+    marginTop: '2em',
+    marginBottom: '2em'
+}
+
+let experienceDivStyle = {
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    marginTop: "50px", 
+    marginBottom: "50px" 
+}
+
+let educationDivStyle = {
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: '10px',
+    marginBottom: "50px" 
+}
+
+let greyText = {
+    color: '#7B7B7B'
+}
+
+function ExperienceComponent(props) {
+
+    let experience = props.experienceData;
+
+    return (
+
+        <div style={itemsMarginsStyle}>
+            { experience.position ?
+            <React.Fragment>
+                <div style={imageContainerStyle}>
+                    <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+                </div>
+                <div style={textContainerStyle}>
+
+                    <div style={{ width: '100%' }}>
+                        <div style={{ marginBottom: '1em' }}>
+                            <h4>{experience.position}</h4>
+                            <h6>{experience.company}</h6>
+                            <h6 style={greyText}>{experience.startDate}{experience.endDate ? ' - ' + experience.endDate : ''}</h6>
+                            <h6 style={greyText}>{experience.location}</h6>
+                        </div>
+
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+                    </div>
+                </div>
+                <hr />
+            </React.Fragment> : null            
+            }
+        </div>
+    )
+}
+
+function EducationComponent(props) {
+
+    let education = props.educationData;
+
+    return (
+        <div style={itemsMarginsStyle}>
+            { education.programName ? 
+                <React.Fragment>
+                    <div style={imageContainerStyle}>
+                        <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+                    </div>
+                    <div style={textContainerStyle}>
+
+                        <div style={{ width: '100%' }}>
+                            <div style={{ marginBottom: '1em' }}>
+                                <h4>{education.programName}{education.programType ? ', ' + education.programType : ''}</h4>
+                                <h6>{education.schoolName}</h6>
+                                <h6 style={greyText}>{education.startDate}{education.endDate ? ' - ' + education.endDate : ''}</h6>
+                                <h6 style={greyText}>{education.location}</h6>
+                            </div>
+
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+                        </div>
+                    </div>
+                <hr />
+                </React.Fragment> : null           
+            }
+        </div>
+    )
+}
+
+function  deleteExperience() {
+    alert('NOT IMPLEMENTED');
+}
 
 class UserAccount extends Component {
     constructor(props) {
@@ -59,15 +170,31 @@ class UserAccount extends Component {
         // Education
         var educationRef = this.props.firebase.education(this.props.authUser.uid)
         educationRef.on('value', snapshot => {
-
+            
+            //  For Edit Profile tab
             if (document.getElementById('education') != null) {
                 document.getElementById('education').innerHTML = '';
             }
+            
+            // For the first tab
+            if (document.getElementById('educationDiv') != null) {
+                document.getElementById('educationDiv').innerHTML = '';
+            }
+            let id = 0;
 
             snapshot.forEach(snap1 => {
                 currentComponent.setState({
                     educations: snapshot.val(),
                 });
+                // For the first tab
+                let divView = document.createElement('div');
+                divView.setAttribute('id', 'education' + ++id);
+                if (document.getElementById('educationDiv') != null) {
+                    document.getElementById('educationDiv').appendChild(divView);
+                }
+                ReactDOM.render(<EducationComponent educationData={snap1.val()} />, document.getElementById('education' + id));
+
+                //  For Edit Profile tab
                 var div = document.createElement('div');
                 div.setAttribute('class', 'edu');
                 var p = document.createElement('p');
@@ -96,10 +223,27 @@ class UserAccount extends Component {
                 document.getElementById('experience').innerHTML = '';
             }
 
+            if (document.getElementById('experienceDiv') != null) {
+                document.getElementById('experienceDiv').innerHTML = '';
+            }
+            let id = 0;
+            
             snapshot.forEach(snap1 => {
                 currentComponent.setState({
                     experiences: snap1.val(),
                 });
+                
+                // console.log(Object.keys(snapshot.val())[id]);
+                // In the first tab
+                let divView = document.createElement('div');
+                divView.setAttribute('id', 'experience' + ++id);
+                if (document.getElementById('experienceDiv') != null) {
+                    
+                    document.getElementById('experienceDiv').appendChild(divView);
+                }
+                ReactDOM.render(<ExperienceComponent experienceData={snap1.val()} />, document.getElementById('experience' + id));
+                
+                //  In Edit Profile
                 var div = document.createElement('div');
                 div.setAttribute('class', 'edu');
                 var p = document.createElement('p');
@@ -108,6 +252,12 @@ class UserAccount extends Component {
                 var spanDate = document.createElement('span');
                 spanDate.setAttribute('class', 'span_date');
                 spanDate.textContent = snap1.child('startDate').val() + " - " + snap1.child('endDate').val();
+                var buttonDelete = document.createElement('button');
+                buttonDelete.setAttribute('class', 'btn btn-danger deleteEducation');
+                buttonDelete.onclick =  function() { deleteExperience()};
+                // buttonDelete.onclick =  function() { alert(Object.keys(snapshot.val())[id])};
+                buttonDelete.textContent  = "Delete";
+                spanDate.appendChild(buttonDelete);
                 p.appendChild(spanDate);
                 div.appendChild(p);
                 var p2 = document.createElement('p');
@@ -248,7 +398,25 @@ class UserAccount extends Component {
                             {/* Education & Experience User Account tab, link1 */}
                             <Tab.Content>
                                 <Tab.Pane eventKey="#link1">
-                                   Display of education and experience
+                                    <Row>
+                                        <div style={experienceDivStyle}>
+                                            <div style={{ marginBottom: '2em' }} className='text-center'>
+                                                <h2>Previous Experience</h2>
+                                            </div>
+                                            <div id='experienceDiv'>
+                                                <div className='text-center'>No experience ... yet</div>
+                                            </div>
+                                        </div>
+
+                                        <div style={educationDivStyle}>
+                                            <div style={{ marginBottom: '2em' }} className='text-center'>
+                                                <h2>Previous Education</h2>
+                                            </div>
+                                            <div id='educationDiv'>
+                                                <div className='text-center'>No education ... yet</div>
+                                            </div>
+                                        </div>
+                                    </Row>
                                 </Tab.Pane>
                             </Tab.Content>
                             {/* Edit Profile Tab, link3 */}
@@ -287,7 +455,7 @@ class UserAccount extends Component {
                                     </Row>
                                 </Tab.Pane>
                             </Tab.Content>
-                            {/* Setting tab, link4 */}
+                            {/* Settings tab, link4 */}
                             <Tab.Content>
                                 <Tab.Pane eventKey="#link4">
                                     <Row style={{ marginTop: "50px", marginBottom: "50px" }}>

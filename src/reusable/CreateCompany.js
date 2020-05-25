@@ -9,6 +9,9 @@ import { withFirebase } from '../components/Firebase';
 // import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import { connect } from 'react-redux';
 
 const CreateCompany = () => (
@@ -27,7 +30,14 @@ const initState = {
 class CreateCompanyForm extends Component {
     constructor(props) {
         super(props);
-        this.state = {...initState};
+        this.state = {
+            companyName: (this.props.location.pathname === '/useraccount' && this.props.loggedCompany!== undefined ) ? this.props.loggedCompany.name : '',
+            companyField: '',
+            companyDesrciption: '',
+            companyCity: '',
+            companyProvince: 'BC',
+            companyCountry: 'Canada'
+        };
     }
 
     
@@ -142,13 +152,49 @@ class CreateCompanyForm extends Component {
         return (
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
-                style={{ justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
+                style={{ justifyContent: 'center', marginTop: "40px", marginBottom: "20px",  width: '100%' }}>
+
+                {this.props.location.pathname === '/useraccount' ?
+                <React.Fragment>
+                    <Row style={{marginLeft: '30px', marginRight: '30px'}}>
+                        <Col sm={6}>
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Name<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                            <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder=""></FormControl>
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Field<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                            <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder=""></FormControl>
+                        </Col>
+                        <Col sm={6}>
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>City<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                            <FormControl type="text" value={companyCity} onChange={this.handleChange} name="companyCity" placeholder=""></FormControl>
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Province</Form.Label>
+                            <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="" disabled></FormControl>
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Country</Form.Label>
+                            <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="" disabled></FormControl>
+                        </Col>
+                    </Row>
+                    <Row style={{marginLeft: '30px', marginRight: '30px'}}>
+                        <Col sm={12}>
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Description</Form.Label>
+                        </Col>
+                        <Col sm={12} className="center">
+                            <textarea rows="4" style={{width: '100%'}} value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder=""></textarea>
+                        </Col>
+                    </Row>
+                    <Row style={{marginLeft: '30px', marginRight: '30px'}}>
+                        <Col sm={12} className="center" style={{marginTop: '20px'}}>
+                            <Button type="submit" variant="warning">
+                                Save Changes
+                            </Button>
+                        </Col>
+                    </Row>
+                </React.Fragment> : 
+                <React.Fragment>
                     <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder="Name"></FormControl>
                     <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder="Field"></FormControl>
                     <FormControl type="text" value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder="Description"></FormControl>
                     <FormControl type="text" value={companyCity} onChange={this.handleChange} name="companyCity" placeholder="City"></FormControl>
-                    <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="Province"></FormControl>
-                    <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="Country"></FormControl>
+                    <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="Province" disabled></FormControl>
+                    <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="Country" disabled></FormControl>
                     {/* <div className="center" style={{marginTop: "50px", paddingBottom: '50px'}}>
                         <Button type="submit" className="loginButton" variant="warning">
                             Register
@@ -160,7 +206,9 @@ class CreateCompanyForm extends Component {
                         :
                         'Next'
                     } 
-                </Button>
+                    </Button>
+                </React.Fragment>
+            }
             </Form>
         )
     }
