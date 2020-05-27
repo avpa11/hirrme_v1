@@ -11,11 +11,23 @@ import { NavHashLink } from 'react-router-hash-link';
 
 import { connect } from 'react-redux';
 
+let iconStyle = {
+    width: '25%',
+    height: '25%'
+}
+
+let profileIconStyle = {
+    height: '2em',
+    marginRight: '0.5em'
+}
+
 const initState = {
     email: '',
     password: '',
     error: null,
-    show: false
+    show: false,
+    userName: '',
+    userPicture: null
 };
 
 class SignOutForm extends Component {
@@ -50,6 +62,14 @@ class SignOutForm extends Component {
     }
 
     render() {
+
+        this.props.firebase.database().child('users').orderByChild('email').equalTo(this.props.authUser.email).once('value').then((snap) => {
+            snap.forEach(snap1 => {
+                this.setState({userName: snap1.child('firstName').val() + ' ' + snap1.child('lastName').val()})                
+                // this.setState({userPicture: snap1.child('profileImage').val()})
+            })
+        })
+
         // Waldi, please check the userType
         let userType = this.props.userType;
         // console.log(this.props.userType);
@@ -57,8 +77,7 @@ class SignOutForm extends Component {
 
                 <div>
                     <Button variant="light" className="logoutButton" onClick={this.changeVisibility}>
-                        <IoIosPerson size={40} />
-                        {this.props.authUser.email}
+                    <img style={profileIconStyle} src={ this.state.userPicture ? this.state.userPicture : require('../img/profileImage.png')} /><span style={{fontSize: '130%'}}>{this.state.userName ? this.state.userName : this.props.authUser.email}</span>
                     </Button>
 
                     <Modal show={this.state.show} onHide={this.changeVisibility} className="modal" id='modalSignOut'>
@@ -68,24 +87,24 @@ class SignOutForm extends Component {
                                 <div id='modalSignOutItems'>
                                     <div onClick={this.changeVisibility}>                                             
                                         <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount#link1">
-                                        <IoIosPersonAdd size={40} /><span>User's profile</span>                                            
+                                        <img style={iconStyle} src={require('../img/usersProfile.png')} /><span>User's profile</span>                                            
                                         </NavHashLink>
                                     </div>
                                     {userType === 'jobSeeker' ? (
                                         <React.Fragment>
                                             <div>
                                                 <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link3">
-                                                    <IoIosDocument size={40} /><span>Edit Profile</span>     
+                                                <img style={iconStyle} src={require('../img/editProfile.png')} /><span>Edit Profile</span>     
                                                 </NavHashLink>                                       
                                             </div>
                                             <div>
                                                 <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link4">
-                                                    <IoMdSettings size={40} /><span>Settings</span>   
+                                                <img style={iconStyle} src={require('../img/settings.png')} /><span>Settings</span>   
                                                 </NavHashLink>                                         
                                             </div>
                                             <div>
                                                 <NavHashLink  as={Link} className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link5">
-                                                    <IoIosThumbsUp size={40} /><span>Saved Vacancies</span>
+                                                <img style={iconStyle} src={require('../img/savedVacancies.png')} /><span>Saved Vacancies</span>
                                                 </NavHashLink>                                            
                                             </div>
                                         </React.Fragment>

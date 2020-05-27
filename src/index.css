@@ -219,10 +219,6 @@ input[type="email"]:focus,
   .navbar {
     background: white;
   }
-
-  #modalSignIn {
-    width: 100% !important;
-  }
 }
 
 /* add a background color on scroll */
@@ -308,10 +304,11 @@ p>a:hover {
 }
 
 #modalSignIn {
-  margin-right: 1em !important;
+  margin-right: 2.2em !important;
+  margin-top: 5em !important;
   text-align: center;
   margin-top: 4em;
-  width: 20%;
+  width: 21em;
 }
 
 #authForm Button{
@@ -333,10 +330,10 @@ p>a:hover {
 
 #modalSignOut {
   margin-right: 0em !important;
-  margin-top: 3.5em;
+  margin-top: 4.5em;
   width: 10%;
   padding: 1em;
-  min-width: 15em;
+  min-width: 16em;
 }
 
 #modalSignOutItems div {
