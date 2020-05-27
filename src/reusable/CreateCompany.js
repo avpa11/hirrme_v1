@@ -32,9 +32,9 @@ class CreateCompanyForm extends Component {
         super(props);
         this.state = {
             companyName: (this.props.location.pathname === '/useraccount' && this.props.loggedCompany!== undefined ) ? this.props.loggedCompany.name : '',
-            companyField: '',
-            companyDesrciption: '',
-            companyCity: '',
+            companyField: (this.props.location.pathname === '/useraccount' && this.props.loggedCompany!== undefined ) ? this.props.loggedCompany.field : '',
+            companyDesrciption: (this.props.location.pathname === '/useraccount' && this.props.loggedCompany!== undefined ) ? this.props.loggedCompany.desrciption : '',
+            companyCity: (this.props.location.pathname === '/useraccount' && this.props.loggedCompany!== undefined ) ? this.props.loggedCompany.city : '',
             companyProvince: 'BC',
             companyCountry: 'Canada'
         };

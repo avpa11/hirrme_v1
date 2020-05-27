@@ -141,9 +141,13 @@ class UserAccount extends Component {
             key: '',
             showProfileAdd: false,
             addEducation: false,
+            showFullDescription: false
             // openTabLocation: this.props.location.hash
         };
     }
+
+    showMore = () => this.setState({showFullDescription: true}); 
+    showLess = () => this.setState({showFullDescription: false});
 
     componentDidMount() {
         // loading flag
@@ -331,6 +335,12 @@ class UserAccount extends Component {
     }
 
     render() {
+        var descriptionContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+        var descriptionLength = descriptionContent.length;
+        var descriptionLimit = 200;
+        var descCropped = descriptionContent.substring(0, descriptionLimit)+"...";
+        const {showFullDescription} = this.state;
+        // console.log(showFullDescription);
         return (
             <React.Fragment>
                 <Video />
@@ -381,12 +391,28 @@ class UserAccount extends Component {
                                                     <span>{this.props.user.city}</span>,
                                                     <span> {this.props.user.province}</span>,
                                                     <span> {this.props.user.country}</span>
-                                                </p> <br />
+                                                </p> 
+                                                {/* <br /> */}
                                             </Col>
-                                            <Col sm={8} style={{marginTop: '1em'}}>
+                                            <Col id="profileCard" sm={8} style={{marginTop: '1em'}}>
                                                 <h4>{this.props.user.title} <span class="jobTypeSpan" style={{float: 'right'}}>#full-time</span></h4>
-                                                
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                                {
+                                                    descriptionLength <= descriptionLimit ?
+                                                    <p id="description">{descriptionContent}</p> :
+                                                    <React.Fragment>
+                                                    {
+                                                        showFullDescription ?
+                                                        <div>
+                                                            {descriptionContent}
+                                                            <a onClick={this.showLess} style={{color: '#FFCA11', cursor: 'crosshair'}}> Read less</a>
+                                                        </div> :
+                                                        <div>
+                                                            {descCropped}
+                                                            <a onClick={this.showMore} style={{color: 'rgb(255, 172, 17)', cursor: 'crosshair'}}> Read more</a>
+                                                        </div>
+                                                    }
+                                                    </React.Fragment>
+                                                }
                                                 <Button style={{marginBottom: '20px', float: 'right', background: '#FFAC11'}} onClick={this.goToProfile} variant="warning">View public profile</Button>
 
                                             </Col>
