@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { withFirebase } from './Firebase';
 // import { AuthUserContext } from './Session';
-import { IoIosPerson, IoIosPersonAdd, IoIosThumbsUp, IoIosDocument, IoMdSettings, IoMdClipboard } from "react-icons/io";
+import { IoMdSettings, IoMdClipboard } from "react-icons/io";
 import { NavHashLink } from 'react-router-hash-link';
 
 import { connect } from 'react-redux';
@@ -77,7 +77,7 @@ class SignOutForm extends Component {
 
                 <div>
                     <Button variant="light" className="logoutButton" onClick={this.changeVisibility}>
-                    <img style={profileIconStyle} src={ this.state.userPicture ? this.state.userPicture : require('../img/profileImage.png')} /><span style={{fontSize: '130%'}}>{this.state.userName ? this.state.userName : this.props.authUser.email}</span>
+                    <img style={profileIconStyle} src={ this.state.userPicture ? this.state.userPicture : require('../img/profileImage.png')} alt='profileImage.png' /><span style={{fontSize: '130%'}}>{this.state.userName ? this.state.userName : this.props.authUser.email}</span>
                     </Button>
 
                     <Modal show={this.state.show} onHide={this.changeVisibility} className="modal" id='modalSignOut'>
@@ -87,24 +87,24 @@ class SignOutForm extends Component {
                                 <div id='modalSignOutItems'>
                                     <div onClick={this.changeVisibility}>                                             
                                         <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount#link1">
-                                        <img style={iconStyle} src={require('../img/usersProfile.png')} /><span>User's profile</span>                                            
+                                        <img style={iconStyle} src={require('../img/usersProfile.png')} alt='usersProfile.png' /><span>User's profile</span>                                            
                                         </NavHashLink>
                                     </div>
                                     {userType === 'jobSeeker' ? (
                                         <React.Fragment>
                                             <div>
                                                 <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link3">
-                                                <img style={iconStyle} src={require('../img/editProfile.png')} /><span>Edit Profile</span>     
+                                                <img style={iconStyle} src={require('../img/editProfile.png')} alt='editProfile.png' /><span>Edit Profile</span>     
                                                 </NavHashLink>                                       
                                             </div>
                                             <div>
                                                 <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link4">
-                                                <img style={iconStyle} src={require('../img/settings.png')} /><span>Settings</span>   
+                                                <img style={iconStyle} src={require('../img/settings.png')} alt='settings.png' /><span>Settings</span>   
                                                 </NavHashLink>                                         
                                             </div>
                                             <div>
                                                 <NavHashLink  as={Link} className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link5">
-                                                <img style={iconStyle} src={require('../img/savedVacancies.png')} /><span>Saved Vacancies</span>
+                                                <img style={iconStyle} src={require('../img/savedVacancies.png')} alt='savedvacancies.png' /><span>Saved Vacancies</span>
                                                 </NavHashLink>                                            
                                             </div>
                                         </React.Fragment>

@@ -533,18 +533,22 @@ class ListVacancies extends Component {
         return (
             <React.Fragment>
                 <Row>
-                    <Col sm={8}>
-                        <h3>{this.props.vacancy.positionTitle} <span className="jobTypeSpan">#{this.props.vacancy.type}</span></h3>
-                        <h4>{this.props.vacancy.city}, {this.props.vacancy.province}, {this.props.vacancy.country}</h4>
-                        <p>{this.props.vacancy.description}</p>
+                    <Col sm={8} md={9} lg={9}>
+                        <div style={{paddingLeft: '2em'}}>
+                            <h3>{this.props.vacancy.positionTitle} <span className="jobTypeSpan">#{this.props.vacancy.type}</span></h3>
+                            <h4>{this.props.vacancy.city}, {this.props.vacancy.province}, {this.props.vacancy.country}</h4>
+                            <p>{this.props.vacancy.description}</p>
+                        </div>
                     </Col>
-                    <Col sm={4}>
-                        <p>Number of Saves: <span style={{float: 'right'}}>{this.state.numberOfSaves}</span></p>
-                        <p>Number of Applications: <span style={{float: 'right'}}>{this.state.numberOfApplicants}</span></p>
+                    <Col sm={4} md={3} lg={3}>
+                        <div style={{paddingRight: '2em'}}>
+                            <p>Number of Saves: <span style={{float: 'right'}}>{this.state.numberOfSaves}</span></p>
+                            <p>Number of Applications: <span style={{float: 'right'}}>{this.state.numberOfApplicants}</span></p>
+                        </div>
                         <div id="quizButton">
 
                         </div>
-                        <div className="center">
+                        <div className="left" >
                             { (this.state.hasQuiz == null) ? (
                                     <Button variant="warning" onClick={this.handleShow}>Add a quiz</Button>
                                 ) : (
