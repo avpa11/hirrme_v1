@@ -185,7 +185,8 @@ class UserAccount extends Component {
                 document.getElementById('educationDiv').innerHTML = '';
             }
             let id = 0;
-
+            let id2 = 0;
+            
             snapshot.forEach(snap1 => {
                 currentComponent.setState({
                     educations: snapshot.val(),
@@ -197,25 +198,18 @@ class UserAccount extends Component {
                     document.getElementById('educationDiv').appendChild(divView);
                 }
                 ReactDOM.render(<EducationComponent educationData={snap1.val()} />, document.getElementById('education' + id));
-
+                
                 //  For Edit Profile tab
-                var div = document.createElement('div');
-                div.setAttribute('class', 'edu');
-                var p = document.createElement('p');
-                p.setAttribute('class', 'mainp');
-                p.textContent = snap1.child('programName').val();
-                var spanDate = document.createElement('span');
-                spanDate.setAttribute('class', 'span_date');
-                spanDate.textContent = snap1.child('startDate').val() + " - " + snap1.child('endDate').val();
-                p.appendChild(spanDate);
-                div.appendChild(p);
-                var p2 = document.createElement('p');
-                p2.setAttribute('class', 'name');
-                p2.textContent = snap1.child('schoolName').val() + ", " + snap1.child('location').val();
-                div.appendChild(p2);
+                let divEditView = document.createElement('div');
+                divEditView.setAttribute('id', 'editEducation' + ++id2);
                 if (document.getElementById('education') != null) {
-                    document.getElementById('education').appendChild(div);
+                    document.getElementById('education').appendChild(divEditView);
                 }
+                ReactDOM.render(<EducationObject 
+                    educationData={snap1.val()}
+                    fireb={this.props.firebase}
+                    userID={this.props.authUser.uid}
+                    eduID={Object.keys(snapshot.val())[id2-1]} />, document.getElementById('editEducation' + id2))
             })
         })
 
@@ -231,6 +225,7 @@ class UserAccount extends Component {
                 document.getElementById('experienceDiv').innerHTML = '';
             }
             let id = 0;
+            let id2 = 0;
             
             snapshot.forEach(snap1 => {
                 currentComponent.setState({
@@ -248,29 +243,16 @@ class UserAccount extends Component {
                 ReactDOM.render(<ExperienceComponent experienceData={snap1.val()} />, document.getElementById('experience' + id));
                 
                 //  In Edit Profile
-                var div = document.createElement('div');
-                div.setAttribute('class', 'edu');
-                var p = document.createElement('p');
-                p.setAttribute('class', 'mainp');
-                p.textContent = snap1.child('position').val();
-                var spanDate = document.createElement('span');
-                spanDate.setAttribute('class', 'span_date');
-                spanDate.textContent = snap1.child('startDate').val() + " - " + snap1.child('endDate').val();
-                var buttonDelete = document.createElement('button');
-                buttonDelete.setAttribute('class', 'btn btn-danger deleteEducation');
-                buttonDelete.onclick =  function() { deleteExperience()};
-                // buttonDelete.onclick =  function() { alert(Object.keys(snapshot.val())[id])};
-                buttonDelete.textContent  = "Delete";
-                spanDate.appendChild(buttonDelete);
-                p.appendChild(spanDate);
-                div.appendChild(p);
-                var p2 = document.createElement('p');
-                p2.setAttribute('class', 'name');
-                p2.textContent = snap1.child('company').val() + ", " + snap1.child('location').val();
-                div.appendChild(p2);
+                let divEditView = document.createElement('div');
+                divEditView.setAttribute('id', 'editExperience' + ++id2);
                 if (document.getElementById('experience') != null) {
-                    document.getElementById('experience').appendChild(div);
+                    document.getElementById('experience').appendChild(divEditView);
                 }
+                ReactDOM.render(<ExperienceObject 
+                    experienceData={snap1.val()}
+                    fireb={this.props.firebase}
+                    userID={this.props.authUser.uid}
+                    expID={Object.keys(snapshot.val())[id2-1]} />, document.getElementById('editExperience' + id2))
             });
         })
     }
@@ -463,9 +445,13 @@ class UserAccount extends Component {
                                         <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
                                             <h3 className="center" style={{marginTop: '10px', paddingTop: '20px'}}>Previous Education</h3>
                                             <div className="container" id="education"></div>
-                                            <Button onClick={this.addEducation} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
-                                                Add Education
+                                            <div className="center">
+                                                <Button onClick={this.addEducation} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
+                                                    {!this.state.addEducation ?
+                                                     "Add Education" : "Hide"
+                                                    }
                                                 </Button>
+                                            </div>
                                             {this.state.addEducation ? <FormEducation></FormEducation> : null}
                                         </Col>
                                     </Row>
@@ -473,9 +459,13 @@ class UserAccount extends Component {
                                         <Col className="container" sm={12} style={{ backgroundColor: 'rgb(255,255,255)', borderRadius: '10px', minHeight: '200px' }}>
                                             <h3 className="center" style={{marginTop: '10px', paddingTop: '20px'}}>Previous Experience</h3>
                                             <div className="container" id="experience"></div>
-                                            <Button onClick={this.addExperience} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
-                                                Add Experience
+                                            <div className="center">
+                                                <Button onClick={this.addExperience} style={{ marginLeft: '7px', marginBottom: '20px' }} type="button" variant="warning">
+                                                {!this.state.addExperience ?
+                                                     "Add Experience" : "Hide"
+                                                    } 
                                                 </Button>
+                                            </div>
                                             {this.state.addExperience ? <FormExperience></FormExperience> : null}
                                         </Col>
                                     </Row>
@@ -550,6 +540,84 @@ class UserAccount extends Component {
     }
 }
 
+class EditEducation extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        }
+    }
+
+    handleEducationDelete = () => {
+        this.props.fireb.database().ref.child('educations').ref.child(this.props.userID).ref.child(this.props.eduID).remove();
+        this.setState({ showReview: false })
+    }
+
+    render() {
+        console.log(this.props.eduID);
+        return (
+            <React.Fragment>
+                <div style={imageContainerStyle}>
+                        <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+                    </div>
+                    <div style={textContainerStyle}>
+
+                        <div style={{ width: '100%' }}>
+                            <div style={{ marginBottom: '1em' }}>
+                                <h4>{this.props.educationData.programName}{this.props.educationData.programType ? ', ' + this.props.educationData.programType : ''}</h4>
+                                <h6>{this.props.educationData.schoolName}</h6>
+                                <h6 style={greyText}>{this.props.educationData.startDate}{this.props.educationData.endDate ? ' - ' + this.props.educationData.endDate : ''}</h6>
+                                <h6 style={greyText}>{this.props.educationData.location}</h6>
+                            </div>
+
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <Button style={{marginBottom: '20px', float: 'right'}} onClick={this.handleEducationDelete} variant="danger">Delete</Button>
+
+                        </div>
+                    </div>
+                <hr />
+            </React.Fragment>
+        )
+    }
+}
+
+class EditExperience extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        }
+    }
+
+    handleEducationDelete = () => {
+        this.props.fireb.database().ref.child('experience').ref.child(this.props.userID).ref.child(this.props.expID).remove();
+        this.setState({ showReview: false })
+    }
+
+    render() {
+        return (
+            <React.Fragment>
+                <div style={imageContainerStyle}>
+                    <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+                </div>
+                <div style={textContainerStyle}>
+
+                    <div style={{ width: '100%' }}>
+                        <div style={{ marginBottom: '1em' }}>
+                            <h4>{this.props.experienceData.position}</h4>
+                            <h6>{this.props.experienceData.company}</h6>
+                            <h6 style={greyText}>{this.props.experienceData.startDate}{this.props.experienceData.endDate ? ' - ' + this.props.experienceData.endDate : ''}</h6>
+                            <h6 style={greyText}>{this.props.experienceData.location}</h6>
+                        </div>
+
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <Button style={{marginBottom: '20px', float: 'right'}} onClick={this.handleEducationDelete} variant="danger">Delete</Button>
+
+                    </div>
+                </div>
+                <hr />
+            </React.Fragment>
+        )
+    }
+}
 
 // Redux stuff
 const mapStateToProps = (state, props) => ({
@@ -566,4 +634,10 @@ const mapDispatchToProps = dispatch => ({
 
 const condition = authUser => !!authUser;
 
+const EducationObject = withFirebase(EditEducation);
+const ExperienceObject = withFirebase(EditExperience);
+
 export default compose(connect(mapStateToProps, mapDispatchToProps), withFirebase, withRouter, withAuthorization(condition))(UserAccount);
+
+export { EducationObject };
+export { ExperienceObject };
