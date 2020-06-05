@@ -24,6 +24,7 @@ class FormExperience extends Component {
                 startDate: '',
                 endDate: '',
                 location: '',
+                description: ''
             }]
         }
     }
@@ -38,6 +39,7 @@ class FormExperience extends Component {
                 startDate: item.startDate,
                 endDate: item.endDate,
                 location: item.location,
+                description: item.description
             })
         ))
         if (this.props.location.pathname === '/experience') {
@@ -58,7 +60,8 @@ class FormExperience extends Component {
             company: '',
             startDate: '',
             endDate: '',
-            location: ''}]
+            location: '',
+            description: ''}]
         }))
     }
 
@@ -73,13 +76,20 @@ class FormExperience extends Component {
             <div key={i} style={{ marginBottom: '20px'}}>
                 <Row>
                     <Col sm={6}>
-                        <FormControl type="text" value={el.position} onChange={this.handleChange.bind(this, i)} name="position" placeholder="Position"></FormControl>                        
-                        <FormControl type="text" value={el.company} onChange={this.handleChange.bind(this, i)} name="company" placeholder="Company"></FormControl>                        
-                        <FormControl type="text" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder="Start Date"></FormControl>                        
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Position<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                        <FormControl type="text" value={el.position} onChange={this.handleChange.bind(this, i)} name="position" placeholder=""></FormControl>                        
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Company<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                        <FormControl type="text" value={el.company} onChange={this.handleChange.bind(this, i)} name="company" placeholder=""></FormControl>                        
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Start Date<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                        <FormControl type="text" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder=""></FormControl>                        
                     </Col>
                     <Col sm={6}>
-                        <FormControl type="text" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder="End Date"></FormControl>                        
-                        <FormControl type="text" value={el.location} onChange={this.handleChange.bind(this, i)} name="location" placeholder="Location"></FormControl>   
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>End Date<span style={{color: '#dc3545'}}></span></Form.Label>
+                        <FormControl type="text" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder=""></FormControl>    
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Location<span style={{color: '#dc3545'}}>*</span></Form.Label>                    
+                        <FormControl type="text" value={el.location} onChange={this.handleChange.bind(this, i)} name="location" placeholder=""></FormControl>   
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Description<span style={{color: '#dc3545'}}>*</span></Form.Label>                       
+                        <textarea rows="4" style={{width: '100%'}} value={el.description} onChange={this.handleChange.bind(this, i)} name="description" placeholder=""></textarea>                    
                     </Col>
                 </Row>
                 <div className="center">

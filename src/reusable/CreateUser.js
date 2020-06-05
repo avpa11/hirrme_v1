@@ -22,6 +22,7 @@ const initState = {
     city: '',
     province: 'BC',
     country: 'Canada',
+    description: '',
 };
 
 class CreateUserForm extends Component {
@@ -34,6 +35,7 @@ class CreateUserForm extends Component {
             city: this.props.location.pathname === '/useraccount' ? this.props.user.city : '',
             province: 'BC',
             country: 'Canada',
+            description: this.props.location.description === '/useraccount' ? this.props.user.description : '',
         };
     }
 
@@ -51,6 +53,7 @@ class CreateUserForm extends Component {
                 city: this.state.city,
                 province: this.state.province,
                 country: this.state.country,
+                description: this.state.description,
                 profileImage: (this.props.user!== null && this.props.user!== undefined) ? this.props.user.profileImage : null
             })
             .then(() => {
@@ -89,6 +92,7 @@ class CreateUserForm extends Component {
                 city: this.state.city,
                 province: this.state.province,
                 country: this.state.country,
+                description: this.state.description
             })
             .then(() => {
                 this.setState({...initState})
@@ -118,7 +122,7 @@ class CreateUserForm extends Component {
     };
 
     render () {
-        const { firstName, lastName, title, city, province, country } = this.state;
+        const { firstName, lastName, title, city, province, country, description } = this.state;
         // console.log(this.props.user);
         // {console.log(this.props.location.pathname)}
         return (
@@ -127,36 +131,58 @@ class CreateUserForm extends Component {
                 style={{ justifyContent: 'center', marginTop: "40px", marginBottom: "20px",  width: '100%' }}>
 
             {this.props.location.pathname === '/useraccount' ?
-                <Row>
-                    <Col sm={5}>
-                        <FormControl type="text" value={firstName} onChange={this.handleChange} name="firstName" placeholder="First Name"></FormControl>                        
-                        <FormControl type="text" value={lastName} onChange={this.handleChange} name="lastName" placeholder="Last Name"></FormControl>                        
-                        <FormControl type="text" value={title} onChange={this.handleChange} name="title" placeholder="Title"></FormControl>    
-                    </Col>
-                    <Col sm={5}>
-                        <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>                        
-                        <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province" disabled></FormControl>                        
-                        <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country" disabled></FormControl>
-                    </Col>
-                    <Col sm={2}>
-                        <div className="center" style={{paddingTop: "30%"}}>
-                            <Button type="submit" variant="warning">
-                                    {(this.props.user!== null && this.props.user!== undefined) ? 
-                                        'Change'
-                                        :
-                                        'Next'
-                                    } 
-                            </Button>
-                        </div>
-                    </Col>
-                </Row> :
                 <React.Fragment>
-                    <FormControl type="text" value={firstName} onChange={this.handleChange} name="firstName" placeholder="First Name"></FormControl>                        
-                    <FormControl type="text" value={lastName} onChange={this.handleChange} name="lastName" placeholder="Last Name"></FormControl>                        
-                    <FormControl type="text" value={title} onChange={this.handleChange} name="title" placeholder="Title"></FormControl>                        
-                    <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder="City"></FormControl>                        
-                    <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="Province" disabled></FormControl>                        
-                    <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="Country" disabled></FormControl>                        
+                    <Row style={{marginLeft: '30px', marginRight: '30px'}}>
+                        <Col sm={5}>
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>First Name<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                            <FormControl type="text" value={firstName} onChange={this.handleChange} name="firstName" placeholder=""></FormControl>      
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Last Name<span style={{color: '#dc3545'}}>*</span></Form.Label>                       
+                            <FormControl type="text" value={lastName} onChange={this.handleChange} name="lastName" placeholder=""></FormControl>    
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Title<span style={{color: '#dc3545'}}>*</span></Form.Label>                      
+                            <FormControl type="text" value={title} onChange={this.handleChange} name="title" placeholder=""></FormControl>    
+                        </Col>
+                        <Col sm={5}>
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>City<span style={{color: '#dc3545'}}>*</span></Form.Label>                   
+                            <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder=""></FormControl>     
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Province<span style={{color: '#dc3545'}}></span></Form.Label>                 
+                            <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="" disabled></FormControl>                      
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Country<span style={{color: '#dc3545'}}></span></Form.Label>                 
+                            <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="" disabled></FormControl>
+                        </Col>
+                        <Col sm={2}>
+                            <div className="center" style={{paddingTop: "30%"}}>
+                                <Button type="submit" variant="warning">
+                                        {(this.props.user!== null && this.props.user!== undefined) ? 
+                                            'Change'
+                                            :
+                                            'Next'
+                                        } 
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row> 
+                    <Row style={{marginLeft: '30px', marginRight: '30px', marginTop: '20px'}}>
+                        <Col sm={12}>
+                            <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Description<span style={{color: '#dc3545'}}>*</span></Form.Label>  
+                            <textarea rows="4" style={{width: '100%'}} value={description} onChange={this.handleChange} name="description" placeholder=""></textarea>                    
+                        </Col>
+                    </Row>
+                </React.Fragment>:
+                <React.Fragment>
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>First Name<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                    <FormControl type="text" value={firstName} onChange={this.handleChange} name="firstName" placeholder=""></FormControl> 
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Last Name<span style={{color: '#dc3545'}}>*</span></Form.Label>                       
+                    <FormControl type="text" value={lastName} onChange={this.handleChange} name="lastName" placeholder=""></FormControl>  
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Title<span style={{color: '#dc3545'}}>*</span></Form.Label>                      
+                    <FormControl type="text" value={title} onChange={this.handleChange} name="title" placeholder=""></FormControl>     
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>City<span style={{color: '#dc3545'}}>*</span></Form.Label>                   
+                    <FormControl type="text" value={city} onChange={this.handleChange} name="city" placeholder=""></FormControl>       
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Province<span style={{color: '#dc3545'}}></span></Form.Label>                 
+                    <FormControl type="text" value={province} onChange={this.handleChange} name="province" placeholder="" disabled></FormControl>       
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Country<span style={{color: '#dc3545'}}></span></Form.Label>                 
+                    <FormControl type="text" value={country} onChange={this.handleChange} name="country" placeholder="" disabled></FormControl>  
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Description<span style={{color: '#dc3545'}}>*</span></Form.Label>  
+                    <textarea rows="4" style={{width: '100%'}} value={description} onChange={this.handleChange} name="description" placeholder=""></textarea>                    
                     <Button type="submit" variant="warning">
                         {(this.props.user!== null && this.props.user!== undefined) ? 
                             'Change'

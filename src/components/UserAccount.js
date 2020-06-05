@@ -85,7 +85,7 @@ function ExperienceComponent(props) {
                             <h6 style={greyText}>{experience.location}</h6>
                         </div>
 
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>{experience.description ? experience.description  : ''}</p>
 
                     </div>
                 </div>
@@ -117,7 +117,7 @@ function EducationComponent(props) {
                                 <h6 style={greyText}>{education.location}</h6>
                             </div>
 
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <p>{education.description ? education.description  : ''}</p>
 
                         </div>
                     </div>
@@ -197,7 +197,9 @@ class UserAccount extends Component {
                 if (document.getElementById('educationDiv') != null) {
                     document.getElementById('educationDiv').appendChild(divView);
                 }
-                ReactDOM.render(<EducationComponent educationData={snap1.val()} />, document.getElementById('education' + id));
+                if (document.getElementById('education' + id)) {
+                    ReactDOM.render(<EducationComponent educationData={snap1.val()} />, document.getElementById('education' + id));
+                }
                 
                 //  For Edit Profile tab
                 let divEditView = document.createElement('div');
@@ -205,11 +207,13 @@ class UserAccount extends Component {
                 if (document.getElementById('education') != null) {
                     document.getElementById('education').appendChild(divEditView);
                 }
+                if (document.getElementById('editEducation' + id)) {
                 ReactDOM.render(<EducationObject 
                     educationData={snap1.val()}
                     fireb={this.props.firebase}
                     userID={this.props.authUser.uid}
                     eduID={Object.keys(snapshot.val())[id2-1]} />, document.getElementById('editEducation' + id2))
+                }
             })
         })
 
@@ -240,7 +244,9 @@ class UserAccount extends Component {
                     
                     document.getElementById('experienceDiv').appendChild(divView);
                 }
-                ReactDOM.render(<ExperienceComponent experienceData={snap1.val()} />, document.getElementById('experience' + id));
+                if (document.getElementById('experience' + id)) {
+                    ReactDOM.render(<ExperienceComponent experienceData={snap1.val()} />, document.getElementById('experience' + id));
+                }
                 
                 //  In Edit Profile
                 let divEditView = document.createElement('div');
@@ -248,11 +254,13 @@ class UserAccount extends Component {
                 if (document.getElementById('experience') != null) {
                     document.getElementById('experience').appendChild(divEditView);
                 }
+                if (document.getElementById('editExperience' + id)) {
                 ReactDOM.render(<ExperienceObject 
                     experienceData={snap1.val()}
                     fireb={this.props.firebase}
                     userID={this.props.authUser.uid}
                     expID={Object.keys(snapshot.val())[id2-1]} />, document.getElementById('editExperience' + id2))
+                }
             });
         })
     }
@@ -317,7 +325,12 @@ class UserAccount extends Component {
     }
 
     render() {
-        var descriptionContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+        // console.log(this.props.user);
+        if (this.props.user) {
+            var descriptionContent = this.props.user.description;
+        } else {
+            var descriptionContent = '';
+        }
         var descriptionLength = descriptionContent.length;
         var descriptionLimit = 200;
         var descCropped = descriptionContent.substring(0, descriptionLimit)+"...";
@@ -569,7 +582,7 @@ class EditEducation extends Component {
                                 <h6 style={greyText}>{this.props.educationData.location}</h6>
                             </div>
 
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <p>{this.props.educationData.description ? this.props.educationData.description  : ''}</p>
                             <Button style={{marginBottom: '20px', float: 'right'}} onClick={this.handleEducationDelete} variant="danger">Delete</Button>
 
                         </div>
@@ -608,7 +621,7 @@ class EditExperience extends Component {
                             <h6 style={greyText}>{this.props.experienceData.location}</h6>
                         </div>
 
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>{this.props.experienceData.description ? this.props.experienceData.description  : ''}</p>
                         <Button style={{marginBottom: '20px', float: 'right'}} onClick={this.handleEducationDelete} variant="danger">Delete</Button>
 
                     </div>

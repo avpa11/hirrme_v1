@@ -85,13 +85,13 @@ class SignOutForm extends Component {
                             <Form
                                 onSubmit={this.handleSubmit}>
                                 <div id='modalSignOutItems'>
-                                    <div onClick={this.changeVisibility}>                                             
-                                        <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount#link1">
-                                        <img style={iconStyle} src={require('../img/usersProfile.png')} alt='usersProfile.png' /><span>User's profile</span>                                            
-                                        </NavHashLink>
-                                    </div>
                                     {userType === 'jobSeeker' ? (
                                         <React.Fragment>
+                                            <div onClick={this.changeVisibility}>                                             
+                                                <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount#link1">
+                                                <img style={iconStyle} src={require('../img/usersProfile.png')} alt='usersProfile.png' /><span>User's profile</span>                                            
+                                                </NavHashLink>
+                                            </div>
                                             <div>
                                                 <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link3">
                                                 <img style={iconStyle} src={require('../img/editProfile.png')} alt='editProfile.png' /><span>Edit Profile</span>     
@@ -110,6 +110,16 @@ class SignOutForm extends Component {
                                         </React.Fragment>
                                         ) : (
                                             <React.Fragment>
+                                                <div onClick={this.changeVisibility}>                                             
+                                                    <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount#link1">
+                                                    <img style={iconStyle} src={require('../img/usersProfile.png')} alt='usersProfile.png' /><span>Profile</span>                                            
+                                                    </NavHashLink>
+                                                </div>
+                                                <div>
+                                                    <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link3">
+                                                    <img style={iconStyle} src={require('../img/editProfile.png')} alt='editProfile.png' /><span>Edit Profile</span>     
+                                                    </NavHashLink>                                       
+                                                </div>
                                                 <div>
                                                     <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link2">
                                                         <IoMdClipboard size={40} /><span>New Vacancy</span>   

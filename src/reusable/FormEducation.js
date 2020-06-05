@@ -26,6 +26,7 @@ class FormEducation extends Component {
                 startDate: '',
                 endDate: '',
                 location: '',
+                description: ''
             }]
         }
     }
@@ -43,6 +44,7 @@ class FormEducation extends Component {
                 startDate: item.startDate,
                 endDate: item.endDate,
                 location: item.location,
+                description: item.description
             })
         ))
         if (this.props.location.pathname === '/education') {
@@ -64,7 +66,8 @@ class FormEducation extends Component {
             programName: '',
             startDate: '',
             endDate: '',
-            location: ''}]
+            location: '',
+            description: ''}]
         }))
     }
 
@@ -79,14 +82,26 @@ class FormEducation extends Component {
             <div key={i} style={{ marginBottom: '20px'}}>
                 <Row>
                     <Col sm={6}>
-                        <FormControl type="text" value={el.schoolName} onChange={this.handleChange.bind(this, i)} name="schoolName" placeholder="School Name"></FormControl>                        
-                        <FormControl type="text" value={el.programType} onChange={this.handleChange.bind(this, i)} name="programType" placeholder="Program Type"></FormControl>                        
-                        <FormControl type="text" value={el.programName} onChange={this.handleChange.bind(this, i)} name="programName" placeholder="Program Name"></FormControl>                                
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>School Name<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                        <FormControl type="text" value={el.schoolName} onChange={this.handleChange.bind(this, i)} name="schoolName" placeholder=""></FormControl>                        
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Program Type<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                        <FormControl type="text" value={el.programType} onChange={this.handleChange.bind(this, i)} name="programType" placeholder=""></FormControl>  
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Program Name<span style={{color: '#dc3545'}}>*</span></Form.Label>                      
+                        <FormControl type="text" value={el.programName} onChange={this.handleChange.bind(this, i)} name="programName" placeholder=""></FormControl>                                
                     </Col>
                     <Col sm={6}>
-                        <FormControl type="text" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder="Start Date"></FormControl>                        
-                        <FormControl type="text" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder="End Date"></FormControl>                        
-                        <FormControl type="text" value={el.location} onChange={this.handleChange.bind(this, i)} name="location" placeholder="Location"></FormControl>   
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Start Date<span style={{color: '#dc3545'}}>*</span></Form.Label>    
+                        <FormControl type="text" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder=""></FormControl>
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>End Date<span style={{color: '#dc3545'}}></span></Form.Label>                        
+                        <FormControl type="text" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder=""></FormControl> 
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Location<span style={{color: '#dc3545'}}>*</span></Form.Label>                       
+                        <FormControl type="text" value={el.location} onChange={this.handleChange.bind(this, i)} name="location" placeholder=""></FormControl>   
+                    </Col>
+                </Row>
+                <Row style={{marginTop: '20px'}}>
+                    <Col sm={12}>
+                        <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Description<span style={{color: '#dc3545'}}>*</span></Form.Label>                       
+                        <textarea rows="4" style={{width: '100%'}} value={el.description} onChange={this.handleChange.bind(this, i)} name="description" placeholder=""></textarea>                    
                     </Col>
                 </Row>
                 <div className="center">

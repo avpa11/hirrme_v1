@@ -44,8 +44,12 @@ class CompanyAccount extends Component {
             company: [],
             vacancies: [],
             key: '',
+            showFullDescription: false
         };
     }
+
+    showMore = () => this.setState({showFullDescription: true}); 
+    showLess = () => this.setState({showFullDescription: false});
 
     componentDidMount() {
         let currentComponent = this;
@@ -145,6 +149,15 @@ class CompanyAccount extends Component {
 
     render() {
         // console.log(this.props.loggedCompany);
+        if (this.state.company.desrciption) {
+            var descriptionContent = this.state.company.desrciption;
+        } else {
+            var descriptionContent = '';
+        }
+        var descriptionLength = descriptionContent.length;
+        var descriptionLimit = 200;
+        var descCropped = descriptionContent.substring(0, descriptionLimit)+"...";
+        const {showFullDescription} = this.state;
         return (
             <div>
                 <div className="container" style={{ marginBottom: '20px' }}>
@@ -193,9 +206,23 @@ class CompanyAccount extends Component {
                                     </Col>
                                     <Col sm={8} style={{marginTop: '2em'}}>
                                         <h4 class="jobTypeSpan">#{this.state.company.field}</h4>
-                                        <p>
-                                            <span>{this.state.company.desrciption}</span>
-                                        </p>
+                                        {
+                                            descriptionLength <= descriptionLimit ?
+                                            <p id="description">{descriptionContent}</p> :
+                                            <React.Fragment>
+                                            {
+                                                showFullDescription ?
+                                                <div>
+                                                    {descriptionContent}
+                                                    <a onClick={this.showLess} style={{color: '#FFCA11', cursor: 'crosshair'}}> Read less</a>
+                                                </div> :
+                                                <div>
+                                                    {descCropped}
+                                                    <a onClick={this.showMore} style={{color: 'rgb(255, 172, 17)', cursor: 'crosshair'}}> Read more</a>
+                                                </div>
+                                            }
+                                            </React.Fragment>
+                                        }
                                     </Col>
                                 </Row>
                             </Col>

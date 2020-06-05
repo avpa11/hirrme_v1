@@ -29,9 +29,6 @@ class CreateUserForm extends Component {
     }
 
     componentDidMount() {
-        // if (this.props.userType !== null) {
-        //     this.props.history.push('/');
-        // }
         let currentComponent = this;
         var jobSeekersRef = this.props.firebase.users().orderByChild('userId')
         .equalTo(this.props.authUser.uid)

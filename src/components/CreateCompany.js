@@ -50,7 +50,7 @@ class CreateCompanyForm extends Component {
     }
 
     redirect = e => {
-        this.props.history.push('/education');
+        this.props.history.push('/useraccount#link1');
     }
 
     render() {
@@ -82,7 +82,7 @@ class CreateCompanyForm extends Component {
 const mapStateToProps = state => ({
     authUser: state.sessionState.authUser,
     loggedCompany: (state.loggedCompanyState.loggedCompany || {})[Object.keys(state.loggedCompanyState.loggedCompany  || {})],
-    loggedCompanyKey: Object.keys(state.loggedCompanyState.loggedCompany || {})
+    loggedCompanyKey: Object.keys(state.loggedCompanyState.loggedCompany || {}),
   });
 
   const mapDispatchToProps = dispatch => ({

@@ -189,12 +189,18 @@ class CreateCompanyForm extends Component {
                     </Row>
                 </React.Fragment> : 
                 <React.Fragment>
-                    <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder="Name"></FormControl>
-                    <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder="Field"></FormControl>
-                    <FormControl type="text" value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder="Description"></FormControl>
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Name<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                    <FormControl type="text" value={companyName} onChange={this.handleChange} name="companyName" placeholder=""></FormControl>
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Field<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                    <FormControl type="text" value={companyField} onChange={this.handleChange} name="companyField" placeholder=""></FormControl>
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>City<span style={{color: '#dc3545'}}>*</span></Form.Label>
                     <FormControl type="text" value={companyCity} onChange={this.handleChange} name="companyCity" placeholder="City"></FormControl>
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Province</Form.Label>
                     <FormControl type="text" value={companyProvince} onChange={this.handleChange} name="companyProvince" placeholder="Province" disabled></FormControl>
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Country</Form.Label>
                     <FormControl type="text" value={companyCountry} onChange={this.handleChange} name="companyCountry" placeholder="Country" disabled></FormControl>
+                    <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Description<span style={{color: '#dc3545'}}>*</span></Form.Label>
+                    <textarea rows="4" style={{width: '100%'}} value={companyDesrciption} onChange={this.handleChange} name="companyDesrciption" placeholder=""></textarea>
                     {/* <div className="center" style={{marginTop: "50px", paddingBottom: '50px'}}>
                         <Button type="submit" className="loginButton" variant="warning">
                             Register

@@ -492,7 +492,7 @@ class VacancyObject extends Component {
                             <div style={{ width: '100%', paddingLeft: '2em', textAlign: 'left', color: '#686868' }}>
                                 <h4>{vacancyData.positionTitle} </h4>
                                 <h5>{vacancyData.city}, {vacancyData.province}</h5>
-                                <div style={{minHeight: '5em'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+                                <div style={{minHeight: '5em'}}>{vacancyData.positionTitle} </div>
                             </div>
                         </div>
                         <div style={{ width: '15%', color: '#FFAC11' }}>

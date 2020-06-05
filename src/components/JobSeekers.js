@@ -270,7 +270,7 @@ class JobSeekerObject extends Component {
                     <div style={{ width: '80%', marginLeft: '9.5em', marginRight: '1em', paddingLeft: '2em', textAlign: 'left', color: '#686868' }}>
                         <h4>{userData.firstName} {userData.lastName} - {userData.title}</h4>
                         <h5>{userData.city}, {userData.province}</h5>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <p>{userData.description ? userData.description : 'No description'}</p>
                     </div>
                 </div>
                 <div style={{ display: this.state.display }}>
