@@ -97,7 +97,7 @@ class VacanciesApplicants extends Component {
     };
 
     displayApplicants = e => {
-
+        
         let param = e ? e.target.value : 'pending';
 
         let userEmail = this.state.authUser ? this.state.authUser.email : '';
@@ -110,8 +110,7 @@ class VacanciesApplicants extends Component {
 
         this.props.firebase.vacanciesApplications().orderByChild('positionTitle').equalTo(this.state.vacancyProp.positionTitle).once('value', snap => {
             snap.forEach(snap1 => {
-                if (snap1.child('contactInfo').val() === userEmail) {
-                    console.log(snap1.val())
+                if (snap1.child('vacancyId').val() === this.state.vacancyProp.vacancyID) {
 
                     if (snap1.child('status').val() === param) {
 

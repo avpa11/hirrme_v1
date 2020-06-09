@@ -267,7 +267,7 @@ class JobSeekerObject extends Component {
                             alt=''>
                         </img>
                     </div>
-                    <div style={{ width: '80%', marginLeft: '9.5em', marginRight: '1em', paddingLeft: '2em', textAlign: 'left', color: '#686868' }}>
+                    <div style={{ width: '80%', marginLeft: '9.5em', marginRight: '1em', paddingLeft: '2em', textAlign: 'left', color: '#686868', minHeight: '10em' }}>
                         <h4>{userData.firstName} {userData.lastName} - {userData.title}</h4>
                         <h5>{userData.city}, {userData.province}</h5>
                         <p>{userData.description ? userData.description : 'No description'}</p>
