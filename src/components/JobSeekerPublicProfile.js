@@ -13,7 +13,7 @@ let greyText = {
 let mainDivStyle = {
     margin: 'auto',
     marginTop: '10em',
-    width: '80%',
+    width: '90%',
     padding: '2em'
 }
 

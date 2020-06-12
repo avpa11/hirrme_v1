@@ -537,8 +537,8 @@ class UserAccount extends Component {
                             {/* Saved vacancies tab, link5 */}                            
                             <Tab.Content>
                                 <Tab.Pane eventKey="#link5">
-                                    <div className="center">
-                                <SavedVacancies></SavedVacancies>
+                                    <div className='center'>
+                                <SavedVacancies width='90%'/>
                                 </div>
                                 </Tab.Pane>
                             </Tab.Content>

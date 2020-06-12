@@ -288,7 +288,7 @@ const VacancyFromHomePage = (props) => {
         <div onClick={goToVacancy}>
             {/* <Nav.Link as={Link} to="/vacancies" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}> */}
                 <p id={cardStyle.orangeText}>#{props.type}</p>
-                <h5>{props.title ? (props.title.length > 20 ? props.title.substring(0,20) + '...' : props.title) : "Loading ... "}</h5>
+                <h5>{props.title ? (props.title.length > 15 ? props.title.substring(0,15) + '...' : props.title) : "Loading ... "}</h5>
                 <p>{props.city}{props.province ? ', ' + props.province : ''}</p>
                 <p><img id={cardStyle.icon} src={props.companyImage ? props.companyImage : require('../img/companyIcon.png')} alt='img.png'></img> {props.companyName}</p>
             {/* </Nav.Link> */}

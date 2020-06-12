@@ -117,7 +117,7 @@ class SavedVacancies extends Component {
     render() {
         const { searchParameter } = this.state;
         return (
-            <div className="container" style={{ marginTop: "120px", width: '55%' }}>
+            <div className="container" style={{ marginTop: "120px", width: this.props.width ? this.props.width : '35%' }}>
                 <Form onSubmit={e => this.handleSubmit(e)} inline style={{ display: 'flex', justifyContent: 'center', marginTop: "80px", marginBottom: "80px" }}>
                     <div className="input-group-prepend col-lg-5 col-6 col-sm-5" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
                         <FormControl value={searchParameter} onChange={this.handleChange} name="searchParameter" type="text" placeholder=" &#xF002; Keyword or Title" className="mr-sm-2 searchBoxes" style={{ borderColor: "#FFC107", width: '100%' }} />

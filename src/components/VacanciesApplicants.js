@@ -67,7 +67,8 @@ class VacanciesApplicants extends Component {
             firebase: this.props.firebase,
             // passed the whole vacancy object here ...
             vacancyProp: this.props.location.state.vacancy,
-            modalIsVisible: false
+            modalIsVisible: false,
+            message: 'Are you sure you want to delete vacancy?'
         };
     }
 
@@ -82,13 +83,31 @@ class VacanciesApplicants extends Component {
     }
 
     deleteVacancy = () => {
-        // let vacancyToRemove = this.props.firebase.vacanciesApplications().orderByChild('vacancyId').equalTo(this.state.vacancyProp.vacancyID);
-        // vacancyToRemove.remove();
-        // this.props.history.push({
-        //     pathname: `useraccount#link1`,
-        // })
-
-        alert('Deletion is suspended for now')
+        let applicationsToRemove = this.props.firebase.vacanciesApplications().once('value', snap => {
+            snap.forEach(snap1 => {
+                if (snap1.child('vacancyId').val() == this.state.vacancyProp.vacancyID) {
+                    this.props.firebase.vacanciesApplications().child(snap1.key).remove();
+                }
+            })
+        }).then(() => {
+            let vacancyToRemove = this.props.firebase.vacancies().once('value', snap => {
+                snap.forEach(snap1 => {
+                    snap1.forEach(snap2 => {
+                        if (snap2.key == this.state.vacancyProp.vacancyID) {
+                            this.props.firebase.vacancies().child(snap1.key + "/" + snap2.key).remove();
+                        }
+                    })
+                })
+            })
+        })
+            .then(this.setState({ message: 'Deleted' }))
+            .then(setTimeout((this.handleModal), 2000))
+            .then(() => {
+                this.props.history.push({
+                    pathname: `useraccount`,
+                })
+            })
+            .catch(error => { console.log(error) });
     }
 
 
@@ -97,7 +116,7 @@ class VacanciesApplicants extends Component {
     };
 
     displayApplicants = e => {
-        
+
         let param = e ? e.target.value : 'pending';
 
         let userEmail = this.state.authUser ? this.state.authUser.email : '';
@@ -175,7 +194,7 @@ class VacanciesApplicants extends Component {
                         </Modal.Header>
                         <Modal.Body>
                             <div style={{ margin: '0 auto' }}>
-                                <h4>Are you sure you want to delet vacancy?</h4>
+                                <h4>{this.state.message}</h4>
                             </div>
                             <div style={{ textAlign: 'right' }}>
                                 <Button variant="primary" onClick={this.deleteVacancy}>Delete</Button>
@@ -341,14 +360,16 @@ class VacancyApplicant extends Component {
                             </div>
                         </Col>
                         <Col sm={9} lg={10}>
-                            <div style={detailsDivStyle} onClick={this.goToProfile}>
-                                <div style={{ fontSize: '150%' }}>{applicant.firstName} {applicant.lastName} - {applicant.title}</div>
-                                <p>{applicant.city}, {applicant.province}, {applicant.country}</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            <div style={detailsDivStyle} >
+                                <div onClick={this.goToProfile}>
+                                    <div style={{ fontSize: '150%' }}>{applicant.firstName} {applicant.lastName} - {applicant.title}</div>
+                                    <p>{applicant.city}, {applicant.province}, {applicant.country}</p>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                </div>
                                 <div>
-                                    <div style={{ float: 'left', width: '25%' }}>{this.state.statusValue === 'accepted' ? application.userEmail : <div style={{ backgroundColor: 'grey', borderRadius: '0.5em', padding: '0.1em', display: 'inline-block' }}>User's email</div>}</div>
-                                    <div style={{ width: '50%' }}>{this.state.attachmentsUrl ? <a href={this.state.attachmentsUrl} target="_blank" rel="noopener noreferrer">View attached files</a> : ''}</div>
-                                    <div style={{ width: '25%' }}>{(this.state.hasQuiz !== null) ? <Button type='button' variant="warning" onClick={this.handleQuizReview} style={{ backgroundColor: '#FF4C41', borderColor: 'transparent', margin: '0.25em', width: '7em' }}>Review Quiz</Button> : null}</div>
+                                    <div style={{ float: 'left', width: '25%' }}>{this.state.statusValue === 'accepted' ? application.userEmail : <div style={{ backgroundColor: 'grey', borderRadius: '0.5em', padding: '0.25em', display: 'inline-block' }}>User's email</div>}</div>
+                                    <div style={{ float: 'left', width: '50%' }}>{this.state.attachmentsUrl ? <a href={this.state.attachmentsUrl} target="_blank" rel="noopener noreferrer">View attached files</a> : 'No attached files'}</div>
+                                    <div style={{ float: 'right', width: '15%' }}>{(this.state.hasQuiz !== null) ? <Button type='button' size="sm" variant="warning" onClick={this.handleQuizReview} style={{ backgroundColor: '#FF4C41', borderColor: 'transparent', width: '7em' }}>Review Quiz</Button> : null}</div>
                                 </div>
                             </div>
                         </Col>
