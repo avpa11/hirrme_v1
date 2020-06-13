@@ -9,7 +9,6 @@ import { compose } from 'recompose';
 import Carousel from 'react-elastic-carousel';
 
 import cardStyle from '../styles/HomePageCardsStyle.module.css';
-import JobSeekerStyle from '../styles/JobSeekerStyle.module.css';
 
 
 class Home extends Component {

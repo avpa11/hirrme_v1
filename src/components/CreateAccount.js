@@ -11,7 +11,7 @@ import { compose } from 'recompose';
 class CreateAccount extends Component {
 
     componentDidMount() {
-        if (this.props.userType == 'company') {
+        if (this.props.userType === 'company') {
             this.props.history.push('/');
         }
         // console.log(this.props.userType );

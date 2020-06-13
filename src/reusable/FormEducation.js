@@ -91,9 +91,9 @@ class FormEducation extends Component {
                     </Col>
                     <Col sm={6}>
                         <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Start Date<span style={{color: '#dc3545'}}>*</span></Form.Label>    
-                        <FormControl type="text" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder=""></FormControl>
+                        <FormControl type="date" value={el.startDate} onChange={this.handleChange.bind(this, i)} name="startDate" placeholder=""></FormControl>
                         <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>End Date<span style={{color: '#dc3545'}}></span></Form.Label>                        
-                        <FormControl type="text" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder=""></FormControl> 
+                        <FormControl type="date" value={el.endDate} onChange={this.handleChange.bind(this, i)} name="endDate" placeholder=""></FormControl> 
                         <Form.Label style={{color: 'rgb(104, 104, 104)', marginLeft: '5px', marginBottom: '0', textAlign: 'left !important'}}>Location<span style={{color: '#dc3545'}}>*</span></Form.Label>                       
                         <FormControl type="text" value={el.location} onChange={this.handleChange.bind(this, i)} name="location" placeholder=""></FormControl>   
                     </Col>

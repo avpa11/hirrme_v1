@@ -2,6 +2,8 @@ import React, { Component }  from 'react';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert'
+
 
 import { withRouter } from 'react-router-dom';
 import { withAuthorization } from '../components/Session';
@@ -24,7 +26,9 @@ const initState = {
     companyDesrciption: '',
     companyCity: '',
     companyProvince: 'BC',
-    companyCountry: 'Canada'
+    companyCountry: 'Canada',
+    error: null,
+    visible : false
 };
 
 class CreateCompanyForm extends Component {
@@ -36,90 +40,102 @@ class CreateCompanyForm extends Component {
             companyDesrciption: (this.props.location.pathname === '/useraccount' && this.props.loggedCompany!== undefined ) ? this.props.loggedCompany.desrciption : '',
             companyCity: (this.props.location.pathname === '/useraccount' && this.props.loggedCompany!== undefined ) ? this.props.loggedCompany.city : '',
             companyProvince: 'BC',
-            companyCountry: 'Canada'
+            companyCountry: 'Canada',
+            error: null,
+            visible : false
         };
     }
 
     
     handleSubmit = (e, authUser) => {
         e.preventDefault();
-        
-        if (this.props.loggedCompany !== null  && this.props.loggedCompany !== undefined) {
-            // this adds a user object with a key and stores uid as userId field inside
-            this.props.firebase.companies().ref.child(this.props.loggedCompanyKey[0]).set({
-                companyId: authUser.uid,
-                name: this.state.companyName,
-                field: this.state.companyField,
-                email: authUser.email,
-                desrciption: this.state.companyDesrciption,
-                city: this.state.companyCity,
-                province: this.state.companyProvince,
-                country: this.state.companyCountry,
-                profileImage: (this.props.loggedCompany!== null && this.props.loggedCompany!== undefined) ? this.props.loggedCompany.profileImage : null
 
-            })
-                .then(() => {
-                    this.setState({...initState})
-                })
-                .then(() => {
-                    this.props.onDeleteLoggedCompany(
-                        null,
-                        null,
-                    );
-                })
-                .then(() => {
-                    // this.props.history.push('/education');
-                    let companyRef = this.props.firebase.companies().orderByChild('companyId')
-                        .equalTo(this.props.authUser.uid)
-                        companyRef.on('value', snapshot => {
-                            snapshot.forEach(snap1 => {
-                                // Redux
-                                this.props.onSetLoggedCompany(
-                                    snap1.val(),
-                                    // user object key
-                                    Object.keys(snapshot.val())[0],
-                                );
-                            });
-                    })
-                })
-                // .then(() => {
-                //     this.props.history.push('/useraccount#link1');
-                // })
-                .catch(error => console.log(error));
+        if (this.state.companyName === '' || this.state.companyField === '' || this.state.companyDesrciption === '' || this.state.companyCity === '' || this.state.companyDesrciption === '') {
+            this.setState({ error: 'Please fill all required fields'});
+            this.setState({visible: true},()=>{
+                setTimeout(()=>{
+                  this.setState({visible: false})
+                },2000)
+              });
         } else {
-            // this adds a user object with a key and stores uid as userId field inside
-            this.props.firebase.companies().push({
-                companyId: authUser.uid,
-                name: this.state.companyName,
-                field: this.state.companyField,
-                email: authUser.email,
-                desrciption: this.state.companyDesrciption,
-                city: this.state.companyCity,
-                province: this.state.companyProvince,
-                country: this.state.companyCountry,
-            })
-                .then(() => {
-                    this.setState({...initState})
+        
+            if (this.props.loggedCompany !== null  && this.props.loggedCompany !== undefined) {
+                // this adds a user object with a key and stores uid as userId field inside
+                this.props.firebase.companies().ref.child(this.props.loggedCompanyKey[0]).set({
+                    companyId: authUser.uid,
+                    name: this.state.companyName,
+                    field: this.state.companyField,
+                    email: authUser.email,
+                    desrciption: this.state.companyDesrciption,
+                    city: this.state.companyCity,
+                    province: this.state.companyProvince,
+                    country: this.state.companyCountry,
+                    profileImage: (this.props.loggedCompany.profileImage!== null && this.props.loggedCompany.profileImage!== undefined) ? this.props.loggedCompany.profileImage : null
+
                 })
-                .then(() => {
-                    // this.props.history.push('/education');
-                    let companyRef = this.props.firebase.companies().orderByChild('companyId')
-                        .equalTo(this.props.authUser.uid)
-                        companyRef.on('value', snapshot => {
-                            snapshot.forEach(snap1 => {
-                                // Redux
-                                this.props.onSetLoggedCompany(
-                                    snap1.val(),
-                                    // user object key
-                                    Object.keys(snapshot.val())[0],
-                                );
-                            });
+                    .then(() => {
+                        this.setState({...initState})
                     })
+                    .then(() => {
+                        this.props.onDeleteLoggedCompany(
+                            null,
+                            null,
+                        );
+                    })
+                    .then(() => {
+                        // this.props.history.push('/education');
+                        let companyRef = this.props.firebase.companies().orderByChild('companyId')
+                            .equalTo(this.props.authUser.uid)
+                            companyRef.on('value', snapshot => {
+                                snapshot.forEach(snap1 => {
+                                    // Redux
+                                    this.props.onSetLoggedCompany(
+                                        snap1.val(),
+                                        // user object key
+                                        Object.keys(snapshot.val())[0],
+                                    );
+                                });
+                        })
+                    })
+                    // .then(() => {
+                    //     this.props.history.push('/useraccount#link1');
+                    // })
+                    .catch(error => console.log(error));
+            } else {
+                // this adds a user object with a key and stores uid as userId field inside
+                this.props.firebase.companies().push({
+                    companyId: authUser.uid,
+                    name: this.state.companyName,
+                    field: this.state.companyField,
+                    email: authUser.email,
+                    desrciption: this.state.companyDesrciption,
+                    city: this.state.companyCity,
+                    province: this.state.companyProvince,
+                    country: this.state.companyCountry,
                 })
-                // .then(() => {
-                //     this.props.history.push('/useraccount#link1');
-                // })
-                .catch(error => console.log(error));
+                    .then(() => {
+                        this.setState({...initState})
+                    })
+                    .then(() => {
+                        // this.props.history.push('/education');
+                        let companyRef = this.props.firebase.companies().orderByChild('companyId')
+                            .equalTo(this.props.authUser.uid)
+                            companyRef.on('value', snapshot => {
+                                snapshot.forEach(snap1 => {
+                                    // Redux
+                                    this.props.onSetLoggedCompany(
+                                        snap1.val(),
+                                        // user object key
+                                        Object.keys(snapshot.val())[0],
+                                    );
+                                });
+                        })
+                    })
+                    // .then(() => {
+                    //     this.props.history.push('/useraccount#link1');
+                    // })
+                    .catch(error => console.log(error));
+            }
         }
 
 
@@ -148,11 +164,13 @@ class CreateCompanyForm extends Component {
     render () {
         // console.log(this.props);
         // console.log(this.props.loggedCompanyKey[0]);
-        const { companyName, companyField, companyDesrciption, companyCity, companyProvince, companyCountry } = this.state;
+        const { companyName, companyField, companyDesrciption, companyCity, companyProvince, companyCountry, error } = this.state;
         return (
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
                 style={{ justifyContent: 'center', marginTop: "40px", marginBottom: "20px",  width: '100%' }}>
+
+                {error && <Alert style= {this.state.visible ? {} : {display: 'none'}} variant="danger">{error}</Alert>}
 
                 {this.props.location.pathname === '/useraccount' ?
                 <React.Fragment>

@@ -4,6 +4,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
 
 import { withAuthorization } from '../components/Session';
 import { withFirebase } from '../components/Firebase';
@@ -23,6 +24,8 @@ const initState = {
     province: 'BC',
     country: 'Canada',
     description: '',
+    error: null,
+    visible : false
 };
 
 class CreateUserForm extends Component {
@@ -36,85 +39,95 @@ class CreateUserForm extends Component {
             province: 'BC',
             country: 'Canada',
             description: this.props.location.description === '/useraccount' ? this.props.user.description : '',
+            error: null,
+            visible : false
         };
     }
 
     handleSubmit = (e, authUser) => {
         e.preventDefault();
 
-        if (this.props.user !== null && this.props.user !== undefined) {
-
-            this.props.firebase.users().ref.child(this.props.userKey[0]).set({
-                userId: authUser.uid,
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                email: authUser.email,
-                title: this.state.title,
-                city: this.state.city,
-                province: this.state.province,
-                country: this.state.country,
-                description: this.state.description,
-                profileImage: (this.props.user!== null && this.props.user!== undefined) ? this.props.user.profileImage : null
-            })
-            .then(() => {
-                this.setState({...initState})
-            })
-            .then(() => {
-                this.props.onDeleteUser(
-                    null,
-                    null,
-                );
-            })
-            .then(() => {
-                // this.props.history.push('/education');
-                let jobSeekersRef = this.props.firebase.users().orderByChild('userId')
-                    .equalTo(this.props.authUser.uid)
-                    jobSeekersRef.on('value', snapshot => {
-                        snapshot.forEach(snap1 => {
-                            // Redux
-                            this.props.onSetUser(
-                                snap1.val(),
-                                // user object key
-                                Object.keys(snapshot.val())[0],
-                            );
-                        });
-                })
-            })
-            .catch(error => console.log(error));
-
+        if (this.state.firstName === '' || this.state.lastName === '' || this.state.title === '' || this.state.city === '') {
+            this.setState({ error: 'Please fill all required fields'});
+            this.setState({visible: true},()=>{
+                setTimeout(()=>{
+                  this.setState({visible: false})
+                },2000)
+              });
         } else {
-            this.props.firebase.users().push({
-                userId: authUser.uid,
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                email: authUser.email,
-                title: this.state.title,
-                city: this.state.city,
-                province: this.state.province,
-                country: this.state.country,
-                description: this.state.description
-            })
-            .then(() => {
-                this.setState({...initState})
-            })
-            .then(() => {
-                // this.props.history.push('/education');
-                let jobSeekersRef = this.props.firebase.users().orderByChild('userId')
-                    .equalTo(this.props.authUser.uid)
-                    jobSeekersRef.on('value', snapshot => {
-                        snapshot.forEach(snap1 => {
-                            // Redux
-                            this.props.onSetUser(
-                                snap1.val(),
-                                // user object key
-                                Object.keys(snapshot.val())[0],
-                            );
-                        });
-                })
-            })
-            .catch(error => console.log(error));
-        }
+            if (this.props.user !== null && this.props.user !== undefined) {
 
+                this.props.firebase.users().ref.child(this.props.userKey[0]).set({
+                    userId: authUser.uid,
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: authUser.email,
+                    title: this.state.title,
+                    city: this.state.city,
+                    province: this.state.province,
+                    country: this.state.country,
+                    description: this.state.description,
+                    profileImage: (this.props.user.profileImage!== null && this.props.user.profileImage!== undefined) ? this.props.user.profileImage : null
+                })
+                .then(() => {
+                    this.setState({...initState})
+                })
+                .then(() => {
+                    this.props.onDeleteUser(
+                        null,
+                        null,
+                    );
+                })
+                .then(() => {
+                    // this.props.history.push('/education');
+                    let jobSeekersRef = this.props.firebase.users().orderByChild('userId')
+                        .equalTo(this.props.authUser.uid)
+                        jobSeekersRef.on('value', snapshot => {
+                            snapshot.forEach(snap1 => {
+                                // Redux
+                                this.props.onSetUser(
+                                    snap1.val(),
+                                    // user object key
+                                    Object.keys(snapshot.val())[0],
+                                );
+                            });
+                    })
+                })
+                .catch(error => console.log(error));
+
+            } else {
+                this.props.firebase.users().push({
+                    userId: authUser.uid,
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: authUser.email,
+                    title: this.state.title,
+                    city: this.state.city,
+                    province: this.state.province,
+                    country: this.state.country,
+                    description: this.state.description
+                })
+                .then(() => {
+                    this.setState({...initState})
+                })
+                .then(() => {
+                    // this.props.history.push('/education');
+                    let jobSeekersRef = this.props.firebase.users().orderByChild('userId')
+                        .equalTo(this.props.authUser.uid)
+                        jobSeekersRef.on('value', snapshot => {
+                            snapshot.forEach(snap1 => {
+                                // Redux
+                                this.props.onSetUser(
+                                    snap1.val(),
+                                    // user object key
+                                    Object.keys(snapshot.val())[0],
+                                );
+                            });
+                    })
+                })
+                .catch(error => console.log(error));
+            }
+        }
     }
 
     handleChange = e => {
@@ -122,13 +135,15 @@ class CreateUserForm extends Component {
     };
 
     render () {
-        const { firstName, lastName, title, city, province, country, description } = this.state;
+        const { firstName, lastName, title, city, province, country, description, error } = this.state;
         // console.log(this.props.user);
         // {console.log(this.props.location.pathname)}
         return (
             <Form
                 onSubmit={e => this.handleSubmit(e, this.props.authUser)}
                 style={{ justifyContent: 'center', marginTop: "40px", marginBottom: "20px",  width: '100%' }}>
+
+            {error && <Alert style= {this.state.visible ? {} : {display: 'none'}} variant="danger">{error}</Alert>}
 
             {this.props.location.pathname === '/useraccount' ?
                 <React.Fragment>

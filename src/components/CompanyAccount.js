@@ -13,7 +13,6 @@ import Modal from 'react-bootstrap/Modal';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import PasswordChangeForm from '../reusable/PasswordChange';
-import { FaBriefcase } from "react-icons/fa";
 import { connect } from 'react-redux';
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import CompanyForm from '../reusable/CreateCompany';
@@ -23,7 +22,7 @@ import CompanyImage from '../reusable/CompanyImage';
 
 const initState = {
     //   for vacancies:
-    positionTitle: null,
+    positionTitle: '',
     description: '',
     city: '',
     province: 'BC',
@@ -149,10 +148,11 @@ class CompanyAccount extends Component {
 
     render() {
         // console.log(this.props.loggedCompany);
+        var descriptionContent = '';
         if (this.state.company.desrciption) {
-            var descriptionContent = this.state.company.desrciption;
+            descriptionContent = this.state.company.desrciption;
         } else {
-            var descriptionContent = '';
+            descriptionContent = '';
         }
         var descriptionLength = descriptionContent.length;
         var descriptionLimit = 200;
@@ -172,7 +172,7 @@ class CompanyAccount extends Component {
                                         Edit Account
                                     </ListGroup.Item>
                                     <ListGroup.Item action href="#link2">
-                                        Vacancies
+                                        New vacancy
                                     </ListGroup.Item>
                                     <ListGroup.Item action href="#link4">
                                         Settings
@@ -205,7 +205,7 @@ class CompanyAccount extends Component {
                                         </p> <br />
                                     </Col>
                                     <Col sm={8} style={{marginTop: '2em'}}>
-                                        <h4 class="jobTypeSpan">#{this.state.company.field}</h4>
+                                        <h4 className="jobTypeSpan">#{this.state.company.field}</h4>
                                         {
                                             descriptionLength <= descriptionLimit ?
                                             <p id="description">{descriptionContent}</p> :

@@ -33,7 +33,7 @@ body {
   margin-right: auto !important;
 }
 
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type="date"] {
   border: none;
   border-bottom: 1px solid #ced4da;
   color: black;
@@ -45,6 +45,7 @@ input[type="password"]:focus,
 input[type="radio"]:focus,
 input[type="select"]:focus,
 input[type="checkbox"]:focus,
+input[type="date"]:focus,
 textarea:focus,
 select:focus,
 input[type="email"]:focus,

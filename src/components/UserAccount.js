@@ -11,7 +11,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { compose } from 'recompose';
-import { FaBriefcase, FaUserSecret, FaUserTie } from "react-icons/fa";
+import { FaUserSecret, FaUserTie } from "react-icons/fa";
 import CompanyAccount from "./CompanyAccount";
 import SavedVacancies from './SavedVacancies';
 import PasswordChangeForm from '../reusable/PasswordChange';
@@ -126,10 +126,6 @@ function EducationComponent(props) {
             }
         </div>
     )
-}
-
-function  deleteExperience() {
-    alert('NOT IMPLEMENTED');
 }
 
 class UserAccount extends Component {
@@ -326,10 +322,11 @@ class UserAccount extends Component {
 
     render() {
         // console.log(this.props.user);
+        var descriptionContent = '';
         if (this.props.user) {
-            var descriptionContent = this.props.user.description;
+            descriptionContent = this.props.user.description;
         } else {
-            var descriptionContent = '';
+            descriptionContent = '';
         }
         var descriptionLength = descriptionContent.length;
         var descriptionLimit = 200;
@@ -399,11 +396,11 @@ class UserAccount extends Component {
                                                         showFullDescription ?
                                                         <div>
                                                             {descriptionContent}
-                                                            <a onClick={this.showLess} style={{color: '#FFCA11', cursor: 'crosshair'}}> Read less</a>
+                                                            <p onClick={this.showLess} style={{color: '#FFCA11', cursor: 'crosshair'}}> Read less</p>
                                                         </div> :
                                                         <div>
                                                             {descCropped}
-                                                            <a onClick={this.showMore} style={{color: 'rgb(255, 172, 17)', cursor: 'crosshair'}}> Read more</a>
+                                                            <p onClick={this.showMore} style={{color: 'rgb(255, 172, 17)', cursor: 'crosshair'}}> Read more</p>
                                                         </div>
                                                     }
                                                     </React.Fragment>
@@ -554,11 +551,6 @@ class UserAccount extends Component {
 }
 
 class EditEducation extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        }
-    }
 
     handleEducationDelete = () => {
         this.props.fireb.database().ref.child('educations').ref.child(this.props.userID).ref.child(this.props.eduID).remove();
@@ -566,7 +558,7 @@ class EditEducation extends Component {
     }
 
     render() {
-        console.log(this.props.eduID);
+        // console.log(this.props.eduID);
         return (
             <React.Fragment>
                 <div style={imageContainerStyle}>
