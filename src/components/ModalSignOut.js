@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form';
 import { withFirebase } from './Firebase';
 // import { AuthUserContext } from './Session';
 import { IoMdSettings, IoMdClipboard } from "react-icons/io";
+import { BsPersonSquare, BsPencilSquare, BsGearFill, BsBookmarkPlus, BsPlus } from 'react-icons/bs';
 import { NavHashLink } from 'react-router-hash-link';
 
 import { connect } from 'react-redux';
@@ -89,22 +90,22 @@ class SignOutForm extends Component {
                                         <React.Fragment>
                                             <div onClick={this.changeVisibility}>                                             
                                                 <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount#link1">
-                                                <img style={iconStyle} src={require('../img/usersProfile.png')} alt='usersProfile.png' /><span>User's profile</span>                                            
+                                                <BsPersonSquare size={40} /><span>User Profile</span>
                                                 </NavHashLink>
                                             </div>
                                             <div>
                                                 <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link3">
-                                                <img style={iconStyle} src={require('../img/editProfile.png')} alt='editProfile.png' /><span>Edit Profile</span>     
+                                                <BsPencilSquare size={40} /><span>Edit Profile</span>
                                                 </NavHashLink>                                       
                                             </div>
                                             <div>
                                                 <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link4">
-                                                <img style={iconStyle} src={require('../img/settings.png')} alt='settings.png' /><span>Settings</span>   
+                                                <BsGearFill size={40} /><span>Settings</span>
                                                 </NavHashLink>                                         
                                             </div>
                                             <div>
                                                 <NavHashLink  as={Link} className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link5">
-                                                <img style={iconStyle} src={require('../img/savedVacancies.png')} alt='savedvacancies.png' /><span>Saved Vacancies</span>
+                                                <BsBookmarkPlus size={40} /><span>Saved Vacancies</span>
                                                 </NavHashLink>                                            
                                             </div>
                                         </React.Fragment>
@@ -112,22 +113,22 @@ class SignOutForm extends Component {
                                             <React.Fragment>
                                                 <div onClick={this.changeVisibility}>                                             
                                                     <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} as={Link} to="/useraccount#link1">
-                                                    <img style={iconStyle} src={require('../img/usersProfile.png')} alt='usersProfile.png' /><span>Profile</span>                                            
+                                                    <BsPersonSquare size={40} /><span>Company Profile</span>                                      
                                                     </NavHashLink>
                                                 </div>
                                                 <div>
                                                     <NavHashLink className='userModalLinks' style={{ 'textDecoration': 'none', 'color': 'black' }} to="/useraccount#link3">
-                                                    <img style={iconStyle} src={require('../img/editProfile.png')} alt='editProfile.png' /><span>Edit Profile</span>     
+                                                    <BsPencilSquare size={40} /><span>Edit Profile</span>
                                                     </NavHashLink>                                       
                                                 </div>
                                                 <div>
                                                     <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link2">
-                                                        <IoMdClipboard size={40} /><span>New Vacancy</span>   
+                                                    <BsPlus size={40} /><span>New Vacancy</span>   
                                                     </NavHashLink>     
                                                 </div>
                                                 <div>                                    
                                                     <NavHashLink className='userModalLinks'  style={{ 'textDecoration': 'none', 'color': 'black' }}  to="/useraccount#link4">
-                                                        <IoMdSettings size={40} /><span>Settings</span>   
+                                                    <BsGearFill size={40} /><span>Settings</span>
                                                     </NavHashLink>                                         
                                                 </div>
                                             </React.Fragment>

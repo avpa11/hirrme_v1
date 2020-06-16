@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/Button';
 import { compose } from 'recompose';
 import app from 'firebase/app';
 import Video from '../components/Video2';
+import Modal from 'react-bootstrap/Modal';
+import emailjs from 'emailjs-com';
 
 let greyText = {
     color: '#7B7B7B'
@@ -12,7 +14,7 @@ let greyText = {
 
 let mainDivStyle = {
     margin: 'auto',
-    marginTop: '10em',
+    marginTop: '5em',
     width: '90%',
     padding: '2em'
 }
@@ -108,6 +110,8 @@ class JobSeekerPublicProfile extends Component {
         this.state = {
             profileUid: window.location.href.substr(window.location.href.length - 28),
             education: null,
+            modalIsShown: false,
+            modalText: 'Do you want to notify user with an email?',
             userProfile: {
                 firstName: '',
                 lastName: '',
@@ -184,12 +188,59 @@ class JobSeekerPublicProfile extends Component {
         })
     }
 
+    sendEmail = () => {
+
+        let companyName = 'company';
+        let companyEmail = 'contact@hirr.me';
+
+        app.database().ref('companies').orderByChild('email').equalTo(app.auth().currentUser.email).once('value', snap => {
+            snap.forEach(snap1 => {
+                companyName = snap1.child('name').val();
+                companyEmail = snap1.child('email').val();
+            })
+        }).then(() => {
+            let template_params = {
+                // For testing
+                // "applicantEmail": "rkmnslt@gmail.com", 
+                "applicantEmail": this.state.userProfile.email,
+                "companyName": companyName,
+                "companyEmail": companyEmail,
+            }
+            emailjs.send('default_service', 'wanttohire_email', template_params, 'user_T0DquIwdnsOjykivg3mYD')
+                .then((result) => {
+                    this.setState({ modalText: 'Email has been sent' })
+                }, (error) => {
+                    console.log('error.text');
+                })
+                .then(setTimeout(() => this.setState({
+                    modalIsShown: false,
+                    modalText: `Do you want to notify user with an email?`
+                }), 1000))
+        })
+    }
+
+    closeModal = () => this.setState({ modalIsShown: false });
+
     render() {
 
         let userData = this.props.location.userData ? this.props.location.userData : this.state.userProfile;
 
         return (
             <React.Fragment>
+                <Modal show={this.state.modalIsShown} onHide={this.closeModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Notification</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>{this.state.modalText}</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={this.sendEmail}>
+                            Send email
+                            </Button>
+                        <Button variant="secondary" onClick={this.closeModal}>
+                            Close
+                            </Button>
+                    </Modal.Footer>
+                </Modal>
                 <Video />
                 <div style={mainDivStyle}>
                     <div style={generalInfoDivStyle}>
@@ -218,7 +269,7 @@ class JobSeekerPublicProfile extends Component {
 
                         </div>
                         <div style={wantToHireDivStyle}>
-                            <Button style={wantToHireButtonStyle} onClick={() => alert('Cool')}>Want to hire</Button>
+                            <Button style={wantToHireButtonStyle} onClick={() => this.setState({ modalIsShown: true })}>Want to hire</Button>
                         </div>
                     </div>
 
@@ -285,7 +336,7 @@ function ExperienceComponent(props) {
                         <h6 style={greyText}>{experience.location}</h6>
                     </div>
 
-                    <p>{experience.description ? experience.description  : ''}</p>
+                    <p>{experience.description ? experience.description : ''}</p>
 
                 </div>
             </div>
@@ -314,7 +365,7 @@ function EducationComponent(props) {
                         <h6 style={greyText}>{education.location}</h6>
                     </div>
 
-                    <p>{education.description ? education.description  : ''}</p>
+                    <p>{education.description ? education.description : ''}</p>
 
                 </div>
             </div>

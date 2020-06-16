@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Video from '../components/Video2';
-// import emailjs from 'emailjs-com';
+import emailjs from 'emailjs-com';
 
 let applicantList = {
     width: '100%',
@@ -216,6 +216,8 @@ class VacancyApplicant extends Component {
             hasQuiz: [],
             showReview: false,
             statusValue: this.props.applicationData.status,
+            modalIsShown: false,
+            modalText: `Do you want to notify applicant with an email?`
         };
     }
 
@@ -229,25 +231,35 @@ class VacancyApplicant extends Component {
                         status: this.state.statusValue
                     })
 
-                    // 190 emails left ¯\_(ツ)_/¯
-                    // if(e.target.value === 'accepted'){
-                    //     var template_params = {
-                    //         "applicantEmail": "rkmnslt@gmail.com",
-                    //         "applicantEmail": this.props.userEmail,
-                    //         "companyEmail": this.props.applicationData.contactInfo,
-                    //         "positionTitle": this.props.applicationData.positionTitle
-                    //     }
-                    //     emailjs.send('default_service', 'template_iZWkUrIo', template_params, 'user_uO9vrokcldxCjrl8HAWdk')
-                    //     .then((result) => {
-                    //     console.log(result.text);
-                    //     }, (error) => {
-                    //     console.log('error.text');
-                    //     });
-                    // }                    
+                    if (this.state.statusValue === 'accepted') {
+                        this.setState({ modalIsShown: true })
+                    }
                 }
             })
         })
     }
+
+    sendEmail = () => {
+        var template_params = {
+            // For testing
+            // "applicantEmail": "rkmnslt@gmail.com", 
+            "applicantEmail": this.props.userEmail,
+            "companyEmail": this.props.applicationData.contactInfo,
+            "positionTitle": this.props.applicationData.positionTitle
+        }
+        emailjs.send('default_service', 'accepted_email', template_params, 'user_T0DquIwdnsOjykivg3mYD')
+            .then((result) => {
+                this.setState({ modalText: 'Email has been sent' })
+            }, (error) => {
+                console.log('error.text');
+            })
+            .then(setTimeout(() => this.setState({
+                modalIsShown: false,
+                modalText: `Do you want to notify applicant with an email?`
+            }), 1000))
+    }
+
+    closeModal = () => this.setState({ modalIsShown: false });
 
     componentDidMount = () => {
         this.getAttachmentsUrls();
@@ -350,6 +362,20 @@ class VacancyApplicant extends Component {
 
         return (
             <React.Fragment>
+                <Modal show={this.state.modalIsShown} onHide={this.closeModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Notification</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>{this.state.modalText}</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={this.sendEmail}>
+                            Send email
+                            </Button>
+                        <Button variant="secondary" onClick={this.closeModal}>
+                            Close
+                            </Button>
+                    </Modal.Footer>
+                </Modal>
                 <div style={applicantStyle}>
                     <Row>
                         <Col sm={3} lg={2}>

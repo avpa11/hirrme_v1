@@ -255,7 +255,7 @@ class Home extends Component {
                         <div className="rectangle">
                             <img src={require('../img/email_icon.png')} alt='email_icon.png'></img>
                             <hr />
-                            <h5>hirr.me@gmail.com</h5>
+                            <h5>contact@hirr.me</h5>
                         </div>
                         <div className="rectangle">
                             <img src={require('../img/phone_icon.png')} alt='phone_icon.png'></img>
@@ -280,14 +280,16 @@ const VacancyFromHomePage = (props) => {
         props.history.push({
             pathname: `vacancies`            
         })
-    }    
+    }
+    
+    const textLength = 21;
         
     return (  
                          
         <div onClick={goToVacancy}>
             {/* <Nav.Link as={Link} to="/vacancies" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}> */}
                 <p id={cardStyle.orangeText}>#{props.type}</p>
-                <h5>{props.title ? (props.title.length > 15 ? props.title.substring(0,15) + '...' : props.title) : "Loading ... "}</h5>
+                <h5>{props.title ? (props.title.length > textLength ? props.title.substring(0,textLength) + '...' : props.title) : "Loading ... "}</h5>
                 <p>{props.city}{props.province ? ', ' + props.province : ''}</p>
                 <p><img id={cardStyle.icon} src={props.companyImage ? props.companyImage : require('../img/companyIcon.png')} alt='img.png'></img> {props.companyName}</p>
             {/* </Nav.Link> */}
@@ -311,11 +313,13 @@ const JobSeekerFromHomePage = (props) => {
         })
     }
 
+    const textLength = 21;
+
     return (
         <div onClick={goToProfile}>
             {/* <Nav.Link as={Link} to="/jobSeekers/" className={cardStyle.navLink} style={{ padding: '0', margin: '0' }}> */}
                 <p id={cardStyle.orangeText}>#{randomWorkTypes.types[randomNum]}</p>
-                <h5>{props.firstName ? (props.firstName.length + props.lastName.length > 20 ? (props.firstName + ' ' + props.lastName).substring(0, 20) + '...' : props.firstName + ' ' + props.lastName) : 'Loading ...'}</h5>
+                <h5>{props.firstName ? (props.firstName.length + props.lastName.length > textLength ? (props.firstName + ' ' + props.lastName).substring(0, textLength) + '...' : props.firstName + ' ' + props.lastName) : 'Loading ...'}</h5>
                 <p>{props.title}</p>
                 <p><img id={cardStyle.icon} src={props.profileImage} alt='img.png'></img>{props.city}{props.province ? ', ' + props.province : ''}</p>
             {/* </Nav.Link> */}

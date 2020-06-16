@@ -220,7 +220,7 @@ class VacancyObject extends Component {
                     savedVacancyData.positionTitle === this.props.vacancyData.positionTitle &&
                     savedVacancyData.contactInfo === this.props.vacancyData.contactInfo) {
 
-                    this.setState({ saveStatus: 'Remove' })
+                    this.setState({ saveStatus: 'Remove' })                                        
                 }
             }
             );
@@ -259,6 +259,7 @@ class VacancyObject extends Component {
                     // snap1.child('vacancyKey').val() === this.props.vacancyKey) {
                     savedVacanciesRef.child(snap1.key).remove()
                         .then(this.setState({ saveStatus: 'Save' }))
+                        .then(this.showAllInfo)
                         .catch(error => console.log(error));
                 }
             })
@@ -473,8 +474,8 @@ class VacancyObject extends Component {
         }
 
         return (
-            <div onClick={this.showAllInfo}>
-                <div>
+            <div>
+                <div onClick={this.showAllInfo}>
                     <div style={{ float: 'left', width: '17%', minWidth: '10em', height: '80%', padding: '0.5em', marginBottom: '0.5em', borderRight: '1px solid grey' }}>
                         <img style={imageStyle} src=
                             {
