@@ -20,6 +20,8 @@ import FormEducation from '../reusable/FormEducation';
 import FormExperience from '../reusable/FormExperience';
 import ProfileImage from '../reusable/ProfileImage';
 import Video from '../components/Video2';
+import { AiFillBank } from "react-icons/ai";
+import { BsBuilding } from "react-icons/bs";
 
 import { connect } from 'react-redux';
 
@@ -73,7 +75,7 @@ function ExperienceComponent(props) {
             { experience.position ?
             <React.Fragment>
                 <div style={imageContainerStyle}>
-                    <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+                    <BsBuilding size={90} />
                 </div>
                 <div style={textContainerStyle}>
 
@@ -105,7 +107,7 @@ function EducationComponent(props) {
             { education.programName ? 
                 <React.Fragment>
                     <div style={imageContainerStyle}>
-                        <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+                        <AiFillBank size={90}/>
                     </div>
                     <div style={textContainerStyle}>
 
@@ -562,7 +564,7 @@ class EditEducation extends Component {
         return (
             <React.Fragment>
                 <div style={imageContainerStyle}>
-                        <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+                        <AiFillBank size={90}/>
                     </div>
                     <div style={textContainerStyle}>
 
@@ -601,7 +603,7 @@ class EditExperience extends Component {
         return (
             <React.Fragment>
                 <div style={imageContainerStyle}>
-                    <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+                    <BsBuilding size={90} />
                 </div>
                 <div style={textContainerStyle}>
 

@@ -7,6 +7,9 @@ import app from 'firebase/app';
 import Video from '../components/Video2';
 import Modal from 'react-bootstrap/Modal';
 import emailjs from 'emailjs-com';
+import { AiFillBank } from "react-icons/ai";
+import { BsBuilding } from "react-icons/bs";
+
 
 let greyText = {
     color: '#7B7B7B'
@@ -324,7 +327,7 @@ function ExperienceComponent(props) {
 
         <div style={itemsMarginsStyle}>
             <div style={imageContainerStyle}>
-                <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+                <BsBuilding size={90} />
             </div>
             <div style={textContainerStyle}>
 
@@ -353,7 +356,7 @@ function EducationComponent(props) {
 
         <div style={itemsMarginsStyle}>
             <div style={imageContainerStyle}>
-                <img style={itemImageStyle} src={require('../img/question.png')} alt='question.png' />
+                <AiFillBank size={90}/>
             </div>
             <div style={textContainerStyle}>
 

@@ -66,7 +66,7 @@ class Navibar extends Component {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="justify-content-end">
             <Nav className="mr-left" >
-              <Nav.Link style={linksStyle} as={Link} to="/">About</Nav.Link>
+              {/* <Nav.Link style={linksStyle} as={Link} to="/">About</Nav.Link> */}
               <Nav.Link style={linksStyle} as={Link} to="/vacancies">Vacancies</Nav.Link>
               <Nav.Link style={linksStyle} as={Link} to="/jobseekers">Job Seekers</Nav.Link>
               <NavHashLink style={linksStyle} className="nav-link" smooth as={Link} to="/#contactFooter">Contact</NavHashLink>              

@@ -163,7 +163,7 @@ class Home extends Component {
                 <br />
                 <div className="container" style={{ zIndex: 1 }}>
                     <div id='homePageHeader'>
-                        <h1 className="text-center">Seacrh for a job at Hirr.me</h1>
+                        <h1 className="text-center">Search for a job at Hirr.me</h1>
                     </div>
 
                     <div>
@@ -201,7 +201,7 @@ class Home extends Component {
                         </Carousel>
 
                         <br /> <br /><br /><br />
-                        <h1 className="text-center">Seacrh for workers at Hirr.me</h1>
+                        <h1 className="text-center">Search for workers at Hirr.me</h1>
                         <Form inline className='searchForm'>
                             <div className="input-group-prepend" style={{ backgroundColor: 'none', borderColor: "#FFC107" }}>
                                 <FormControl className='searchBoxes mr-sm-2 keywordInput' type="text" value={searchParameterJobSeekers} name="searchParameterJobSeekers" placeholder=" &#xF002; Name, Keyword or Title" onChange={this.handleChange} />
@@ -257,15 +257,15 @@ class Home extends Component {
                             <hr />
                             <h5>contact@hirr.me</h5>
                         </div>
-                        <div className="rectangle">
+                        {/* <div className="rectangle">
                             <img src={require('../img/phone_icon.png')} alt='phone_icon.png'></img>
                             <hr />
                             <h5>+1 (604) 635-3726</h5>
-                        </div>
+                        </div> */}
                         <div className="rectangle">
                             <img src={require('../img/location_icon.png')} alt='location_icon.png'></img>
                             <hr />
-                            <h5>123 Pender St. <br /> Vancouver </h5>
+                            <h5>757 West Hastings <br /> Vancouver </h5>
                         </div>
                     </div>
                 </div>

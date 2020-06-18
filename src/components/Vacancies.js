@@ -11,6 +11,8 @@ import Nav from 'react-bootstrap/Nav';
 import Modal from 'react-bootstrap/Modal';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Video from '../components/Video2';
+import { BsBuilding } from "react-icons/bs";
+
 
 class Vacancies extends Component {
     constructor(props) {
@@ -477,14 +479,13 @@ class VacancyObject extends Component {
             <div>
                 <div onClick={this.showAllInfo}>
                     <div style={{ float: 'left', width: '17%', minWidth: '10em', height: '80%', padding: '0.5em', marginBottom: '0.5em', borderRight: '1px solid grey' }}>
-                        <img style={imageStyle} src=
-                            {
-                                this.props.profileImage === null ?
-                                    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/McDonald%27s_Golden_Arches.svg/1200px-McDonald%27s_Golden_Arches.svg.png'
-                                    :
-                                    this.props.profileImage
-                            }
+                    {
+                        this.props.profileImage === null ?
+                        <BsBuilding size={90} /> :
+                        
+                        <img style={imageStyle} src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/McDonald%27s_Golden_Arches.svg/1200px-McDonald%27s_Golden_Arches.svg.png'
                             alt=''></img>
+                    }
                         <div style={{ color: '#686868', fontSize: '120%' }}>{this.props.companyName}</div>
                     </div>
 
