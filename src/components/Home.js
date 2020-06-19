@@ -7,6 +7,7 @@ import { withFirebase } from './Firebase';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import Carousel from 'react-elastic-carousel';
+import { BsBuilding } from "react-icons/bs";
 
 import cardStyle from '../styles/HomePageCardsStyle.module.css';
 
@@ -291,7 +292,16 @@ const VacancyFromHomePage = (props) => {
                 <p id={cardStyle.orangeText}>#{props.type}</p>
                 <h5>{props.title ? (props.title.length > textLength ? props.title.substring(0,textLength) + '...' : props.title) : "Loading ... "}</h5>
                 <p>{props.city}{props.province ? ', ' + props.province : ''}</p>
-                <p><img id={cardStyle.icon} src={props.companyImage ? props.companyImage : require('../img/companyIcon.png')} alt='img.png'></img> {props.companyName}</p>
+                <p>
+                    {
+                        props.companyImage  === null ?
+                        <BsBuilding size={40} /> :
+                        <img id={cardStyle.icon} src={props.companyImage}
+                            alt='Company Profile Image'></img>
+                    }
+                    {/* <img id={cardStyle.icon} src={props.companyImage ? props.companyImage : require('../img/companyIcon.png')} alt='img.png'></img>  */}
+                
+                {props.companyName}</p>
             {/* </Nav.Link> */}
         </div>
     );

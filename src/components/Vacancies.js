@@ -483,7 +483,7 @@ class VacancyObject extends Component {
                         this.props.profileImage === null ?
                         <BsBuilding size={90} /> :
                         
-                        <img style={imageStyle} src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/McDonald%27s_Golden_Arches.svg/1200px-McDonald%27s_Golden_Arches.svg.png'
+                        <img style={imageStyle} src={this.props.profileImage}
                             alt=''></img>
                     }
                         <div style={{ color: '#686868', fontSize: '120%' }}>{this.props.companyName}</div>
